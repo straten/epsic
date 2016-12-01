@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/genutil/BoxMuller.h,v $
-   $Revision: 1.2 $
-   $Date: 2006/10/06 21:13:54 $
-   $Author: straten $ */
+// epsic/src/BoxMuller.h
 
 #ifndef __BoxMuller_h
 #define __BoxMuller_h

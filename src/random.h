@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// psrchive/Util/units/random.h
+// epsic/src/random.h
 
 #ifndef __random_H
 #define __random_H

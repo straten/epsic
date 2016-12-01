@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// psrchive/Util/units/Minkowski.h
+// epsic/src/Minkowski.h
 
 #ifndef __Minkowski_H
 #define __Minkowski_H

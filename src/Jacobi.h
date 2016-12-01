@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Jacobi.h,v $
-   $Revision: 1.11 $
-   $Date: 2010/05/02 14:11:23 $
-   $Author: straten $ */
+// epsic/src/Jacobi.h
 
 #ifndef __Jacobi_H
 #define __Jacobi_H

@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Conventions.h,v $
-   $Revision: 1.4 $
-   $Date: 2006/10/06 21:13:55 $
-   $Author: straten $ */
+// epsic/src/Conventions.h
 
 #ifndef __Conventions_h
 #define __Conventions_h

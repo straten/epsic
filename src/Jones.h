@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Jones.h,v $
-   $Revision: 1.29 $
-   $Date: 2008/09/10 21:01:22 $
-   $Author: straten $ */
+// epsic/src/Jones.h
 
 #ifndef __Jones_H
 #define __Jones_H

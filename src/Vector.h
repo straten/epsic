@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Vector.h,v $
-   $Revision: 1.20 $
-   $Date: 2010/01/20 05:00:21 $
-   $Author: straten $ */
+// espic/src/Vector.h
 
 #ifndef __Vector_H
 #define __Vector_H

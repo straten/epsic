@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Traits.h,v $
-   $Revision: 1.6 $
-   $Date: 2010/05/02 14:11:23 $
-   $Author: straten $ */
+// epsic/src/Traits.h
 
 /*
  * For a useful discussion on traits, please see 

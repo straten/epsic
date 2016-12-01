@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// psrchive/Util/units/tostring.h
+// epsic/src/tostring.h
 
 #ifndef __TOSTRING_H
 #define __TOSTRING_H

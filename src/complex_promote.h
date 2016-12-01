@@ -5,10 +5,8 @@
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/complex_promote.h,v $
-   $Revision: 1.6 $
-   $Date: 2006/10/06 21:13:55 $
-   $Author: straten $ */
+
+// epsic/src/complex_promote.h
 
 #ifndef __complex_promote_H
 #define __complex_promote_H
