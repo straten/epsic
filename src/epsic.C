@@ -1,13 +1,13 @@
 /***************************************************************************
  *
- *   Copyright (C) 2008 by Willem van Straten
+ *   Copyright (C) 2016 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
 
 /*
 
-  Simulate polarized noise
+  Simulates the polarization of electromagnetic radiation.
 
 */
 
@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <inttypes.h>
+#include <exception>
 
 // #define _DEBUG 1
 
@@ -179,7 +180,7 @@ void mode::set_Stokes (const Stokes<double>& _mean)
 spinor<double> mode::get_field ()
 {
   if (!normal)
-    throw Error (InvalidState, "mode::get_field", "BoxMuller not set");
+    throw std::runtime_error( "mode::get_field - BoxMuller not set");
 
   BoxMuller& gasdev = *normal;
 

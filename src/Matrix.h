@@ -6,16 +6,12 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Matrix.h,v $
-   $Revision: 1.25 $
-   $Date: 2010/01/20 05:00:16 $
-   $Author: straten $ */
+// epsic/src/Matrix.h
 
 #ifndef __Matrix_H
 #define __Matrix_H
 
 #include "Vector.h"
-#include "Error.h"
 #include "complex_promote.h"
 
 //! Matrix is a column vector of row vectors
@@ -130,8 +126,7 @@ void GaussJordan (Matrix<Rows,C1,T>& a, Matrix<Rows,C2,U>& b)
 	    }
 	  } 
 	  else if (ipiv[k] > 1) 
-	    throw Error (InvalidParam, "GaussJordan (Matrix)",
-			 "Singular Matrix-1");
+	    throw std::runtime_error("GaussJordan (Matrix) Singular Matrix-1");
 	}
     }
 
@@ -152,7 +147,7 @@ void GaussJordan (Matrix<Rows,C1,T>& a, Matrix<Rows,C2,U>& b)
     indxc[i]=icol;
 
     if (a[icol][icol] == 0.0)
-      throw Error (InvalidParam, "GaussJordan (Matrix)", "Singular Matrix-2");
+      throw std::runtime_error ("GaussJordan (Matrix) Singular Matrix-2");
 
     //cerr << "3" << endl;
 

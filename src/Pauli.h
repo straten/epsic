@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Pauli.h,v $
-   $Revision: 1.29 $
-   $Date: 2009/01/07 20:58:37 $
-   $Author: straten $ */
+// epsic/src/Pauli.h
 
 #ifndef __Pauli_H
 #define __Pauli_H
@@ -99,17 +96,6 @@ const Stokes<T> standard (const Quaternion<T,Hermitian>& q)
   return Stokes<T>( q.get_scalar(), Pauli::basis().get_in(q.get_vector()) );
 }
 
-// convert coherency vector to Jones matrix
-template<typename T>
-const Jones<T> convert (const std::vector<T>& c)
-{
-  if (c.size() != 4)
-    throw Error (InvalidParam, "Jones<T> convert (std::vector<T>)",
-		 "vector.size=%d != 4", c.size());
-
-  return Jones<T> (c[0], std::complex<T> (c[2], -c[3]),
-		   std::complex<T> (c[2], c[3]), c[1]);
-}
 
 // convert Jones matrix to Hermitian Biquaternion
 template<typename T>
@@ -158,15 +144,16 @@ const Stokes<T> real_coherency (const Quaternion<std::complex<T>,Hermitian>& q)
   T nr = norm(realpart);
   T ni = norm(imaginary);
   if (ni > 1e8*std::numeric_limits<T>::epsilon() && ni*1e5 > nr)
-#if THROW
-    throw Error (InvalidParam,
-		 "Stokes<T> coherency (Quaternion<complex<T>,Hermitian>)",
-		 "non-zero imaginary component");
-#else
-  std::cerr << "Stokes<T> coherency (Quaternion<complex<T>,Hermitian>) "
-    "non-zero imaginary component\n"
-    "   norm(imag(q))=" << ni << " norm=" << nr << std::endl;
-#endif
+  {
+    const char* msg = "Stokes<T> coherency (Quaternion<complex<T>,Hermitian>) "
+      "non-zero imaginary component";
+    
+    std::cerr << msg << 
+      "\n   norm(imag(q))=" << ni << " norm=" << nr << std::endl;
+
+    throw std::runtime_error (msg);
+  }
+  
   return coherency (realpart);
 }
 

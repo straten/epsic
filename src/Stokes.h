@@ -6,17 +6,15 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Stokes.h,v $
-   $Revision: 1.22 $
-   $Date: 2009/08/13 21:09:09 $
-   $Author: straten $ */
+// espic/src/Stokes.h
 
 #ifndef __Stokes_H
 #define __Stokes_H
 
 #include "Vector.h"
-#include "Error.h"
 #include "random.h"
+
+#include <exception>
 
 template <typename T>
 class Stokes : public Vector<4,T>
@@ -94,8 +92,7 @@ void random_value (Stokes<T>& val, U scale, float max_polarization = 1.0)
     val[i] *= scale;
 
   if (val.invariant() < -1e-10)
-    throw Error (InvalidState, "random_value (Stokes)",
-		 "det=%f<0", val.invariant());
+    throw std::runtime_error ("random_value (Stokes) invariant less than zero");
 }
 
 template <class T, class U>

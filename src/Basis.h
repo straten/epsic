@@ -6,10 +6,7 @@
  *
  ***************************************************************************/
 
-/* $Source: /cvsroot/psrchive/psrchive/Util/units/Basis.h,v $
-   $Revision: 1.11 $
-   $Date: 2006/10/06 21:13:55 $
-   $Author: straten $ */
+// epsic/src/Basis.h
 
 #ifndef __Basis_H
 #define __Basis_H
@@ -117,7 +114,7 @@ void Basis<T>::set_basis (Signal::Basis _basis)
     break;
 
   default:
-    throw Error (InvalidParam, "Basis::set_basis unrecognized basis");
+    throw std::runtime_error ("Basis::set_basis unrecognized basis");
 
   }
 
