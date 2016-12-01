@@ -1,4 +1,4 @@
-\documentclass[preprint]{aastex6}
+\documentclass[fullpage]{article}
 %\documentclass[twocolumn]{aastex6}
 
 \usepackage{graphicx}
@@ -97,22 +97,13 @@
 
 \newcommand{\instI}{\ensuremath{\xi}}
 
-\shorttitle   {Disjoint, Superposed, and Composite Samples}
-\shortauthors {van Straten \& Tiburzi}
-
-\received{}
-
 \begin{document}
 
 \title{ {\sc epsic}: Electromagnetic Polarization Simulation in C++ }
 
-\author{W. van Straten}
-\affil{Institute for Radio Astronomy \& Space Research,
-Auckland University of Technology,
-Private Bag 92006,
-Auckland 1142,
-New Zealand}
-\email{willem.van.straten@aut.ac.nz}
+\author{Willem van Straten}
+
+\maketitle
 
 \begin{abstract}
 
@@ -148,13 +139,16 @@ New Zealand}
   the mean of the distribution, $\langle u \rangle =
   \exp(\varsigma^2/2)$, such that the mean of the amplitude modulating
   function is unity.
-  %
-  % CHANGED: The simulation was updated to support appendix A
-  %
-  To simulate square subpulses defined by the sub-sample size $n$, as
-  described in \App{gxv+99}, a single value of $u$ is applied to $n$
-  consecutive instances of $\mbf{e}$.
-
+  \begin{itemize}
+  \item
+  To simulate rectangular subpulses defined by the sub-sample size $n$, a
+  single value of $u$ is applied to $n$ consecutive instances of
+  $\mbf{e}$.
+  \item
+  The modulation function can also be smoothed using a box-car of specified
+  width.
+  \end{itemize}
+  
 \item If simulating \emph{superposed samples}, repeat all of the previous
   steps to produce $M$ instances of the electric field vector in the
   other mode then, for each instance of the electric field vectors
@@ -182,16 +176,114 @@ New Zealand}
 
 \item Compute the $4\times4$ covariances between the Stokes parameters
   using either the $M$ instantaneous Stokes parameters or the $N$
-  sample mean Stokes parameters.  Verify that the computed covariance
-  matrix matches the theoretical prediction within the uncertainty due
-  to noise.
-  
+  sample mean Stokes parameters.
+    
 \end{enumerate}
 %
 
+Following the simulation, {\sc epsic} reports
+\begin{itemize}
+  \item the expected population mean Stokes parameters and $4\times4$
+    matrix of covariances between the instantaneous or sample mean
+    Stokes parameters;
 
-\bibliographystyle{aasjournal}
-\bibliography{journals,modrefs,psrrefs,../local,crossrefs}
+  \item the values of the above quantities as derived from the
+    simulated data;
+
+  \item the mean value of the degree of polarization, derived from the
+    simulated instantaneous or sample mean Stokes parameters; and
+
+  \item the modulation index derived from simulated data.
+\end{itemize}
+
+{\sc epsic} currently does not verify that the computed covariance
+matrix matches the theoretical prediction within the uncertainty due
+to noise.
+
+\newpage
+
+\section{ Simulation Model Parameters }
+
+The simulation can be configured using the following parameters.  Each
+parameter corresponds to a command line option.
+
+\begin{itemize}
+
+\item By default, {\sc epsic} simulates the polarized electromagnetic
+  radiation of a single source.  To simulate a combination of two
+  sources, use one of the following three options:
+
+  \begin{itemize}
+  \item Enable {\bf superposed modes} using the {\tt -S} option, which
+    has no arguments.
+
+  \item Enable {\bf disjont modes} using the {\tt -D} option; the argument
+    to this option is the fraction of Stokes samples that occur in mode A
+    in the simulated population.
+
+  \item Enable {\bf composite samples of disjoint modes} using the
+    {\tt -C} option; the argument to this option is the fraction of
+    electric field instances that occur in mode A in each Stokes sample.
+
+  \end{itemize}
+
+\item The {\bf Stokes sample size} can be set using the {\tt -n}
+  option.  The argument to this option is the integer number of
+  instances of the electric field in each Stokes sample.  By default,
+  {\sc epsic} calculates the statistics of the instantaneous Stokes
+  parameters (i.e. $n=1$).
+
+\item The {\bf population size} can be set using the {\tt -N}
+  option.  The argument to this option is the floating point number
+  of mega Stokes samples to simulate, where a mega Stokes sample is
+  $2^{20}$ Stokes samples.  The total number of instances of electric
+  field vectors that will be simulated is the population size times
+  the Stokes sample size.
+   
+\item The {\bf population mean Stokes parameters} can be set using the
+  {\tt -s}, {\tt -A}, and {\tt -B} options.  If simulating only a
+  single source, use either {\tt -s} or {\tt -A}.  If simulating a
+  combination of two sources, use {\tt -A} and {\tt -B} to specify the
+  population mean Stokes parameters of the first and second sources,
+  respectively.  The argument to this option is a comma separated list
+  of the four population mean Stokes parameters, $I,Q,U,V$; e.g.  {\tt
+    epsic -A 5.3,0,0,-1.4} will simulate polarized noise with a total
+  intensity (Stokes $I$) of 5.3 units and circularly polarized
+  intensity (Stokes $V$) of -1.4 units.  By default, {\sc epsic} will
+  simulate unpolarized noise from a single source with population mean
+  intensity equal to unity.
+  
+\item Optional {\bf amplitude modulation} is enabled using the {\tt
+  -l} option.  The argument to this option is the standard deviation
+  $\varsigma$ of the normally distributed variate that is used to
+  generate a lognormal distribution.  For example, {\tt epsic -l
+    0.2} will cause {\tt epsic} to multiply each electric field
+  instance by $u=\exp(v/2)$, where $v$ is normally distributed with
+  mean equal to zero and standard deviation equal to 0.2.  When
+  amplitude modulation is enabled using the {\tt -l} option, the
+  following options apply.
+  
+  \begin{itemize}
+  \item
+    The amplitude modulating function can be set to a contiguous
+    sequence of {\bf rectangular pulses} using the {\tt -r} option.  The
+    argument to this option is the integer number of instances of the
+    electric field to be multiplied by a single value of $u$. 
+  \item
+    The amplitude modulating function can be {\bf boxcar smoothed} using the
+    {\tt -b} option.  The argument to this option is the width of the
+    boxcar expressed as the integer number of instances of the
+    electric field that it spans.
+  \end{itemize}
+
+  If simulating a combination of two sources, modulation properties of
+  the second source can be specified by preceding the argument to any
+  of {\tt -l}, {\tt -r} and/or {\tt -b} with the letter `{\tt B}';
+  e.g. {\tt epsic -S -l B0.5 -b B4}.
+  
+\end{itemize}
+%
+
 \end{document}
 
 
