@@ -13,6 +13,7 @@
 
 #include "Vector.h"
 #include "complex_promote.h"
+#include <exception>
 
 //! Matrix is a column vector of row vectors
 template <unsigned Rows, unsigned Columns, typename T> 
