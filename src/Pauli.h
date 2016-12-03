@@ -17,6 +17,7 @@
 #include "Basis.h"
 
 #include <vector>
+#include <limits>
 
 namespace Pauli {
 
