@@ -859,7 +859,7 @@ int main (int argc, char** argv)
   bool variances_only = false;
 
   int c;
-  while ((c = getopt(argc, argv, "a:dg:hn:N:m:M:s:SC:D:A:B:l:oprX")) != -1)
+  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:A:B:l:oprX")) != -1)
   {
     switch (c)
     {
@@ -919,14 +919,14 @@ int main (int argc, char** argv)
 	setup_A.smooth_before = atoi (optarg);
       break;
 
-    case 'a':
+    case 'b':
       if (optarg[0]=='B')
 	setup_B.smooth_modulator = atoi (optarg+1);
       else
 	setup_A.smooth_modulator = atoi (optarg);
       break;
 
-    case 'g':
+    case 'r':
       if (optarg[0]=='B')
 	setup_B.square_modulator = atoi (optarg+1);
       else
