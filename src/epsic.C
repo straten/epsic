@@ -859,7 +859,7 @@ int main (int argc, char** argv)
   bool variances_only = false;
 
   int c;
-  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:A:B:l:oprX")) != -1)
+  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:A:B:l:opRX")) != -1)
   {
     switch (c)
     {
@@ -958,7 +958,7 @@ int main (int argc, char** argv)
       dual = new disjoint( atof(optarg) );
       break;
 
-    case 'r':
+    case 'R':
       rho_stats = true;
       break;
 
