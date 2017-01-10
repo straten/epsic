@@ -14,7 +14,7 @@
 #include "Vector.h"
 #include "random.h"
 
-#include <exception>
+#include <stdexcept>
 
 template <typename T>
 class Stokes : public Vector<4,T>
