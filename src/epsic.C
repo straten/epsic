@@ -43,19 +43,13 @@ void usage ()
     " -n Nint     integrate Nint samples before further processing \n"
     " -m Nsamp    box-car smooth over Nsamp samples before detection \n"
     " -M Nsamp    box-car smooth over Nsamp samples after detection \n"
-    " -s i,q,u,v  single source with specified Stokes parameters \n"
     " -S          superposed modes \n"
-    " -X          cross-correlate the modes after detection \n"
     " -C f_A      composite modes with fraction of instances in mode A \n"
     " -D F_A      disjoint modes with fraction of samples in mode A \n"
-    " -A i,q,u,v  set the Stokes parameters of mode A \n"
-    " -B i,q,u,v  set the Stokes parameters of mode B \n"
-    " -l sigma    modulate mode A using a log-normal variate \n"
-    " -a Nsamp    box-car smooth the amplitude modulation function \n"
-    " -g Nsamp    use square impulse amplitude modulation function \n"
-    " -p          print real part of x and y, plus diff. phase \n"
-    " -r          print the statistics of the coherency matrix \n"
-    " -d          print only the variances of each Stokes parameter \n"
+    " -s i,q,u,v  set the population mean Stokes parameters \n"
+    " -l sigma    modulate Stokes parameters using a log-normal variate \n"
+    " -b Nsamp    box-car smooth the amplitude modulation function \n"
+    " -r Nsamp    use rectangular impulse amplitude modulation function \n"
        << endl;
 }
 
@@ -133,7 +127,7 @@ int main (int argc, char** argv)
   bool variances_only = false;
 
   int c;
-  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:A:B:l:opRX")) != -1)
+  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:l:opRX")) != -1)
   {
     switch (c)
     {
@@ -143,13 +137,13 @@ int main (int argc, char** argv)
       return 0;
 
     case 's':
-    case 'A':
-    case 'B':
     {
+      bool mode_B = optarg[0] == 'B';
+      unsigned offset = (mode_B) ? 1 : 0;
       double i,q,u,v;
-      if (sscanf (optarg, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
+      if (sscanf (optarg+offset, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
       {
-	cerr << "Error parsing " << optarg << " as Stokes 4-vector" << endl;
+	cerr << "Error parsing " << optarg+offset << " as 4-vector" << endl;
 	return -1;
       }
       stokes = Stokes<double> (i,q,u,v);
@@ -159,10 +153,10 @@ int main (int argc, char** argv)
 	return -1;
       }
 
-      if (dual && c=='A')
-	dual->A->set_Stokes( stokes );
-      if (dual && c=='B')
+      if (dual && mode_B)
 	dual->B->set_Stokes( stokes );
+      else if (dual)
+	dual->A->set_Stokes( stokes );
 
       break;
     }
