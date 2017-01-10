@@ -213,7 +213,7 @@ options and their arguments, run {\tt epsic -h}.
   \item Enable {\bf superposed modes} using the {\tt -S} option, which
     has no arguments.
 
-  \item Enable {\bf disjont modes} using the {\tt -D} option; the argument
+  \item Enable {\bf disjoint modes} using the {\tt -D} option; the argument
     to this option is the fraction of Stokes samples that occur in mode A
     in the simulated population.
 
@@ -237,16 +237,12 @@ options and their arguments, run {\tt epsic -h}.
   the Stokes sample size.
    
 \item The {\bf population mean Stokes parameters} can be set using the
-  {\tt -s}, {\tt -A}, and {\tt -B} options.  If simulating only a
-  single source, use either {\tt -s} or {\tt -A}.  If simulating a
-  combination of two sources, use {\tt -A} and {\tt -B} to specify the
-  population mean Stokes parameters of the first and second sources,
-  respectively.  The argument to this option is a comma separated list
+  {\tt -s} option. The argument to this option is a comma separated list
   of the four population mean Stokes parameters, $I,Q,U,V$; e.g.  {\tt
-    epsic -A 5.3,0,0,-1.4} will simulate polarized noise with a total
+    epsic -s 5.3,0,0,-1.4} will simulate polarized noise with a total
   intensity (Stokes $I$) of 5.3 units and circularly polarized
   intensity (Stokes $V$) of -1.4 units.  By default, {\sc epsic} will
-  simulate unpolarized noise from a single source with population mean
+  simulate unpolarized noise with population mean
   intensity equal to unity.
   
 \item Optional {\bf amplitude modulation} is enabled using the {\tt
@@ -272,14 +268,16 @@ options and their arguments, run {\tt epsic -h}.
     electric field that it spans.
   \end{itemize}
 
-  If simulating a combination of two sources, modulation properties of
-  the second source can be specified by preceding the argument to any
-  of {\tt -l}, {\tt -r} and/or {\tt -b} with the letter `{\tt B}';
-  e.g. {\tt epsic -S -l B0.5 -b B4}.
-  
 \end{itemize}
 %
 
+\noindent
+If simulating a combination of two sources, either the population mean
+Stokes parameters or the modulation properties of
+  the second source can be specified by preceding the argument to any
+  of {\tt -s}, {\tt -l}, {\tt -r} and/or {\tt -b} with the letter `{\tt B}';
+  e.g. {\tt epsic -S -l B0.5 -b B4}.
+  
 \end{document}
 
 
