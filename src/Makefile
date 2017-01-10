@@ -1,6 +1,6 @@
 
-CCFILES = epsic.C Dirac.C Pauli.C BoxMuller.C random.C
+CCFILES = epsic.C util/Dirac.C util/Pauli.C util/BoxMuller.C util/random.C
 
 epsic: ${CCFILES}
-	g++ -o epsic ${CCFILES}
+	g++ -Iutil/ -o epsic ${CCFILES}
 
