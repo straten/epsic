@@ -7,7 +7,8 @@
 
 /*
 
-  Simulates the polarization of electromagnetic radiation.
+  Simulates the higher order moments of
+  polarized electromagnetic radiation.
 
 */
 
@@ -26,6 +27,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <exception>
+#include <fstream>
 
 // #define _DEBUG 1
 
@@ -105,7 +107,7 @@ int main (int argc, char** argv)
 {
   uint64_t ndat = 1024 * 1024;     // number of Stokes samples
   unsigned nint = 1;               // number of instances in Stokes sample
-
+  unsigned nlag = 0;               // number of lags to compute in ACF
   unsigned smooth_after = 0;       // box-car smoothing width post-detection
 
   bool verbose = false;
@@ -120,14 +122,12 @@ int main (int argc, char** argv)
   mode_setup setup_A;
   mode_setup setup_B;
 
-  bool cross_correlate = false;
-
   bool print = false;
   bool rho_stats = false;
   bool variances_only = false;
 
   int c;
-  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:l:opRX")) != -1)
+  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:l:opRX:")) != -1)
   {
     switch (c)
     {
@@ -214,8 +214,7 @@ int main (int argc, char** argv)
       break;
 
     case 'X':
-      dual = new superposed;
-      cross_correlate = true;
+      nlag = atoi (optarg);
       break;
 
     case 'C':
@@ -246,6 +245,8 @@ int main (int argc, char** argv)
   BoxMuller gasdev (time(NULL));
 
   uint64_t ntot = 0;
+  uint64_t ntot_lag = 0;
+  
   double totp = 0;
   Vector<4, double> tot;
   Matrix<4,4, double> totsq;
@@ -253,6 +254,10 @@ int main (int argc, char** argv)
   Matrix<2,2, complex<double> > tot_rho;
   Matrix<4,4, complex<double> > totsq_rho;
 
+  vector< Matrix<4,4, complex<double> > > acf (nlag);
+  vector< Vector<4, double> > samples (nlag);
+  unsigned current_sample = 0;
+  
   source.set_Stokes (stokes);
 
   if (dual)
@@ -284,7 +289,28 @@ int main (int argc, char** argv)
 
     tot += mean_stokes;
     totsq += outer(mean_stokes, mean_stokes);
+    ntot ++;
 
+    if (nlag)
+    {
+      samples[current_sample] = mean_stokes;
+      current_sample ++;
+      if (current_sample == nlag)
+	current_sample = 0;
+
+      if (ntot >= nlag)
+      {
+	Vector<4, double> Sj = samples[current_sample];
+	for (unsigned ilag=0; ilag<nlag; ilag++)
+	{
+	  Vector<4, double> Si = samples[(current_sample+ilag)%nlag];
+	  acf[ilag] += outer(Si,Sj);
+	}
+
+	ntot_lag++;
+      }
+    }
+    
     double psq = sqr(mean_stokes[1])+sqr(mean_stokes[2])+sqr(mean_stokes[3]);
     totp += sqrt(psq)/mean_stokes[0];
       
@@ -295,8 +321,6 @@ int main (int argc, char** argv)
       tot_rho += rho;
       totsq_rho += direct (rho, rho);
     }
-
-    ntot ++;
   }
 
   totp /= ntot;
@@ -340,6 +364,17 @@ int main (int argc, char** argv)
   cerr << "\ncovar=\n" << totsq << endl;
   cerr << "expected=\n" << expected_covariance << endl;
 
+  if (nlag)
+  {
+    ofstream out ("acf.txt");
+    for (unsigned ilag=0; ilag<nlag; ilag++)
+    {
+      acf[ilag] /= ntot_lag;
+      acf[ilag] -= outer(tot,tot);
+      out << acf[ilag] << endl;
+    }
+  }
+  
   if (!rho_stats)
     return 0;
 
