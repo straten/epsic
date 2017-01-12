@@ -34,12 +34,21 @@ public:
   // worker function for sub-classes
   Matrix<4,4, double> get_covariance (mode* s, unsigned n)
   {
+    std::cerr << "sample::get_covariance n=" << n << std::endl;
+
     Matrix<4,4, double> result = s->get_covariance ();
 
-    double acf = s->get_autocorrelation (n);
-    Matrix<4,4, double> out = outer( s->get_mean(), s->get_mean() );
-    out *= acf / n;
-    result += out;
+    for (unsigned ilag=1; ilag < n; ilag++)
+    {
+      Matrix<4,4, double> out = s->get_crosscovariance (ilag);
+
+      std::cerr << "ilag=" << ilag << " C=" << out << std::endl;
+
+      // multiply by two to also sum the symmetric lower triangle
+      out *= 2.0*double(n-ilag)/double(n);
+      result += out;
+    }
+    
     result /= n;
     return result;
   }

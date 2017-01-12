@@ -68,7 +68,7 @@ public:
 
     Matrix<4,4,double> C = source->get_covariance();
     C *= (mean*mean + var);
-    Matrix<4,4,double> o = outer (get_Stokes(), get_Stokes());
+    Matrix<4,4,double> o = outer (source->get_mean(), source->get_mean());
     o *= var;
     return C + o;
   }
@@ -150,22 +150,16 @@ public:
     return mod->get_mod_mean ();
   }
 
-  //! Return the sum of the intensity autocorrelation function
-  double get_autocorrelation (unsigned nsample) 
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
   {
-    double nsum = std::min (smooth, nsample);
-    double result = 0;
+    if (ilag >= smooth)
+      return 0;
 
-    // sum all of the elements in the upper triangle of the covariance matrix
-    for (unsigned offset=1; offset < nsum; offset++)
-    {
-      double acf = (smooth - offset) / double (smooth * smooth);
-      result += (nsample - offset) * acf;
-    }
-
-    // multiply by two to also sum the symmetric lower triangle
-    return 2.0 * result * mod->get_mod_variance();
+    Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
+    result *= double (smooth - ilag) / smooth * get_mod_variance();
+    return result;
   }
+  
 };
 
 
@@ -204,21 +198,15 @@ public:
     return mod->get_mod_mean ();
   }
 
-  //! Return the sum of the intensity autocorrelation function
-  double get_autocorrelation (unsigned nsample) 
+  //! Return cross-covariance between Stokes parameters as a function of lag
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
   {
-    // sum the width X width squares along the diagonal
-    double result = 0;
-    while (nsample > width)
-    {
-      result += (width-1)*width;
-      nsample -= width;
-    }
+    if (ilag >= width)
+      return 0;
 
-    if (nsample)
-      result += (nsample-1)*nsample;
-    
-    return result * mod->get_mod_variance();
+    Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
+    result *= double (width - ilag) / width * get_mod_variance();
+    return result;
   }
 };
 

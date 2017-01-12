@@ -41,8 +41,9 @@ public:
   virtual Matrix<4,4, double> get_covariance ()
   { return Minkowski::outer (mean, mean); }
 
-  //! Return the sum of the intensity autocorrelation function
-  virtual double get_autocorrelation (unsigned nsample) { return 0; }
+  //! Return cross-covariance between Stokes parameters as a function of lag
+  virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  { if (ilag>0) return 0; else return get_covariance(); }
 
   //! Return a random instance of the electric field vector
   virtual Spinor<double> get_field ();
