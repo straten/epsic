@@ -64,6 +64,8 @@ void usage ()
 class mode_setup
 {
 public:
+  // population mean Stokes parameters
+  Stokes<double> mean;
   // box-car smoothing width pre-detection
   unsigned smooth_before;
   // box-car smoothing of modulation function
@@ -73,7 +75,7 @@ public:
   // variance of logarithm of modulation function
   double log_sigma;
 
-  mode_setup ()
+  mode_setup () : mean (1,0,0,0)
   {
     smooth_before = 0;
     smooth_modulator = 0;
@@ -85,6 +87,9 @@ public:
   {
     modulated_mode* mod = 0;
 
+    if (s)
+      s->set_Stokes (mean);
+    
     if (log_sigma)
       s = mod = new lognormal_mode (s, log_sigma);
 
@@ -129,6 +134,15 @@ int main (int argc, char** argv)
   int c;
   while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:l:opRX:")) != -1)
   {
+    const char* usearg = optarg;
+    mode_setup* setup = &setup_A;
+    
+    if (optarg && optarg[0] == 'B')
+    {
+      setup = &setup_B;
+      usearg ++;
+    }
+    
     switch (c)
     {
 
@@ -138,12 +152,10 @@ int main (int argc, char** argv)
 
     case 's':
     {
-      bool mode_B = optarg[0] == 'B';
-      unsigned offset = (mode_B) ? 1 : 0;
       double i,q,u,v;
-      if (sscanf (optarg+offset, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
+      if (sscanf (usearg, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
       {
-	cerr << "Error parsing " << optarg+offset << " as 4-vector" << endl;
+	cerr << "Error parsing " << usearg << " as 4-vector" << endl;
 	return -1;
       }
       stokes = Stokes<double> (i,q,u,v);
@@ -153,19 +165,13 @@ int main (int argc, char** argv)
 	return -1;
       }
 
-      if (dual && mode_B)
-	dual->B->set_Stokes( stokes );
-      else if (dual)
-	dual->A->set_Stokes( stokes );
+      setup->mean = stokes;
 
       break;
     }
 
     case 'l':
-      if (optarg[0]=='B')
-	setup_B.log_sigma = atof (optarg+1);
-      else
-	setup_A.log_sigma = atof (optarg);
+      setup->log_sigma = atof (usearg);
       break;
       
     case 'N':
@@ -181,24 +187,15 @@ int main (int argc, char** argv)
       break;
 
     case 'm':
-      if (optarg[0]=='B')
-	setup_B.smooth_before = atoi (optarg+1);
-      else
-	setup_A.smooth_before = atoi (optarg);
+      setup->smooth_before = atoi (usearg);
       break;
 
     case 'b':
-      if (optarg[0]=='B')
-	setup_B.smooth_modulator = atoi (optarg+1);
-      else
-	setup_A.smooth_modulator = atoi (optarg);
+      setup->smooth_modulator = atoi (usearg);
       break;
 
     case 'r':
-      if (optarg[0]=='B')
-	setup_B.square_modulator = atoi (optarg+1);
-      else
-	setup_A.square_modulator = atoi (optarg);
+      setup->square_modulator = atoi (usearg);
       break;
 
     case 'o':
