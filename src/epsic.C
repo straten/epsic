@@ -251,7 +251,7 @@ int main (int argc, char** argv)
   Matrix<2,2, complex<double> > tot_rho;
   Matrix<4,4, complex<double> > totsq_rho;
 
-  vector< Matrix<4,4, complex<double> > > acf (nlag);
+  vector< Matrix<4,4, double> > acf (nlag);
   vector< Vector<4, double> > samples (nlag);
   unsigned current_sample = 0;
   
@@ -368,7 +368,9 @@ int main (int argc, char** argv)
     {
       acf[ilag] /= ntot_lag;
       acf[ilag] -= outer(tot,tot);
-      out << acf[ilag] << endl;
+      out << "============================================================\n"
+	"lag=" << ilag << endl << "mean=" << acf[ilag] << endl
+	  << "expected=" << stokes_sample->get_crosscovariance(ilag) << endl;
     }
   }
   

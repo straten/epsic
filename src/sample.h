@@ -30,12 +30,11 @@ public:
   virtual Stokes<double> get_Stokes () = 0;
   virtual Vector<4, double> get_mean () = 0;
   virtual Matrix<4,4, double> get_covariance () = 0;
+  virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) = 0;
 
   // worker function for sub-classes
   Matrix<4,4, double> get_covariance (mode* s, unsigned n)
   {
-    std::cerr << "sample::get_covariance n=" << n << std::endl;
-
     Matrix<4,4, double> result = s->get_covariance ();
 
     for (unsigned ilag=1; ilag < n; ilag++)
@@ -52,6 +51,9 @@ public:
     result /= n;
     return result;
   }
+
+  //! Return cross-covariance between Stokes parameters as a function of lag
+
 };
 
 /***************************************************************************
@@ -95,6 +97,14 @@ public:
   {
     return sample::get_covariance (source, sample_size);
   }
+
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  {
+    if (ilag == 0)
+      return get_covariance();
+    return source->get_crosscovariance(ilag);
+  }
+
 };
 
 
@@ -113,6 +123,14 @@ public:
   combination () { A = new mode; B = new mode; }
 
   void set_normal (BoxMuller* n) { A->set_normal(n); B->set_normal(n); }
+
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  {
+    if (ilag == 0)
+      return get_covariance();
+    
+    return A->get_crosscovariance(ilag) + B->get_crosscovariance (ilag);
+  }
 };
 
 /***************************************************************************
