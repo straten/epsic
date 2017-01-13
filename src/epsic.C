@@ -41,25 +41,20 @@ void usage ()
     " \n"
     "options: \n"
     " \n"
-    " -N Msamp    simulate Msamp mega samples \n"
-    " -n Nint     integrate Nint samples before further processing \n"
+    " -N Msamp    number of Mega (2^20) Stokes samples [default:1]\n"
+    " -n Nint     number of instances in each Stokes sample [default:1] \n"
     //" -m Nsamp    box-car smooth over Nsamp samples before detection \n"
     //" -M Nsamp    box-car smooth over Nsamp samples after detection \n"
     " -S          superposed modes \n"
     " -C f_A      composite modes with fraction of instances in mode A \n"
     " -D F_A      disjoint modes with fraction of samples in mode A \n"
-    " -s i,q,u,v  set the population mean Stokes parameters \n"
+    " -s i,q,u,v  population mean Stokes parameters [default:1,0,0,0]\n"
     " -l sigma    modulate Stokes parameters using a log-normal variate \n"
     " -b Nsamp    box-car smooth the amplitude modulation function \n"
     " -r Nsamp    use rectangular impulse amplitude modulation function \n"
+    " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
        << endl;
 }
-
-
-
-
-
-
 
 class mode_setup
 {
@@ -110,12 +105,11 @@ double sqr (double x) { return x*x; }
 
 int main (int argc, char** argv)
 {
-  uint64_t ndat = 1024 * 1024;     // number of Stokes samples
-  unsigned nint = 1;               // number of instances in Stokes sample
-  unsigned nlag = 0;               // number of lags to compute in ACF
-  unsigned smooth_after = 0;       // box-car smoothing width post-detection
-
-  bool verbose = false;
+  uint64_t Mega = 1024 * 1024;
+  uint64_t nsamp = Mega;       // number of Stokes samples
+  unsigned nint = 1;           // number of instances in each Stokes sample
+  unsigned nlag = 0;           // number of lags to compute in ACF
+  unsigned smooth_after = 0;   // box-car smoothing width post-detection
 
   Stokes<double> stokes = 1.0;
   bool subtract_outer_population_mean = false;
@@ -132,7 +126,7 @@ int main (int argc, char** argv)
   bool variances_only = false;
 
   int c;
-  while ((c = getopt(argc, argv, "b:dr:hn:N:m:M:s:SC:D:l:opRX:")) != -1)
+  while ((c = getopt(argc, argv, "hN:n:SC:D:s:l:b:r:X:")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -149,6 +143,26 @@ int main (int argc, char** argv)
     case 'h':
       usage ();
       return 0;
+
+    case 'N':
+      nsamp = nsamp * atof (optarg);
+      break;
+
+    case 'n':
+      nint = atoi (optarg);
+      break;
+
+    case 'S':
+      dual = new superposed;
+      break;
+
+    case 'C':
+      dual = new composite( atof(optarg) );
+      break;
+
+    case 'D':
+      dual = new disjoint( atof(optarg) );
+      break;
 
     case 's':
     {
@@ -174,13 +188,19 @@ int main (int argc, char** argv)
       setup->log_sigma = atof (usearg);
       break;
       
-    case 'N':
-      ndat = ndat * atof (optarg);
+    case 'b':
+      setup->smooth_modulator = atoi (usearg);
       break;
 
-    case 'n':
-      nint = atoi (optarg);
+    case 'r':
+      setup->square_modulator = atoi (usearg);
       break;
+
+    case 'X':
+      nlag = atoi (optarg);
+      break;
+
+    /* undocumented and currently unavailable features */
 
     case 'M':
       smooth_after = atoi (optarg);
@@ -188,14 +208,6 @@ int main (int argc, char** argv)
 
     case 'm':
       setup->smooth_before = atoi (usearg);
-      break;
-
-    case 'b':
-      setup->smooth_modulator = atoi (usearg);
-      break;
-
-    case 'r':
-      setup->square_modulator = atoi (usearg);
       break;
 
     case 'o':
@@ -206,22 +218,6 @@ int main (int argc, char** argv)
       print = true;
       break;
 
-    case 'S':
-      dual = new superposed;
-      break;
-
-    case 'X':
-      nlag = atoi (optarg);
-      break;
-
-    case 'C':
-      dual = new composite( atof(optarg) );
-      break;
-
-    case 'D':
-      dual = new disjoint( atof(optarg) );
-      break;
-
     case 'R':
       rho_stats = true;
       break;
@@ -229,14 +225,10 @@ int main (int argc, char** argv)
     case 'd':
       variances_only = true;
       break;
-
-    case 'v':
-      verbose = true;
-      break;
     }
   }
 
-  cerr << "Simulating " << ndat << " Stokes samples" << endl;
+  cerr << "Simulating " << nsamp << " Stokes samples" << endl;
 
   random_init ();
   BoxMuller gasdev (time(NULL));
@@ -278,7 +270,7 @@ int main (int argc, char** argv)
 
   stokes_sample->sample_size = nint;
 
-  for (uint64_t idat=0; idat<ndat; idat++)
+  for (uint64_t idat=0; idat<nsamp; idat++)
   {
     Vector<4, double> mean_stokes;
 
@@ -385,8 +377,8 @@ int main (int argc, char** argv)
     " ******************************************************************* \n"
        << endl;
 
-  tot_rho /= ndat;
-  totsq_rho /= ndat;
+  tot_rho /= nsamp;
+  totsq_rho /= nsamp;
 
   cerr << "rho sq=\n" << totsq_rho << endl;
 
