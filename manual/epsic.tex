@@ -277,7 +277,11 @@ Stokes parameters or the modulation properties of
   the second source can be specified by preceding the argument to any
   of {\tt -s}, {\tt -l}, {\tt -r} and/or {\tt -b} with the letter `{\tt B}';
   e.g. {\tt epsic -S -l B0.5 -b B4}.
-  
+
+\section{ Cross-covariances between the Stokes parameters }
+
+{\sc epsic} can also report the measured and predicted cross-covariances between the Stokes parameters as a function of lag.  Currently, this works only for the instantaneous Stokes parameters.  To try it out, add {\tt -X} to the command line; the results will be printed to a text file named {\tt acf.txt}.
+
 \end{document}
 
 
