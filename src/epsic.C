@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- *   Copyright (C) 2016 by Willem van Straten
+ *   Copyright (C) 2016 - 2017 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
@@ -356,13 +356,24 @@ int main (int argc, char** argv)
   if (nlag)
   {
     ofstream out ("acf.txt");
+    ofstream plot ("acf_plot.txt");
+    
     for (unsigned ilag=0; ilag<nlag; ilag++)
     {
       acf[ilag] /= ntot_lag;
       acf[ilag] -= outer(tot,tot);
+
+      Matrix<4,4,double> exp = stokes_sample->get_crosscovariance(ilag);
+      
       out << "============================================================\n"
 	"lag=" << ilag << endl << "mean=" << acf[ilag] << endl
-	  << "expected=" << stokes_sample->get_crosscovariance(ilag) << endl;
+	  << "expected=" << exp << endl;
+
+      plot << ilag << " ";
+      for (unsigned i=0; i<4; i++)
+	for (unsigned j=0; j<4; j++)
+	  plot << exp[i][j] << " " << acf[ilag][i][j] << " ";
+      plot << endl;
     }
   }
   
