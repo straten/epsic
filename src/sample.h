@@ -32,27 +32,62 @@ public:
   virtual Matrix<4,4, double> get_covariance () = 0;
   virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) = 0;
 
-  // worker function for sub-classes
-  Matrix<4,4, double> get_covariance (mode* s, unsigned n)
+  //! Sums the sample_size by sample_size square on the diagonal
+  /*! worker function for sub-classes */
+  Matrix<4,4, double> get_covariance (mode* s, unsigned sample_size)
   {
     Matrix<4,4, double> result = s->get_covariance ();
 
-    for (unsigned ilag=1; ilag < n; ilag++)
+    // sum the sample_size instances along the diagonal
+    result *= sample_size;
+
+    for (unsigned ilag=1; ilag < sample_size; ilag++)
     {
       Matrix<4,4, double> out = s->get_crosscovariance (ilag);
 
       std::cerr << "ilag=" << ilag << " C=" << out << std::endl;
 
-      // multiply by two to also sum the symmetric lower triangle
-      out *= 2.0*double(n-ilag)/double(n);
+      /*
+	multiply by two to also sum the symmetric lower triangle
+	
+	multiply by sample_size-ilag samples along the diagonal
+	defined by i,i+ilag
+      */
+      out *= 2.0 * (sample_size-ilag);
       result += out;
     }
+
+    /*          
+      divide by sample_size squared because this function returns the
+      covariance matrix of the sample mean
+    */
     
-    result /= n;
+    result /= sample_size * sample_size;
     return result;
   }
 
-  //! Return cross-covariance between Stokes parameters as a function of lag
+  //! Sums the sample_size by sample_size square off the diagonal
+  /*! starts at at_lag * sample_size off the diagonal */
+  Matrix<4,4, double> get_crosscovariance (mode* s, unsigned at_lag,
+					   unsigned sample_size)
+  {
+    Matrix<4,4, double> result (0);
+    
+    for (unsigned ilag=0; ilag < sample_size; ilag++)
+      for (unsigned jlag=0; jlag < sample_size; jlag++)
+      {
+	unsigned mode_lag = abs(int(at_lag * sample_size + ilag) - int(jlag));
+	result += s->get_crosscovariance (mode_lag);
+      }
+
+    /*          
+      divide by sample_size squared because this function returns the
+      cross covariance matrix of the sample mean
+    */
+    
+    result /= sample_size * sample_size;
+    return result;
+  }
 
 };
 
@@ -100,9 +135,7 @@ public:
 
   Matrix<4,4, double> get_crosscovariance (unsigned ilag)
   {
-    if (ilag == 0)
-      return get_covariance();
-    return source->get_crosscovariance(ilag);
+    return sample::get_crosscovariance (source, ilag, sample_size);
   }
 
 };
@@ -129,7 +162,8 @@ public:
     if (ilag == 0)
       return get_covariance();
     
-    return A->get_crosscovariance(ilag) + B->get_crosscovariance (ilag);
+    return sample::get_crosscovariance (A, ilag, sample_size)
+      + sample::get_crosscovariance (B, ilag, sample_size);
   }
 };
 
@@ -293,6 +327,20 @@ public:
     D *= A_fraction * (1-A_fraction);
 
     return C_A + C_B + D;
+  }
+
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  {
+    if (ilag == 0)
+      return get_covariance();
+
+    Matrix<4,4,double> Acov = A->get_crosscovariance(ilag);
+    Acov *= A_fraction * A_fraction;
+
+    Matrix<4,4,double> Bcov = B->get_crosscovariance(ilag);
+    Bcov *= (1-A_fraction) * (1-A_fraction);
+
+    return Acov + Bcov;
   }
 };
 
