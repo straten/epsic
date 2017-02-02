@@ -7,8 +7,11 @@
 
 /*
 
-  Simulates the higher order moments of
-  polarized electromagnetic radiation.
+  Simulates the higher order moments of polarized electromagnetic radiation.
+  This software was written to verify the equations presented in
+
+  van Straten & Tiburzi 2017, The Astrophysical Journal, 835:293
+  http://dx.doi.org/10.3847/1538-4357/835/2/293
 
 */
 
