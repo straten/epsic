@@ -53,6 +53,7 @@ void usage ()
     " -b Nsamp    box-car smooth the amplitude modulation function \n"
     " -r Nsamp    use rectangular impulse amplitude modulation function \n"
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
+    " -t          report only theoretical predictions \n"
        << endl;
 }
 
@@ -105,6 +106,8 @@ double sqr (double x) { return x*x; }
 
 int main (int argc, char** argv)
 {
+  bool run_simulation = true;
+  
   uint64_t Mega = 1024 * 1024;
   uint64_t nsamp = Mega;       // number of Stokes samples
   unsigned nint = 1;           // number of instances in each Stokes sample
@@ -124,9 +127,9 @@ int main (int argc, char** argv)
   bool print = false;
   bool rho_stats = false;
   bool variances_only = false;
-
+  
   int c;
-  while ((c = getopt(argc, argv, "hN:n:SC:D:s:l:b:r:X:")) != -1)
+  while ((c = getopt(argc, argv, "hN:n:SC:D:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -225,14 +228,45 @@ int main (int argc, char** argv)
     case 'd':
       variances_only = true;
       break;
+      
+    case 't':
+      run_simulation = false;
+      break;
     }
   }
 
-  cerr << "Simulating " << nsamp << " Stokes samples" << endl;
+  source.set_Stokes (stokes);
+
+  if (dual)
+  {
+    stokes_sample = dual;
+
+    dual->A = setup_A.setup_mode (dual->A);
+    dual->B = setup_B.setup_mode (dual->B);
+  }
+  else
+  {
+    mode* s = setup_A.setup_mode(&source);
+
+    if (smooth_after > 1)
+      stokes_sample = new boxcar_sample (s, smooth_after);
+    else
+      stokes_sample = new single(s);
+  }
+
+  stokes_sample->sample_size = nint;
+
+  if (run_simulation)
+    cerr << "Simulating " << nsamp << " Stokes samples" << endl;
 
   random_init ();
   BoxMuller gasdev (time(NULL));
 
+  if (dual)
+    dual->set_normal (&gasdev);
+  else
+    source.set_normal (&gasdev);
+    
   uint64_t ntot = 0;
   uint64_t ntot_lag = 0;
   
@@ -247,30 +281,7 @@ int main (int argc, char** argv)
   vector< Vector<4, double> > samples (nlag);
   unsigned current_sample = 0;
   
-  source.set_Stokes (stokes);
-
-  if (dual)
-  {
-    dual->set_normal (&gasdev);
-    stokes_sample = dual;
-
-    dual->A = setup_A.setup_mode (dual->A);
-    dual->B = setup_B.setup_mode (dual->B);
-  }
-  else
-  {
-    source.set_normal (&gasdev);
-    mode* s = setup_A.setup_mode(&source);
-
-    if (smooth_after > 1)
-      stokes_sample = new boxcar_sample (s, smooth_after);
-    else
-      stokes_sample = new single(s);
-  }
-
-  stokes_sample->sample_size = nint;
-
-  for (uint64_t idat=0; idat<nsamp; idat++)
+  for (uint64_t idat=0; run_simulation && idat<nsamp; idat++)
   {
     Vector<4, double> mean_stokes;
 
@@ -343,16 +354,19 @@ int main (int argc, char** argv)
     " ******************************************************************* \n"
        << endl;
 
-  cerr << "mean sample dop=" << totp << endl << endl;
+  if (run_simulation)
+  {
+    cerr << "mean sample dop=" << totp << endl << endl;
 
-  cerr << "modulation index=" << sqrt(totsq[0][0])/tot[0] << endl << endl;
+    cerr << "modulation index=" << sqrt(totsq[0][0])/tot[0] << endl << endl;
 
-  cerr << "mean=" << tot << endl;
-  cerr << "expected=" << expected_mean << endl;
+    cerr << "mean=" << tot << endl;
+    cerr << "expected=" << expected_mean << endl;
 
-  cerr << "\ncovar=\n" << totsq << endl;
-  cerr << "expected=\n" << expected_covariance << endl;
-
+    cerr << "\ncovar=\n" << totsq << endl;
+    cerr << "expected=\n" << expected_covariance << endl;
+  }
+  
   if (nlag)
   {
     ofstream out ("acf.txt");
@@ -366,13 +380,19 @@ int main (int argc, char** argv)
       Matrix<4,4,double> exp = stokes_sample->get_crosscovariance(ilag);
       
       out << "============================================================\n"
-	"lag=" << ilag << endl << "mean=" << acf[ilag] << endl
-	  << "expected=" << exp << endl;
+	"lag=" << ilag << endl;
+      if (run_simulation)
+	out << "mean=" << acf[ilag] << endl;
+      out << "expected=" << exp << endl;
 
       plot << ilag << " ";
       for (unsigned i=0; i<4; i++)
 	for (unsigned j=0; j<4; j++)
-	  plot << exp[i][j] << " " << acf[ilag][i][j] << " ";
+	{
+	  plot << exp[i][j] << " ";
+	  if (run_simulation)
+	    plot  << acf[ilag][i][j] << " ";
+	}
       plot << endl;
     }
   }
