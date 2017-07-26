@@ -196,6 +196,7 @@ class superposed : public combination
     return A->get_mean() + B->get_mean();
   }
 
+  //! Implements Equation (42) of van Straten & Tiburzi (2017)
   Matrix<4,4, double> get_covariance ()
   {
     Matrix<4,4, double> result = sample::get_covariance (A, sample_size);
@@ -203,6 +204,10 @@ class superposed : public combination
 
     Stokes<double> mean_A = A->get_mean();
     Stokes<double> mean_B = B->get_mean();
+
+    /* Minkowski::outer implements A \otimes B - 0.5 \eta A \cdot B
+       such that Minkowski::outer(A,B) +  Minkowski::outer(B,A)
+       yields Equation (43) of van Straten & Tiburzi (2017) */
     Matrix<4,4, double> xcovar = Minkowski::outer(mean_A, mean_B);
     xcovar /= sample_size;
     result += xcovar + transpose(xcovar);
@@ -258,6 +263,7 @@ public:
     return result;
   }
 
+  //! Implements Equation (59) of van Straten & Tiburzi (2017)
   Matrix<4,4, double> get_covariance ()
   {
     unsigned A_sample_size = A_fraction * sample_size;
@@ -314,6 +320,7 @@ public:
     return A_fraction * A->get_mean() + (1-A_fraction) * B->get_mean();
   }
 
+  //! Implements Equation (39) of van Straten & Tiburzi (2017)
   Matrix<4,4, double> get_covariance ()
   {
     Matrix<4,4,double> C_A = sample::get_covariance (A, sample_size);
