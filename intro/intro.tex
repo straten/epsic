@@ -1,0 +1,939 @@
+%\documentclass[preprint]{aastex6}
+\documentclass[twocolumn]{aastex6}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% bold math italic font
+\newcommand{\mbf}[1]{\mbox{\boldmath $#1$}}
+% bold math italic super- or subscript size font
+\newcommand{\mbfs}[1]{\mbox{\scriptsize\boldmath $#1$}}
+
+% equations
+\newcommand{\Eqn}[1]{Equation~(\ref{eqn:#1})}
+\newcommand{\Eqns}[3]{Equations~(\ref{eqn:#1}) #2~(\ref{eqn:#3})}
+\newcommand{\eqn}[1]{equation~(\ref{eqn:#1})}
+\newcommand{\eqns}[3]{equations~(\ref{eqn:#1}) #2~(\ref{eqn:#3})}
+
+% sections
+\newcommand{\Sec}[1]{Section~\ref{sec:#1}}
+\newcommand{\Secs}[3]{Sections~\ref{sec:#1} #2~\ref{sec:#3}} 
+
+% figures
+\newcommand{\Fig}[1]{Figure~\ref{fig:#1}}
+\newcommand{\Figs}[3]{Figures~\ref{fig:#1} #2~\ref{fig:#3}}
+
+% tables
+\newcommand{\Tab}[1]{Table~\ref{tab:#1}}
+\newcommand{\Tabs}[3]{Tables~\ref{tab:#1} #2~\ref{tab:#3}}
+
+% appendices
+\newcommand{\App}[1]{Appendix~\ref{app:#1}}
+\newcommand{\Apps}[1]{Appendices~\ref{app:#1}}
+
+% symbol used for sqrt(-1)
+\newcommand{\Ci}{\ensuremath{i}}
+
+\newcommand{\C}{{\mathbb{C}}}
+\newcommand{\R}{{\mathbb{R}}}
+
+\newcommand{\rankfour}{\ensuremath{\mathbb{C}^2_{2;2}}}
+\newcommand{\ranktwo}{\ensuremath{\mathbb{C}^4_{1;1}}}
+
+\newcommand{\irow}{\mu} \newcommand{\icol}{\nu}
+\newcommand{\jrow}{\kappa} \newcommand{\jcol}{\lambda}
+\newcommand{\srow}{j} \newcommand{\scol}{k}
+
+\newcommand{\trace}{{\rm Tr}}
+\newcommand{\real}{{\rm Re}}
+\newcommand{\imag}{{\rm Im}}
+
+\newcommand{\Rotation}{{\bf R}}
+\newcommand{\Boost}{{\bf B}}
+
+\newcommand{\vRotation}[1][n]{\ensuremath{\Rotation_{\mbfs{\hat #1}}}}
+\newcommand{\vBoost}[1][m]{\ensuremath{\Boost_{\mbfs{\hat #1}}}}
+
+\newcommand{\tr}[1]{\trace\ensuremath{ \left[ {#1} \right] }}
+\newcommand{\re}[1]{\real\ensuremath{ \left[ {#1} \right] }}
+\newcommand{\im}[1]{\imag\ensuremath{ \left[ {#1} \right] }}
+
+\newcommand{\sinc}{\mathrm sinc}
+\newcommand{\bw}{\ensuremath{ \Delta\nu }}
+
+\newcommand{\mean}[1]{\ensuremath{ \langle #1 \rangle }}
+\newcommand{\expectation}[1]{\ensuremath{ E\left[ {#1} \right] }}
+\newcommand{\smean}[1][ ]{\ensuremath{ \bar{#1} }}
+
+\newcommand{\Linner}[2]{\ensuremath{ { {#1} \cdot {#2} } } }
+
+\newcommand{\bilinear}[2]{\ensuremath{\left({#1},{#2}\right)}}
+
+\newcommand{\outerBilinear}[2]{\ensuremath{{#1}\otimes{#2}}}
+\newcommand{\stimes}{\ensuremath{\tilde{\otimes}}}
+\newcommand{\spinorBilinear}[2]{\ensuremath{{#1}\,\stimes\,{#2}}}
+
+% the second tensor power of a difference
+\newcommand{\outerDiff}[2]{\ensuremath{({#1}-{#2})^{\otimes 2}}}
+\newcommand{\outerSymm}[2]{\ensuremath{{#1}\,\tilde{\odot}\,{#2}}}
+
+\newcommand{\outerMueller}[2]{\ensuremath{{\bf M}_\otimes\bilinear{#1}{#2}}}
+\newcommand{\spinorMueller}[2]{\ensuremath{{\bf M}_{\stimes}\bilinear{#1}{#2}}}
+
+\newcommand{\exterior}[2]{\ensuremath{{#1}\wedge{#2}}}
+\newcommand{\dc}[2]{\ensuremath{{#1}\,\mbf{:}\,{#2}}}
+
+\newcommand{\rotat}{\ensuremath{\vRotation(\phi)}}
+\newcommand{\boost}{\ensuremath{\vBoost(\beta)}}
+
+\newcommand{\pauli}[1]{\ensuremath{\mbf{\sigma}_{#1}}}
+
+\newcommand{\inv}[1]{\ensuremath{ {#1}^2 }}
+\newcommand{\norm}[1]{\ensuremath{ \|{#1}\| }}
+
+\newcommand{\element}[3]{\ensuremath{ \left\{ {#1} \right\}_{#2}^{#3} }}
+\newcommand{\Celement}[1]{\element{#1}{\irow}{\icol}}
+
+\newcommand{\instI}{\ensuremath{\xi}}
+
+\shorttitle   {Introduction to Polarimetry}
+\shortauthors {van Straten}
+
+
+\begin{document}
+
+\title{ Introduction to Radio Astronomical Polarimetry }
+
+\author{W. van Straten}
+\affil{Institute for Radio Astronomy \& Space Research,
+Auckland University of Technology,
+Private Bag 92006,
+Auckland 1142,
+New Zealand}
+\email{willem.van.straten@aut.ac.nz}
+
+\begin{abstract}
+
+  This paper presents an introduction to the concepts and mathematical
+  foundations of polarimetry.
+  
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Polarization}
+\label{sec:polarization}
+
+For a plane-propagating transverse electromagnetic wave, there exist
+two independent solutions to Maxwell's equations, representing two
+orthogonal senses of polarization.  Radio receiver systems must
+differentiate between these two senses in order to fully describe the
+vector state of the observed radiation.  A dual-polarization receiver
+is therefore designed with two receptors, or probes, that are ideally
+sensitive to orthogonal polarizations.  Define the transverse electric
+field vector,
+\begin{equation}
+\mbf{e}(t) =
+ \left( 
+    \begin{array}{c}
+      e_0(t) \\
+      e_1(t)
+    \end{array}
+  \right)
+\end{equation}
+where $e_0(t)$ and $e_1(t)$ are the complex-valued analytic signals
+associated with two real time series, providing the instantaneous
+amplitudes and phases of the two orthogonal senses of polarization
+(see \App{analytic} for more details).
+
+The polarization of electromagnetic radiation is described by the
+second-order statistics of $\mbf{e}$, as represented by the complex
+$2\times2$ coherency matrix \citep{bw80}
+\begin{equation}
+  \label{eqn:coherency}
+  \mbf{\rho}\equiv\langle\mbf{e \otimes e}^\dagger\rangle
+  =\left( 
+    \begin{array}{cc}
+      \langle e_0e_0^*\rangle & \langle e_0e_1^*\rangle \\
+      \langle e_1e_0^*\rangle & \langle e_1e_1^*\rangle
+    \end{array}
+  \right).
+\end{equation}
+Here, the angular brackets denote an ensemble average, $\mbf\otimes$
+is the tensor product, and $\mbf{e}^\dagger$ is the Hermitian transpose
+of $\mbf{e}$.
+
+The coherency matrix is self-adjoint, or Hermitian,
+i.e.\ $\mbf{\rho}=\mbf{\rho}^\dagger$, and can be written as a linear
+combination of four Hermitian basis matrices,
+%
+\begin{equation}
+  {\mbf\rho} = S_\irow\,\pauli{\irow} / 2,    \label{eqn:combination}
+\end{equation}
+where $S_\irow$ are the four Stokes parameters, Einstein
+notation is used to imply a sum over repeated indeces,
+$0\le\irow\le3$, $\pauli{0}$ is the $2\times2$ identity matrix, and
+\begin{eqnarray}
+{\mbf{\sigma}_1} = \left( \begin{array}{cc}
+1 & 0 \\
+0 & -1 
+\end{array}\right)
+&
+\mbf{\sigma}_2 = \left( \begin{array}{cc}
+0 & 1 \\
+1 & 0 
+\end{array}\right)
+& 
+\mbf{\sigma}_3 = \left( \begin{array}{cc}
+0 & -\Ci \\
+\Ci & 0
+\end{array}\right)
+\label{pauli}
+\end{eqnarray}
+%
+are the Pauli matrices.  The Pauli matrices are traceless
+(i.e.\ $\tr{\pauli{i}}=0$, where $\trace$ is the matrix trace
+operator) and satisfy
+\begin{equation}
+\pauli{i}\,\pauli{j} = \delta_{ij}\,\pauli{0} + i\epsilon_{ijk}\,\pauli{k},
+\end{equation}
+where $\epsilon_{ijk}$ is the permutation symbol and summation over
+the index $k$ is implied.  Using these properties, it is easily shown that
+%
+\begin{equation}
+S_\irow = \trace(\pauli{\irow}\mbf{\rho}).  \label{eqn:trace}
+\end{equation}
+%
+Equivalent expressions of the Stokes parameters are given by
+%
+\begin{equation}
+S_\irow = \langle \mbf{e}^\dagger \pauli{\irow} \mbf{e} \rangle \label{eqn:inner}
+\end{equation}
+and
+\begin{equation}
+S_\irow = \dc{\pauli{\irow}}{\mbf\rho}     \label{eqn:projection}
+\end{equation}
+%
+where the $\mbf{:}$ operator represents tensor double contraction, a
+tensor product followed by contraction over two pairs of indeces.  The
+double contraction of two matrices {\bf A} and {\bf B} yields a scalar
+quantity defined by
+%
+\begin{equation}
+\dc{\bf A}{\bf B} \equiv A_\mu^\nu B_\nu^\mu.
+\label{eqn:double_contraction_matrices}
+\end{equation}
+%
+\Eqn{combination} expresses the coherency matrix as a linear
+combination of Hermitian basis matrices; \Eqn{projection} represents
+the Stokes parameters as the projections of the coherency matrix onto
+the basis matrices.  Because $\mbf\rho$ is Hermitian, the Stokes
+parameters are real-valued.  
+%
+
+Any one of \Eqns{trace}{through}{projection} can be used to
+derive the following expressions for the Stokes parameters 
+\begin{eqnarray}
+ S_0=&\langle|e_0(t)|^2\rangle+\langle|e_1(t)|^2\rangle\label{eqn:stokesI} \\
+ S_1=&\langle|e_0(t)|^2\rangle-\langle|e_1(t)|^2\rangle\label{eqn:stokesQ} \\
+ S_2=&2\re{\langle e_0^*(t)e_1(t)\rangle}\label{eqn:stokesU} \\
+ S_3=&2\im{\langle e_0^*(t)e_1(t)\rangle}.\label{eqn:stokesV}
+\end{eqnarray}
+
+It proves useful to organize the four real-valued 
+Stokes parameters into scalar and vector components,
+[$S_0,\mbf{S}$], where $S_0$ is the total intensity and
+$\mbf{S}=(S_1,S_2,S_3)$ is the polarization vector.
+
+Given a Cartesian basis in which the radiation propagates in the
+direction of the $\mbf{\hat z}$ axis, and the electric field is
+measured by its projection along the $\mbf{\hat x}$ and $\mbf{\hat y}$
+axes,
+\begin{equation}
+\mbf{e}(t) =
+ \left( 
+    \begin{array}{c}
+      e_x(t) \\
+      e_y(t)
+    \end{array}
+  \right)
+\end{equation}
+and $\mbf{S}=(Q,U,V)$.
+%
+Some receivers employ waveguide structures (for example, a quarter
+waveplate) to convert from linear to circular polarization.
+In a basis defined in terms of orthogonal senses of circular
+polarization \citep[e.g.\ see][for more details]{vmjr10},
+\begin{equation}
+\mbf{e}(t) =
+ \left( 
+    \begin{array}{c}
+      e_l(t) \\
+      e_r(t)
+    \end{array}
+  \right)
+\end{equation}
+%
+and $\mbf{S}=(V,Q,U)$. To foster an intuitive understanding of the
+mathematical definitions of the Stokes parameters, consider some
+special cases of polarization state.
+
+\subsection{ 100\% Polarized Radiation }
+
+Six special cases of fully polarized radiation are considered in the
+Cartesian basis; they are organized into the following three groups:
+
+\begin{enumerate}
+\item Stokes Q: $e_x=0$ or $e_y=0$
+\item Stokes U: $e_x=e_y$ or $e_x=-e_y$
+\item Stokes V: $e_x=-i e_y$ or $e_x=i e_y$
+\end{enumerate}
+
+\subsubsection {Stokes Q}
+
+If $e_y=0$, then the radiation is 100\% linearly polarized with
+the electric field vector oscillating only along the x-axis.  In this
+case, the total intensity $S_0$ is equal to the variance of $e_x$,
+$S_1=S_0$ and $S_2=S_3=0$.  This corresponds to positive Stokes $Q$.
+
+If $e_x=0$, then the radiation is 100\% linearly polarized with
+electric field vector oscillating only along the y-axis.  In this
+case, the total intensity $S_0$ is equal to the variance of $e_y$,
+$S_1=-S_0$ and $S_2=S_3=0$.  This corresponds to negative Stokes $Q$.
+
+\subsubsection {Stokes U}
+
+If $e_x=e_y$, then the radiation is 100\% linearly polarized with
+the electric field vector oscillating only along an axis that is rotated
+by 45 degrees with respect to the x-axis.  In this case, the variances
+of $e_x$ and $e_y$ are equal, the total intensity $S_0$ is equal to
+twice the variance of $e_x$, $S_1=0$, $S_2=S_0$, and $S_3=0$.  This
+corresponds to positive Stokes $U$.
+
+If $e_x=-e_y$, then the radiation is 100\% linearly polarized with
+the electric field vector oscillating only along an axis that is rotated
+by -45 degrees with respect to the x-axis.  In this case, the variances
+of $e_x$ and $e_y$ are equal, the total intensity $S_0$ is equal to
+twice the variance of $e_x$, $S_1=0$, $S_2=-S_0$, and $S_3=0$.  This
+corresponds to negative Stokes $U$.
+
+\subsubsection {Stokes V}
+
+If $e_x=-i e_y$, then the phase of $e_y$ leads that of $e_x$ by 90
+degrees and the radiation is 100\% circularly polarized with the electric
+field vector tracing a counter-clockwise circle in the x-y plane; this
+is defined by the IEEE as left-hand circularly polarized (LCP).  In
+this case, the variances of $e_x$ and $e_y$ are equal, the total
+intensity $S_0$ is equal to twice the variance of $e_x$, $S_1=0$,
+$S_2=0$, and $S_3=S_0$.  This corresponds to positive Stokes $V$,
+which is contrary to the IAU convention \citep[see][for more
+  details]{vmjr10}.
+
+If $e_x=i e_y$, then the phase of $e_x$ leads that of $e_y$ by 90
+degrees and the radiation is 100\% circularly polarized with the electric
+field vector tracing a clockwise circle in the x-y plane; this is
+defined by the IEEE as right-hand circularly polarized (RCP).  In this
+case, the variances of $e_x$ and $e_y$ are equal, the total intensity
+$S_0$ is equal to twice the variance of $e_x$, $S_1=0$, $S_2=0$, and
+$S_3=-S_0$.  This corresponds to negative Stokes $V$.
+
+\subsection { Unpolarized Radiation }
+
+It is easy to see in the case of Stokes Q that polarized radiation can
+can be seen as an incoherent superposition of orthogonally polarized
+(and 100\% polarized) modes.  Incoherent means that the modes are uncorrelated
+(i.e.\ $S_2=S_3=0$) and not necessarily statistically independent.
+When only one mode is present, $S_1 = \pm S_0$ and the signal is 100\%
+polarized; when incoherent modes are present with equal power, $S_1=0$
+and the signal is unpolarized.
+
+In fact, any polarized state can be represented as an incoherent sum
+of orthogonally polarized states.  This can be seen by expressing the
+coherency matrix as a similarity transformation known as its eigen
+decomposition,
+%
+\begin{equation}
+\mbf{\rho}={\bf{R}}\left( \begin{array}{cc}
+\lambda_0 & 0 \\
+0 & \lambda_1
+\end{array}\right){\bf{R}}^{-1}.
+\label{eqn:eigen}
+\end{equation}
+Here, ${\bf{R}}=(\mbf{e}_0\,\mbf{e}_1)$ is a $2\times2$ matrix with
+columns equal to the eigenvectors of $\mbf{\rho}$, and $\lambda_m$ are
+the corresponding eigenvalues, given by
+$\lambda=(S_0\pm|\mbf{S}|)/2=(1 \pm P)S_0/2$, where $P=|\mbf{S}|/S_0$
+is the degree of polarization ($0\le P\le1$).  If the signal is
+completely polarized, then $\lambda_1=0$ and the degree of
+polarization $P=1$.  If the signal is unpolarized, then there is a
+single 2-fold degenerate eigenvalue, $\lambda=S_0/2$, the degree of
+polarization $P=0$, and ${\bf R}$ is undefined; that is, an
+unpolarized signal is unpolarized in any basis.
+
+If the eigenvectors are normalized such that
+${\mbf{e}_k}^\dagger\mbf{e}_k=1$, then \eqn{eigen} is equivalent to a
+congruence transformation by a unitary matrix (${\bf R}^\dagger={\bf
+  R}^{-1}$).
+%
+In the natural basis defined by ${\bf{R}}^\dagger$, the eigenvalues
+$\lambda_m$ are equal to the variances of two uncorrelated signals
+received by orthogonally polarized receptors described by the
+eigenvectors.
+%
+The total intensity, $S_0=\lambda_0+\lambda_1$; the
+polarized intensity, $S_1=|\mbf{S}|=\lambda_0-\lambda_1$; and
+$S_2=S_3=0$.  
+%
+That is, ${\bf{R}}^\dagger$ rotates the basis such that the mean
+polarization vector points along $S_1$.
+
+%
+% The Stokes parameters may be mapped onto a point in the Poincare
+% sphere by $\mbf{p}=\mbf{S}/S_0$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Linear Transformations}
+\label{sec:transformations}
+
+In the narrow-band (or quasi-monochromatic) approximation of an
+electromagnetic wave (see \App{linear_transformations}), linear
+transformations of the electric field vector are represented by
+%
+\begin{equation}
+\mbf{e}^\prime(t)={\bf J}\mbf{e}(t),
+\label{eqn:field_transformation}
+\end{equation}
+where {\bf J} is a $2\times2$ complex-valued Jones matrix.
+
+Substitution of
+$\mbf{e}^\prime={\bf J}\mbf{e}$ into the definition of the coherency
+matrix yields the congruence transformation,
+%
+\begin{equation}
+{\mbf{\rho}^\prime}={\bf{J}}\mbf{\rho}{\bf{J}}^\dagger,
+\label{eqn:congruence}
+\end{equation}
+%%
+%% REF 4.
+%%
+which forms the basis of the various coordinate transformations that
+are exploited throughout this work.
+%
+If ${\bf{J}}$ is non-singular, it can be decomposed into the product
+of a Hermitian matrix and a unitary matrix known as its polar
+decomposition,
+\begin{equation}
+\label{eqn:polar}
+{\bf J} = J \, \boost \, \rotat,
+\end{equation}
+where $J=|{\bf J}|^{1/2}$, $|{\bf J}|$ is the determinant of {\bf J},
+\boost\ is positive-definite Hermitian,
+%% \[
+%% \left[\boost\right]^\dagger=\boost;
+%% \]
+and \rotat\ is unitary.
+%% \[
+%% \left[\rotat\right]^\dagger=\left[\rotat\right]^{-1}.
+%% \]
+%
+Under the congruence transformation of the coherency matrix, the
+Hermitian matrix
+\begin{equation}
+\label{eqn:Boost}
+\boost = \pauli{0}\cosh\beta + \mbf{\hat{m}\cdot\sigma}\sinh\beta
+\end{equation}
+effects a Lorentz boost of the Stokes four-vector along the $\mbf{\hat
+  m}$ axis by a hyperbolic angle $2\beta$.  In the above equation,
+$\mbf{\sigma}$ is a 3-vector whose components are the Pauli spin
+matrices.
+%%
+%% REF 4.
+%%
+As the Lorentz transformation of a spacetime event mixes temporal and
+spatial dimensions, the polarimetric boost mixes total and polarized
+intensities, thereby altering the degree of polarization.
+%
+In contrast, the unitary matrix
+\begin{equation}
+\label{eqn:Rotation}
+\rotat = \pauli{0}\cos\phi + \Ci\mbf{\hat{n}\cdot\sigma}\sin\phi
+\end{equation}
+rotates the Stokes polarization vector about the $\mbf{\hat n}$ axis by
+an angle $2\phi$.
+%%
+%% REF 4.
+%%
+As the orthogonal transformation of a vector in Euclidean space
+preserves its length, the polarimetric rotation leaves the degree of
+polarization unchanged.
+%
+
+These geometric interpretations promote a more intuitive treatment of
+the matrix equations that typically arise in polarimetry.
+%
+Boost transformations can be utilized to convert unpolarized radiation
+into partially polarized radiation, and rotation transformations can
+be used to choose the orthonormal basis that maximizes symmetry.
+
+Both \boost\ and \rotat\ are unimodular (i.e.\ $|\boost|=1$ and
+$|\rotat|=1$); therefore, because $|{\bf AB}|=|{\bf A}||{\bf B}|$,
+congruence transformation of the coherency matrix by either \boost\ or
+\rotat\ preserves the determinant.  The determinant of the coherency
+matrix is therefore an invariant of boost and rotation transformations
+(but not of scalar multiplication).  Using \Eqn{combination} it is
+easy to show that the Lorentz invariant of a Stokes four-vector is
+equal to four times the determinant of the coherency matrix; that is,
+\begin{equation}
+\inv{S} \equiv S_0^2 - |\mbf{S}|^2 = 4 |\mbf{\rho}|
+\end{equation}
+As with the spacetime null interval, no linear transformation of the
+electric field can alter the degree of polarization of a completely
+polarized source.
+
+Each axis-angle parameterization of \boost\ and \rotat\ has three free
+parameters: a unit vector that defines the axis of symmetry of the
+transformation and an angle.  Combined with the real and imaginary
+parts of the complex-valued $J$, \Eqn{polar} has eight degrees of
+freedom, as expected for a complex-valued $2\times2$ matrix.  However,
+the coherency matrix is insensitive to the absolute phase of $J$
+because $J$ (on the left) is multiplied by $J^*$ (on the right) in
+\Eqn{coherency}.  Therefore, only seven degrees of freedom matter
+in single-dish polarimetry and $J$ can be replaced by the real-valued
+absolute gain $G$.
+
+Using \Eqns{combination}{and}{trace}, the congruence
+transformation of the coherency matrix can be expressed as an
+equivalent linear transformation of the associated Stokes parameters
+by a real-valued $4\times4$ Mueller matrix {\bf M}, as defined by
+%
+\begin{equation}
+ S_\irow^\prime = M_\irow^\icol S_\icol
+\label{eqn:linear_to_Mueller}
+\end{equation}
+%
+where
+\begin{equation}
+ M_\irow^\icol = \frac{1}{2} \tr{\pauli{\irow}{\bf J}\pauli{\icol}{\bf J}^\dagger}.
+\end{equation}
+%
+Although there is an unique Mueller matrix for every Jones matrix, the
+converse is not true.  Mueller matrices that do not have an equivalent Jones
+matrix are known as ``impure''.
+
+\begin{appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Analytic Signal}
+\label{app:analytic}
+
+The voltage signal from each receptor is a real-valued function of
+time, or process, that may be represented by its associated analytic
+signal.
+
+The analytic signal, also known as Gabor's complex signal, is a
+complex-valued representation of a real-valued process that provides
+its instantaneous amplitude and phase.  In order to define the
+analytic signal associated with a process, $x(t)$, it is first
+necessary to define the Hilbert transform \citep{pap65},
+\begin{equation}
+  \hat x(t) \equiv
+	{1\over\pi} \int_{-\infty}^\infty {x(\tau)\over t-\tau} \,d\tau.
+\label{eqn:hilbert}
+\end{equation}
+The discontinuity in $\hat x(t)$ at $t=\tau$ is avoided by taking the
+Cauchy principal value.
+%, ${\mathcal{P}}(\tau)$:
+%\[
+%  {\mathcal P}(\tau) \equiv \lim_{\epsilon\to 0} 
+%	\left[{\int^{t-\epsilon}_{-\infty} {x(\tau)\over\tau-t}\,d\tau
+%	+ \int^\infty_{t+\epsilon} {x(\tau)\over\tau-t}\,d\tau}\right]
+%\]
+The analytic signal associated with $x(t)$ is then defined by
+\begin{equation}
+  z(t) = x(t) + \Ci\hat x(t).
+\end{equation}
+
+As it is derived from the real-valued process, the analytic signal
+does not contain any additional information.  However, the analytic
+signals associated with two orthogonal senses of polarization, $e_0(t)$ and
+$e_1(t)$, permit calculation of the coherency matrix.  The analytic signal
+therefore proves to be a useful representation in radio polarimetric
+studies and in the theoretical description of quadrature
+down-conversion (see \App{dsb}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The Quadrature Filter}
+\label{app:quadrature_filter}
+
+The Hilbert transformation of \Eqn{hilbert} may also be
+written as the convolution, $\hat{x}(t)=h(t)*x(t)$, where
+\[
+h(t) = {1\over{\pi t}},
+\]
+and the $*$ symbol is used to represent the convolution operation,
+\begin{equation}
+h(t)*x(t)\equiv\int_{-\infty}^{\infty}{x(\tau)h(t-\tau)d\tau}.
+\end{equation}
+By the convolution theorem, this transformation is equivalent to 
+$\hat{X}(\nu)=H(\nu)X(\nu)$, where
+\begin{equation} H(\nu) = \left\{ \begin{array}{cc}
+                -\Ci  & \nu > 0 \\
+                \Ci & \nu < 0
+                \end{array} \right.
+\end{equation}
+is the Fourier transform of $h(t)$, known as the quadrature
+filter \citep{pap65}.  Referring to the other commonly used functions
+and their Fourier transforms in \Tab{fourier}, it is trivial to show
+that the Hilbert transform of $\cos(\nu_0t)$ is equal to
+$\sin(\nu_0t)$, enabling the quadrature filter to be understood as a
+90\degr\ phase shifter.  Using the quadrature filter, it can also be
+shown that the Fourier transform of the analytic signal, $Z(\nu)$, is
+equal to zero for $\nu$ less than zero:
+\begin{eqnarray}
+ Z(\nu) & = & X(\nu) + \Ci\hat X(\nu) \nonumber \\
+	& = & X(\nu) + \Ci H(\nu)X(\nu) \nonumber \\
+	& = & \left \{ \begin{array}{cc} 
+	2X(\nu)  & \nu > 0 \\
+	0 & \nu < 0 
+	\end{array} \right. \nonumber
+\end{eqnarray}
+Conversely, the analytic signal associated with $x(t)$ may be produced
+by suppression of the negative frequencies in $X(\nu)$.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c|c}
+\hline
+\hline
+$x(t)$ & $X(\nu)$ \\
+\hline \\ [-2mm]
+$\cos(2\pi\nu_0t)$ & $\frac{1}{2}(\delta(\nu+\nu_0)+\delta(\nu-\nu_0))$ \\ [4mm]
+$\sin(2\pi\nu_0t)$ & $\frac{\Ci}{2}(\delta(\nu+\nu_0)-\delta(\nu-\nu_0))$ \\ [4mm]
+$h(t)=(\pi t)^{-1}$ & $H(\nu) =\left\{ \begin{array}{cc}
+	       	        	-\Ci & \nu > 0 \\
+	                	\Ci  & \nu < 0 \end{array} \right.$ \\ [4mm]
+$\pi(t)=\sinc(\pi\bw t)$ & $\Pi(\nu/\bw) = \left\{ \begin{array}{cc}
+                		0  & |\nu/\bw| > 1/2 \\
+				1/2& |\nu/\bw| = 1/2 \\
+               			1  & |\nu/\bw| < 1/2 \end{array} \right.$ \\ [8mm]
+\hline
+\end{tabular}
+\end{center}
+\caption
+{Useful Fourier Transform pairs. The left column lists functions of
+time.  In the right column, the corresponding Fourier transform is
+given as a function of oscillation frequency, $\nu$. The filters,
+$H(\nu)$ and $\Pi(\nu)$, are known as the quadrature and rectangle
+functions, respectively.}
+\label{tab:fourier}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Narrow-band approximation to polarimetric transformations}
+\label{app:linear_transformations}
+
+Regardless of feed design, the electric field component of the
+radiation impinging on the receiver feed horn induces a voltage in
+each of the receptors and these voltages are propagated through
+separate signal paths.
+%
+Each voltage signal therefore experiences a different series of
+amplification, attenuation, mixing, and filtering before sampling or
+detection is performed.  Whereas efforts are made to match the
+components of the observatory equipment, each will realistically have
+a unique frequency response to the input signal.  Even a simple
+mismatch in signal path length will result in a relative phase
+difference between the two polarizations that varies linearly with
+frequency.
+
+In fact, any physically realizable system will transform the radiation
+in a manner that depends on frequency.  Where variations across the
+smallest bandwidth available may be considered negligible,
+post-detection calibration and correction techniques may be used to
+invert the transformation and recover the original polarimetric state.
+However, the transformation may vary significantly across the band,
+causing the polarization vector to combine destructively when
+integrated in frequency.  This phenomenon is known as ``bandwidth
+depolarization'' of the signal, and results in irreversible decimation
+of the degree of polarization.  It is therefore desirable to perform
+polarimetric corrections at sufficiently high spectral resolution.
+
+Consider a linear system with impulse response, $j(t)$.  Presented
+with an input signal, $e(t)$, the output of this system is given by
+the convolution, $e^\prime(t)=j(t)*e(t)$.  In the two-dimensional
+case, each output signal is given by a linear combination of the input
+signals,
+\begin{eqnarray}
+e_1^\prime(t)=j_{11}(t)*e_1(t) + j_{12}(t)*e_2(t), \\
+e_2^\prime(t)=j_{21}(t)*e_1(t) + j_{22}(t)*e_2(t).
+\end{eqnarray}
+
+  By
+defining the analytic vector, $\mbf{e}(t)$, with elements $e_1(t)$ and
+$e_2(t)$, and the $2\times2$ impulse response matrix, ${\bf{j}}(t)$,
+with elements $j_{mn}(t)$, we may express the propagation of a
+transverse electromagnetic wave by the matrix equation,
+\begin{equation}
+{\mbf{e^\prime}}(t)={\bf{j}}(t)*\mbf{e}(t).
+\label{eqn:convolution_t}
+\end{equation}
+By the convolution theorem, \Eqn{convolution_t} is equivalent to
+\begin{equation}
+\mbf{E^\prime}(\nu)={\bf J}(\nu)\mbf{E}(\nu),
+\label{eqn:convolution_nu}
+\end{equation}
+where $\bf{J}(\nu)$ is the frequency response matrix with elements
+$J_{mn}(\nu)$, and $\mbf{E}(\nu)$ is the vector spectrum.  In the case
+of monochromatic light, or under the assumption that $\bf{J}(\nu)$ is
+constant over all frequencies, matrix convolution reduces to simple
+matrix multiplication in the time domain, as traditionally represented
+using the Jones matrix.  However, because these conditions are not
+physically realizable, the Jones matrix finds its most meaningful
+interpretation in the frequency domain.
+
+The average auto- and cross-power spectra are summarized by the
+average power spectrum matrix, defined by the vector direct product,
+\mbox{$\bar{\bf{P}}(\nu)
+=\langle\mbf{E}(\nu)\boldsymbol{\otimes}\mbf{E}^\dagger(\nu)\rangle$},
+where $\mbf{E}^\dagger$ is the Hermitian transpose of $\mbf{E}$ and
+the angular brackets denote time averaging.  More explicitly:
+\begin{equation}
+\bar{\bf{P}}(\nu)=
+  \left( 
+    \begin{array}{cc}
+      \langle E_1(\nu)E_1^*(\nu)\rangle & \langle E_1(\nu)E_2^*(\nu)\rangle \\
+      \langle E_2(\nu)E_1^*(\nu)\rangle & \langle E_2(\nu)E_2^*(\nu)\rangle
+    \end{array}
+  \right).
+\label{eqn:avg_power_spectrum_matrix}
+\end{equation}
+Each component of the average power spectrum matrix,
+$\bar{P}_{mn}(\nu)$, is the Fourier transform pair of the average
+correlation function, $\bar{\rho}_{mn}(\tau)$ \citep{pap65}.
+Therefore, $\bar{\bf{P}}(\nu)$ may be related to the commonly used
+coherency matrix,
+\begin{equation}
+\boldsymbol{\rho}=
+	\langle\mbf{E}(t)\boldsymbol{\otimes}\mbf{E}^\dagger(t)\rangle
+=\bar{\boldsymbol{\rho}}(0)
+={1\over2\pi}\int_{\nu_0-\Delta\nu}^{\nu_0+\Delta\nu}{\bar{\bf{P}}(\nu)}d\nu,
+\label{eqn:coherency_matrix}
+\end{equation}
+where $\nu_0$ is the centre frequency and $2\Delta\nu$ is the
+bandwidth of the observation.  The average power spectrum matrix may
+therefore be interpreted as the coherency spectral density matrix and,
+in the narrow band limit $\Delta\nu\rightarrow0$,
+$\boldsymbol{\rho}=\bar{\bf{P}}(\nu_0)/2\pi$.
+
+Using Equations~\ref{eqn:convolution_nu}
+and~\ref{eqn:avg_power_spectrum_matrix} it is easily shown that a
+two-dimensional linear system transforms the average power spectrum as
+\begin{equation}
+{\bar{\bf{P}}^\prime}(\nu)={\bf{J}}(\nu)\bar{\bf{P}}(\nu){\bf{J}}^\dagger(\nu).
+\label{eqn:congruence_transformation}
+\end{equation}
+This matrix equation is a congruence transformation, and forms the
+basis on which the frequency response of the system will be related to
+the input (source) and output (measured) coherency spectrum.  For
+brevity in this paper, all symbolic values are
+assumed to be a function of frequency, $\nu$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Down-Conversion}
+\label{app:downconversion}
+
+By the Nyquist Theorem, a signal must be sampled at a rate equal to
+twice its bandwidth in order to completely represent the information
+discretely.  Therefore, subject to the finite recording rate of
+digital observatory equipment, a radio astronomy experiment must be
+constrained to observe a limited portion of the radio spectrum.  The
+intermediate process by which the signal from the receiver is
+band-limited and made ready for baseband recording is known as
+down-conversion.
+
+Consider the incoming radio signal, $x(t)$, and its Fourier transform,
+$X(\nu)$, known as the spectrum, or spectral density of $x(t)$.  The
+band-limited signal of interest, $x_b(t)$, is parameterized by its
+centre frequency, $\nu_0$, and bandwidth, \bw.  Baseband
+down-conversion is the process by which the spectral information
+originally contained in the range [$\nu_0-\Delta\nu/2$,
+$\nu_0+\Delta\nu/2$] is shifted down to [0, \bw].  It is worth noting
+that this definition of baseband differs slightly from the more widely
+accepted use in the telecommunications industry, where baseband refers
+to the original band of frequencies of a signal before it is used to
+modulate a carrier of much higher frequency.
+
+% baseband 1. The original band of frequencies produced by a transducer,
+% such as a microphone, telegraph key, or other signal-initiating
+% device, prior to initial modulation. Note 1: In transmission systems,
+% the baseband signal is usually used to modulate a carrier. Note 2:
+% Demodulation re-creates the baseband signal. Note 3: Baseband
+% describes the signal state prior to modulation, prior to multiplexing,
+% following demultiplexing, and following demodulation. (188) Note 4:
+% Baseband frequencies are usually characterized by being much lower in
+% frequency than the frequencies that result when the baseband signal is
+% used to modulate a carrier or subcarrier. 2. In facsimile, the
+% frequency of a signal equal in bandwidth to that between zero
+% frequency and maximum keying frequency. (188)
+
+The spectral information is shifted to baseband by demodulating or
+mixing the radio frequencies (RF) with a local oscillator (LO).  This
+is equivalent to multiplying the signal, $x(t)$, with a pure tone,
+$l(t)=a\cos(2\pi\nu_lt) + b\sin(2\pi\nu_lt)$.  By application of the
+convolution theorem, and reference to \Tab{fourier}, mixing may also
+be understood as a convolution with a pair of (complex) delta
+functions in the frequency domain.  This understanding proves useful
+in the following sections.
+
+In addition to mixing to lower frequencies, the signal must also be
+band-limited before analog-to-digital conversion.  Otherwise, power
+from frequencies higher than the Nyquist frequency will be reflected
+back into the band of interest, a pollution known as aliasing.  The
+ideal low-pass filter is represented by the rectangle function (see
+\Tab{fourier}) so that a bandpass filter with centre frequency,
+$\nu_0$, and bandwidth, \bw, is given by
+\begin{equation}
+\Pi \left( {{|\nu|-\nu_0}\over\Delta\nu} \right).
+\end{equation}
+Note that the absolute value of $\nu$ in the first term of the above
+equation creates a bandpass window at both positive and negative
+frequency values.
+
+Down-conversion therefore refers to the combined operation of mixing
+and band-limiting.  The following sections describe in detail two
+commonly used methods of down-conversion: dual-sideband (DSB) and
+single-sideband (SSB).  These are also represented graphically in
+Figures~\ref{fig:dsb} and~\ref{fig:ssb}.  The process of
+down-conversion is performed separately and (ideally) identically on
+each of the two orthogonal senses of polarization from the receiver
+feed.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Dual-Sideband Down-Conversion}
+\label{app:dsb}
+
+During dual-sideband down-conversion (DSB, see \Fig{dsb}), also known
+as quadrature mixing, the voltages from the receiver are split equally
+into two signal paths.  One signal is mixed with a local oscillator,
+producing
+\[
+	i(t)=x(t)\cos(2\pi\nu_0t+\theta).
+\]
+The other signal is mixed with the same local oscillator phase-shifted
+by 90 degrees,
+\[
+q(t)=x(t)\cos(2\pi\nu_0t+\theta-\pi/2)=x(t)\sin(2\pi\nu_0t+\theta).
+\]
+Both $i(t)$ and $q(t)$ are low-pass filtered with a cutoff frequency
+of $\nu_c=\Delta\nu/2$, producing $i_b(t)=i(t)*\sinc(\pi\Delta\nu
+t)$ and $q_b(t)=q(t)*\sinc(\pi\Delta\nu t)$.  The low-pass
+filtered signals are then digitally sampled at the Nyquist rate of
+$2\nu_c=\Delta\nu$.  The signals, $i_b(t)$ and $q_b(t)$ are known as
+the in-phase and quadrature components, respectively, of $x(t)$ with
+respect to $\nu_0$.
+
+During playback, the analytic signal associated with $x(t)$ is formed
+by taking:
+\begin{eqnarray}
+  z_b(t) & = & i_b(t)+\Ci q_b(t) \nonumber \\
+       & = & [x(t)\cos(2\pi\nu_0 t)+\Ci x(t)\sin(2\pi\nu_0 t)] 
+		* \sinc(\pi\Delta\nu t) \nonumber \\
+       & = & [x(t)e^{2\pi\Ci\nu_0t}] * \sinc(\pi\Delta\nu t) \nonumber
+\end{eqnarray}
+where the distributive property of convolution has been applied and
+the arbitrary phase angle, $\theta$, has been set to zero without loss
+of generality.  In the Fourier domain,
+\[
+	Z_b(\nu)=X(\nu+\nu_0) \Pi(\nu/\Delta\nu).
+\]
+That is, the spectrum of $z_b(t)$ is equivalent to the band-limited
+portion of $x(t)$ centred at $\nu_0$.  The negative frequency
+components, centred at $-\nu_0$, have been suppressed by low-pass
+filtering, forming the analytic signal associated with $x(t)$.
+
+\begin{figure}[h]
+
+\centerline{\includegraphics[height=10cm,angle=-90]{dsb.eps}}
+%\centerline{\psfig{figure=dsb.ps,height=10cm,angle=-90}}
+\caption{During dual-sideband down-conversion (DSB), the real
+signal, X$(\nu)$, is split during mixing into its in-phase, I$(\nu)$,
+and quadrature, Q$(\nu)$, components before low-pass filtering.  The
+centre frequency and bandwidth of interest are $\nu_0$ and
+\bw, respectively.  Each of the signals, I$_b(\nu)$ and Q$_b(\nu)$, 
+have bandwidth $\Delta\nu/2$.  The complex signal,
+Z$_b(\nu)$=I$_b(\nu)$+\Ci Q$_b(\nu)$, is the band-limited analytic
+signal associated with X$(\nu)$.}
+\label{fig:dsb}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Single-Sideband Down-Conversion}
+\label{app:ssb}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+During single-sideband down-conversion (SSB, see \Fig{ssb}), the
+signal of interest, $x(t)$, is first bandpass filtered, producing
+$x_b(t)$ where \mbox{$X_b(\nu)=X(\nu)\Pi((|\nu|-\nu_0)/\Delta\nu)$}.  The
+band-limited signal is then mixed with a LO with frequency, $\nu_1$,
+producing \mbox{$x_m(t)=x_b(t)\cos(2\pi\nu_1t+\theta)$}, where $\nu_1$
+set to either $\nu_0+\Delta\nu/2$ (lower-sideband) or $\nu_0-\Delta\nu/2$
+(upper-sideband).
+After another stage of low-pass filtering, $x_u(t)$
+is then digitally sampled at the Nyquist rate, $2\Delta\nu$.  As
+bandpass filtering is performed before mixing, the filter used in the
+first stage must be tunable over the range of interesting centre
+frequencies, unlike the low-pass filter in a DSB down-converter.  For
+this reason, DSB is often the more economical means of
+down-conversion.
+
+During playback, the analytic signal associated with $x(t)$ may be
+formed in practice by taking the real-to-complex Fast Fourier
+Transform (FFT), followed by the complex-to-complex inverse
+FFT.  Most real-to-complex FFT implementations automatically omit the
+redundant negative frequencies ($F(-\nu)=F^*(\nu)$) from their output,
+implicitly producing the analytic signal (see
+\App{quadrature_filter}).  Since many signal processing operations
+(such as polyphase filter banks and phase-coherent dispersion removal)
+are performed in the Fourier domain, the cost of calculating the
+analytic signal is transparent.
+
+\begin{figure}
+\centerline{\includegraphics[height=5cm,angle=-90]{usb.eps}}
+\caption{During single-sideband down-conversion (SSB), the real signal,
+X$(\nu)$, is bandpass filtered before mixing.  The centre frequency
+and bandwidth of interest are $\nu_0$ and \bw, respectively.
+The band-limited signal, X$_b(\nu)$, may be mixed with a local
+oscillator set to $\nu_0+\Delta\nu/2$ (lower-sideband) or
+$\nu_0-\Delta\nu/2$ (upper-sideband, shown here). The resulting
+signal, X$_m(\nu)$, is low-pass filtered, producing X$_u(\nu)$ with
+bandwidth \bw.}
+\label{fig:ssb}
+\end{figure}
+
+
+\end{appendix}
+
+\bibliographystyle{aasjournal}
+\bibliography{journals,modrefs,psrrefs,local,crossrefs}
+
+
+\end{document}
+
+
