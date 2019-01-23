@@ -12,6 +12,7 @@
 #define __Stokes_H
 
 #include "Vector.h"
+#include "Estimate.h"
 #include "random.h"
 
 #include <stdexcept>
@@ -101,6 +102,23 @@ void random_vector (Stokes<T>& val, U scale)
   random_value (val, scale);
 }
 
+template<typename T>
+Estimate<T> invariant ( const Stokes< Estimate<T> >& stokes )
+{
+  Estimate<T> result = stokes.invariant();
+
+  // the value is underestimated due to noise
+  double bias = stokes[0].get_variance();
+  for (unsigned i=1; i<4; i++)
+    bias -= stokes[i].get_variance();
+
+  result.val -= bias;
+
+  // the variance is underestimated by Estimate<T>::operator * (x,x)
+  result.var *= 2;
+
+  return result;
+}
 
 template<typename T> struct DatumTraits< Stokes<T> > 
   : public DatumTraits< Vector<4,T> > {};

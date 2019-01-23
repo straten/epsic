@@ -1,0 +1,287 @@
+\documentclass[12pt]{article}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+% symbol used for sqrt(-1)
+\newcommand{\Ci}{{\rm i}}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\code}[1]{{\tt{#1}}}
+
+\newcommand{\boost}[1][]{{\ensuremath{ {\bf H}{#1}_{\bm{\hat m}}(\beta) }}}
+\newcommand{\rotat}[1][]{{\ensuremath{ {\bf U}{#1}_{\bm{\hat n}}(\phi) }}}
+
+\newcommand{\pauli}[1]{\ensuremath{ {\bm\sigma}_{\rm #1} }}
+
+\begin{document}
+
+\section{Introduction}
+
+Quaternions were invented by William Rowan Hamilton when he carved the
+fundamental formula of quaternion algebra,
+\begin{equation}
+i^2=j^2=k^2=ijk=-1
+\end{equation}
+into the stone of the Brougham bridge.
+An arbitrary quaternion, $\bm{U}$, is given by the linear combination,
+\begin{equation}
+\bm{U}=u_0+u_1i+u_2j+u_3k, \hspace{5mm} u_i\in\R
+\end{equation}
+and, as with matrices, quaternion multiplication is non-commutative.
+
+A quaternion with complex coefficients is known as a biquaternion.
+The algebra of biquaternions is isomorphic to the $2\times2$ complex
+matrix group, and may be
+represented by the linear combination,
+\begin{equation}
+\bm{B}=b_0\pauli{0}+b_1\pauli{1}+b_2\pauli{2}+b_3\pauli{3},\hspace{5mm}b_i\in\C
+\end{equation}
+where $\pauli{0}$ equals the identity matrix, $\bm{I}$, and $\pauli{1-3}$
+are the Pauli spin matrices:
+\begin{eqnarray}
+\pauli{1} = \left( \begin{array}{cc}
+1 & 0 \\
+0 & -1 
+\end{array}\right)
+&
+\pauli{2} = \left( \begin{array}{cc}
+0 & 1 \\
+1 & 0 
+\end{array}\right)
+& 
+\pauli{3} = \left( \begin{array}{cc}
+0 & -\Ci \\
+\Ci & 0
+\end{array}\right).
+\label{eqn:pauli}
+\end{eqnarray}
+From the above definitions, it can be seen that the Pauli spin
+matrices have the following properties:
+\begin{equation}\label{eqn:properties}
+\pauli{i}^2 = \bm{I}, \hspace{5mm} 
+\pauli{i}\pauli{j} = -\pauli{j}\pauli{i} = \Ci\pauli{k}
+\end{equation}
+where $\{i,j,k\}$ is chosen from cyclic permutations of $\{1,2,3\}$.
+
+A very useful notation represents the biquaternion as a scalar plus
+a three-vector:
+\begin{equation}\label{eqn:biquaternion}
+\bm{B}=[b+\bm{b}] = b\pauli{0} + \bm{b\cdot\sigma}, \hspace{5mm} b_i\in\C
+\end{equation}
+were $\bm{b}=(b_1,b_2,b_3)$ and $\bm\sigma$ is a three-vector whose
+components are the Pauli spin matrices as defined above.  Using this
+notation, the left-handed quaternion sub-group (see
+Section~\ref{sec:qmult}) may be represented as
+\begin{equation}\label{eqn:quaternion}
+\bm{Q}=[q+i\bm{q}]= q\pauli{0} + \Ci\bm{q\cdot\sigma}, \hspace{5mm} q_i\in\R
+\end{equation}
+
+\section{Some Algebraic Derivations}
+
+\subsection{Biquaternion Multiplication}
+As with matrices, quaternion multiplication is non-commutative.  It is
+useful to derive the result of the multiplication of two quaternions
+in some detail. Start with two biquaternions, $\bm{A}=[a_0+\bm{a}]$
+and $\bm{B}=[b_0+\bm{b}]$, as defined in Eq.~\ref{eqn:biquaternion},
+and expand to yield
+\begin{eqnarray}
+\begin{array}{ccl}
+\bm{A}\bm{B} & = &
+(a_0\pauli{0} + a_1\pauli{1} + a_2\pauli{2} + a_3\pauli{3})
+(b_0\pauli{0} + b_1\pauli{1} + b_2\pauli{2} + b_3\pauli{3}) \\
+& = & a_0b_0\pauli{0}\pauli{0} + a_0b_1\pauli{0}\pauli{1}
+	+ a_0b_2\pauli{0}\pauli{2} + a_0b_3\pauli{0}\pauli{3} \\
+& + & a_1b_0\pauli{1}\pauli{0} + a_1b_1\pauli{1}\pauli{1}
+	+ a_1b_2\pauli{1}\pauli{2} + a_1b_3\pauli{1}\pauli{3} \\
+& + & a_2b_0\pauli{2}\pauli{0} + a_2b_1\pauli{2}\pauli{1}
+	+ a_2b_2\pauli{2}\pauli{2} + a_2b_3\pauli{2}\pauli{3} \\
+& + & a_3b_0\pauli{3}\pauli{0} + a_3b_1\pauli{3}\pauli{1}
+	+ a_3b_2\pauli{3}\pauli{2} + a_3b_3\pauli{3}\pauli{3}
+\end{array}
+\end{eqnarray}
+By applying the properties shown in Eq.~\ref{eqn:properties}, this may
+be reduced to
+\begin{eqnarray}\label{eqn:biquaternion_multiplication}
+\begin{array}{ccl}
+\bm{A}\bm{B}
+& = & (a_0b_0 + a_1b_1 + a_2b_2 + a_3b_3) \pauli{0} \\
+& + & (a_0b_1 + a_1b_0 + \Ci a_2b_3 - \Ci a_3b_2) \pauli{1} \\
+& + & (a_0b_2 - \Ci a_1b_3 + a_2b_0 + \Ci a_3b_1) \pauli{2} \\
+& + & (a_0b_3 + \Ci a_1b_2 - \Ci a_2b_1 + a_3b_0) \pauli{3}	
+\end{array}
+\end{eqnarray}
+
+\subsection{Left-Handed Quaternion Multiplication}
+\label{sec:qmult}
+Equation~\ref{eqn:biquaternion_multiplication} may be used to derive
+the multiplication rule for left-handed quaternions.  Assuming that
+$\bm{C}=[c_0+\Ci\bm{c}]$ and $\bm{D}=[d_0+\Ci\bm{d}]$, as defined in
+Eq.~\ref{eqn:quaternion}, the quaternion product,
+$\bm{X}=[x_0+\Ci\bm{x}]=\bm{CD}$, is given by
+\begin{equation}\label{eqn:quaternion_multiplication}
+\begin{array}{rl}
+x_0 & = c_0d_0 - c_1d_1 - c_2d_2 - c_3d_3 \\
+x_1 & = c_0d_1 + c_1d_0 - c_2d_3 + c_3d_2 \\
+x_2 & = c_0d_2 + c_1d_3 + c_2d_0 - c_3d_1 \\
+x_3 & = c_0d_3 - c_1d_2 + c_2d_1 + c_3d_0
+\end{array}
+\end{equation}
+
+Notice that this result differs from the product of two quaternions as
+originally defined by Hamilton.  This is because the left-handed
+quaternion basis is given by the Pauli spin matrices multplied by the
+imaginary number, $\Ci=\sqrt{-1}$, which satisfy:
+\begin{equation}
+\Ci\pauli{i} \Ci\pauli{j} = -\Ci\pauli{k}
+\end{equation}
+
+
+\section{Isomorphism with Jones matrices}
+
+An arbitrary $2\times2$ complex, or Jones, matrix may be represented
+by its polar decomposition,
+\begin{equation}
+{\bf J} = J \; \boost \rotat,
+\label{eqn:polar_decomposition}
+\end{equation}
+where $J=(\det{\bf J})^{1/2}$,
+\begin{eqnarray}
+\boost &=& \exp(\bm{\sigma\cdot}\bm{\hat m}\beta)
+        = [\cosh\beta,\sinh\beta\;\bm{\hat m}],
+\label{eqn:boost} \\
+\rotat &=& \exp(i\bm{\sigma\cdot}\bm{\hat n}\phi)
+        = [\cos\phi,i\sin\phi\;\bm{\hat n}],
+\label{eqn:rotation}
+\end{eqnarray}
+and $\bm{\hat m}$ and $\bm{\hat n}$ are real-valued unit 3-vectors.
+The matrices, \rotat\ and \boost, are unimodular (ie. have unit
+determinant) and are known as the axis-angle representation of unitary
+and Hermitian transformations, respectively. The same matrix, ${\bf J}$,
+may also be represented by 
+\begin{equation}
+{\bf J}=J\;\rotat\boost[^\prime],
+\end{equation}
+where $\boost[^\prime]=\rotat[^\dagger]\boost\rotat$.  The polar
+decomposition of Eq.~\ref{eqn:polar_decomposition} may be calculated
+noting that
+\begin{equation}
+{\bf JJ}^\dagger = (J\boost\rotat)(\rotat[^\dagger]\boost[^\dagger]J^*)
+	= |J|^2 \boost[^2]
+\end{equation}
+So that:
+\begin{equation}\label{eqn:sqrt}
+\boost = {\sqrt{{\bf JJ}^\dagger} \over |J|}
+\end{equation}
+and
+\begin{equation}
+\rotat = \boost[^{-1}] {{\bf J} \over J}
+\end{equation}
+Note that equation~\ref{eqn:sqrt} requires the definition of a matrix
+square root, the solution of which is given in Hamaker 2000, Appendix B.5.
+
+\section{Fast Quaternion Fourier Transform}
+
+An efficient implementation of the two-dimensional quaternion Fourier
+Transform has been implemented using the 2-D complex FFT \cite{pdc01}.
+The result is summarized and simplified for the one-dimensional case
+using left-handed quaternions.  The one-dimensional quaternion Fourier
+transform is given by:
+\begin{equation}
+\bm{H}(\nu)=\intop_{-\infty}^\infty
+	\exp(-\Ci\;\bm{\sigma\cdot\hat\mu}\;2\pi\nu t)\;\bm{H}(t)\;dt
+\end{equation}
+where $\bm{\hat\mu}$ is a real-valued unit three-vector and
+$\bm{H}(t) = [h_0(t) + \Ci\bm{h}(t)]$ is a left-handed quaternion-valued
+function of the real variable, $t$.
+
+\noindent
+By defining three new basis vectors:
+\begin{equation}
+\bm{\hat\mu}_k = \sum_{i=1}^3 \mu_{k,i}\Ci\pauli{i} \hspace{1cm} 1\le k \le 3
+\end{equation}
+such that $\bm{\hat\mu}_1=\Ci\bm{\hat\mu}$,
+$\bm{\hat\mu}_k^2=-\pauli{0}$, and
+$\bm{\hat\mu}_i\bm{\hat\mu}_j=-\bm{\hat\mu}_k$, $\bm{H}(t)$ may be
+expressed as:
+\begin{equation}
+\bm{H}(t) = h_0(t) + \sum_{i=1}^3 h_i^\prime(t)\;\bm{\hat\mu}_i
+\end{equation}
+where $\bm{h}^\prime(t)=\bm{R}^{-1}\bm{h}(t)$ and
+\begin{equation}
+\bm{R} = \left( \begin{array}{ccc}
+\mu_{1,1} & \mu_{2,1} & \mu_{3,1} \\
+\mu_{1,2} & \mu_{2,2} & \mu_{3,2} \\
+\mu_{1,3} & \mu_{2,3} & \mu_{3,3} \\
+\end{array}\right)
+\end{equation}
+By the definitions of $\bm{\hat\mu}_k$, $\bm{H}(t)$ may be re-expressed as:
+\begin{equation}
+\bm{H}(t) = c_1(t) + c_2(t)\bm{\hat\mu}_2
+\end{equation}
+where
+\begin{eqnarray}
+c_1(t) & = & h_0(t)+h_1^\prime(t)\bm{\hat\mu}_1 \\
+c_2(t) & = & h_2^\prime(t)-h_3^\prime(t)\bm{\hat\mu}_1
+\end{eqnarray}
+Finally, the quaternion Fourier transform may be re-expressed as:
+\begin{equation}\label{eqn:fqft}
+\bm{H}(\nu)=\intop_{-\infty}^\infty
+		\exp(-2\pi\nu t\;\bm{\hat\mu}_1)\;c_1(t)\;dt
+	+ \intop_{-\infty}^\infty
+		\exp(-2\pi\nu t\;\bm{\hat\mu}_1)\;c_2(t)\;dt\;\bm{\hat\mu}_2
+\end{equation}
+As $\bm{\hat\mu}_1^2=-1$, both integrals in the right-hand side of
+Equation~\ref{eqn:fqft} are simply complex Fourier transforms.
+
+\newpage
+\section{The \code{Quaternion} template class}
+
+The \code{Quaternion} template class was designed to implement both
+left-handed quaternions and biquaternions using the Pauli spin
+matrices, with purely imaginary or purely real vector components, as
+the basis.  When using the Pauli spin matrices with real components,
+it is possible to represent a Hermitian matrix using only four real
+numbers.  However, as the product of two Hermitian matrices is not
+Hermitian (unless the matrices commute), it is not possible to
+multiply two real quaternions in the Pauli basis.
+
+In summary, there are four ways to create a null-constructed instance
+of a Quaternion object:
+\begin{verbatim}
+// Left-handed quaternion (unitary basis)
+Quaternion<float> q;
+
+// Representation of Hermitian matrix (non-multiplicative)
+Quaternion<float, Hermitian> h;
+
+// Biquaternion in unitary basis
+Quaternion<complex<float>, Unitary> bq;
+
+// Biquaternion in Hermitian basis
+Quaternion<complex<float>, Hermitian> bh;
+\end{verbatim}
+Note that the floating-point precision is specified in the first
+template argument and the basis, \code{Unitary} or \code{Hermitian},
+is specified in the second template argument. As the left-handed
+quaternion is most closely related to Hamilton's quaternion, the
+Unitary basis is used by default.
+
+\begin{thebibliography}{}
+
+\bibitem{pdc01}
+Pei, S., Ding, J., Chang, J. 2001,  IEEE Trans. Signal Process. Vol. 49,
+No. 11, 2783
+
+\end{thebibliography}
+
+\end{document}
+
+   Efficient implementation of quaternion Fourier transform, convolution, 
+   and correlation by 2-D complex FFT.  
+   Pei, Soo-Chang; Ding, Jian-Jiun; Chang, Ja-Han  
+   IEEE Trans. Signal Process. 49 (2001), no. 11, 2783--2797, Math. Sci. Net.  
+
+
+
