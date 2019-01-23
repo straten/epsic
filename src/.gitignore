@@ -18,5 +18,6 @@ config/ltsugar.m4
 config/ltversion.m4
 config/lt~obsolete.m4
 config/missing
+config/test-driver
 configure
 util/Makefile.in
