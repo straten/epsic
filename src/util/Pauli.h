@@ -83,6 +83,17 @@ const Jones<T> convert (const Stokes<T>& stokes)
   return convert (T(0.5)*q);
 }
 
+// convert coherency vector to Jones matrix
+template<typename T>
+const Jones<T> convert (const std::vector<T>& c)
+{
+  if (c.size() != 4)
+    throw std::runtime_error ("Jones<T> convert (std::vector<T>) vector.size() != 4");
+
+  return Jones<T> (c[0], std::complex<T> (c[2], -c[3]),
+                 std::complex<T> (c[2], c[3]), c[1]);
+}
+
 // convert Stokes parameters to natural basis
 template<typename T>
 const Quaternion<T,Hermitian> natural (const Stokes<T>& stokes)
