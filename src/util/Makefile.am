@@ -47,7 +47,7 @@ PromoteTraits.h: $(srcdir)/header_PromoteTraits ./generate_PromoteTraits
 	./generate_PromoteTraits
 
 # Depend on constructed include files
-Error.lo: PromoteTraits.h
+random.lo: PromoteTraits.h
 
 BUILT_SOURCES = PromoteTraits.h
 

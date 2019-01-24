@@ -8,7 +8,7 @@ epsic_SOURCES = epsic.C
 LDADD = $(top_builddir)/libepsic.la
 
 libepsic_la_LIBADD = util/libutil.la 
-AM_CPPFLAGS = -I$(top_srcdir)/util
+AM_CPPFLAGS = -I$(top_srcdir)/util -I$(top_builddir)/util
 SUBDIRS = util
 
 
