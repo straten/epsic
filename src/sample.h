@@ -76,7 +76,7 @@ public:
     for (unsigned ilag=0; ilag < sample_size; ilag++)
       for (unsigned jlag=0; jlag < sample_size; jlag++)
       {
-	unsigned mode_lag = abs(int(at_lag * sample_size + ilag) - int(jlag));
+	unsigned mode_lag = std::abs(int(at_lag*sample_size+ilag) - int(jlag));
 	result += s->get_crosscovariance (mode_lag);
       }
 
