@@ -11,6 +11,8 @@
 #ifndef __sample_H
 #define __sample_H
 
+#include <cstdlib>
+
 /***************************************************************************
  *
  *  a Stokes sample
