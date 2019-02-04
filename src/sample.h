@@ -6,8 +6,9 @@
  *
  ***************************************************************************/
 
-#include <cstdlib>
 // epsic/src/util/sample.h
+
+#include <cstdlib>
 
 #ifndef __sample_H
 #define __sample_H
