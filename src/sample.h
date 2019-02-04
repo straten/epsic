@@ -6,6 +6,7 @@
  *
  ***************************************************************************/
 
+#include <cstdlib>
 // epsic/src/util/sample.h
 
 #ifndef __sample_H
