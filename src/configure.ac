@@ -11,10 +11,6 @@ AC_CONFIG_SRCDIR([epsic.C])
 # Initialize automake to place object files in sub-directories
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
-# Create static libraries by default
-AC_DISABLE_SHARED
-AC_SUBST(enable_shared)
-
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
