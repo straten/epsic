@@ -52,7 +52,7 @@ void usage ()
     " -C f_A      composite modes with fraction of instances in mode A \n"
     " -D F_A      disjoint modes with fraction of samples in mode A \n"
     " -s i,q,u,v  population mean Stokes parameters [default:1,0,0,0]\n"
-    " -l sigma    modulate Stokes parameters using a log-normal variate \n"
+    " -l beta     modulation index of log-normal amplitude modulation \n"
     " -b Nsamp    box-car smooth the amplitude modulation function \n"
     " -r Nsamp    use rectangular impulse amplitude modulation function \n"
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
@@ -71,15 +71,15 @@ public:
   unsigned smooth_modulator;
   // width of square modulation function
   unsigned square_modulator;
-  // variance of logarithm of modulation function
-  double log_sigma;
+  // modulation index of log-normal modulation function
+  double beta;
 
   mode_setup () : mean (1,0,0,0)
   {
     smooth_before = 0;
     smooth_modulator = 0;
     square_modulator = 0;
-    log_sigma = 0;
+    beta = 0;
   }
 
   mode* setup_mode (mode* s)
@@ -89,8 +89,8 @@ public:
     if (s)
       s->set_Stokes (mean);
     
-    if (log_sigma)
-      s = mod = new lognormal_mode (s, log_sigma);
+    if (beta)
+      s = mod = new lognormal_mode (s, beta);
 
     if (smooth_modulator > 1 && mod)
       s = new boxcar_modulated_mode (mod, smooth_modulator);
@@ -191,7 +191,7 @@ int main (int argc, char** argv)
     }
 
     case 'l':
-      setup->log_sigma = atof (usearg);
+      setup->beta = atof (usearg);
       break;
       
     case 'b':

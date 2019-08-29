@@ -47,7 +47,9 @@ public:
     {
       Matrix<4,4, double> out = s->get_crosscovariance (ilag);
 
+#ifdef _DEBUG
       std::cerr << "ilag=" << ilag << " C=" << out << std::endl;
+#endif
 
       /*
 	multiply by two to also sum the symmetric lower triangle

@@ -36,10 +36,10 @@ public:
   virtual double modulation () = 0;
 
   // return the mean of the scalar modulation factor
-  virtual double get_mod_mean () = 0;
+  virtual double get_mod_mean () const = 0;
 
   // return the variance of the scalar modulation factor
-  virtual double get_mod_variance () = 0;
+  virtual double get_mod_variance () const = 0;
 
   Spinor<double> get_field ()
   {
@@ -52,7 +52,7 @@ public:
     return sqrt(mod) * source->get_field();
   }
 
-  Matrix<4,4,double> get_covariance ()
+  Matrix<4,4,double> get_covariance () const
   {
     double mean = get_mod_mean();
     double var = get_mod_variance();
@@ -73,7 +73,7 @@ public:
     return C + o;
   }
 
-  Stokes<double> get_mean ()
+  Stokes<double> get_mean () const
   {
     return get_mod_mean () * source->get_mean();
   }
@@ -87,7 +87,18 @@ class lognormal_mode : public modulated_mode
 
 public:
 
-  lognormal_mode (mode* s, double ls) : modulated_mode (s) { log_sigma = ls;}
+  // initialize based on the modulation index beta
+  lognormal_mode (mode* s, double beta) : modulated_mode (s) { set_beta (beta); }
+
+  void set_beta (double beta)
+  {
+    log_sigma = sqrt( log( beta*beta + 1.0 ) );
+  }
+
+  double get_beta () const
+  {
+    return sqrt( get_mod_variance() );
+  }
 
   // return a random scalar modulation factor
   double modulation ()
@@ -95,9 +106,9 @@ public:
     return exp ( log_sigma * (get_normal()->evaluate() - 0.5*log_sigma) ) ;
   }
 
-  double get_mod_mean () { return 1.0; }
+  double get_mod_mean () const { return 1.0; }
   
-  double get_mod_variance () { return exp(log_sigma*log_sigma) - 1.0; }
+  double get_mod_variance () const { return exp(log_sigma*log_sigma) - 1.0; }
 
 };
 
@@ -140,17 +151,17 @@ public:
     return result;
   }
 
-  double get_mod_variance ()
+  double get_mod_variance () const
   {
     return mod->get_mod_variance() / smooth;
   }
 
-  double get_mod_mean ()
+  double get_mod_mean () const
   {
     return mod->get_mod_mean ();
   }
 
-  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag) const
   {
     if (ilag >= smooth)
       return 0;
@@ -188,18 +199,18 @@ public:
     return value;
   }
 
-  double get_mod_variance ()
+  double get_mod_variance () const
   {
     return mod->get_mod_variance();
   }
 
-  double get_mod_mean ()
+  double get_mod_mean () const
   {
     return mod->get_mod_mean ();
   }
 
   //! Return cross-covariance between Stokes parameters as a function of lag
-  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag) const
   {
     if (ilag >= width)
       return 0;
