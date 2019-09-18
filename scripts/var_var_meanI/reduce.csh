@@ -55,10 +55,10 @@ foreach delta (0.05 0.10 0.20 0.40)
 
     ## Compute the standard deviation of the source variance estimator
 
-    set d_don  = `echo "-1.0 * (3.0 + 2.0 * $I_S)" | bc -l`
-    set d_doff = `echo "3.0 - $I_S" | bc -l`
+    set d_don  = `echo "-2.0 * $I_on - 1.0/$sample" | bc -l`
+    set d_doff = `echo "2.0 - ($I_on - 2.0)/$sample" | bc -l`
 
-    set var_on = `echo "(1.0 + $I_S^2 + 2.0*$I_S) / ( 2.0 * $N * $delta )" | bc -l`
+    set var_on = `echo "${I_on}^2 / ( 2.0 * $N * $delta )" | bc -l`
     set var_off = `echo "1.0 / ( 2.0 * $N * (1.0-$delta) )" | bc -l`
 
     set term1 = `echo "$d_don^2 * $var_on" | bc -l`
@@ -68,7 +68,7 @@ foreach delta (0.05 0.10 0.20 0.40)
 
     ## Compute the standard deviation of the source variance estimator
 
-    set mean = `awk '{count++; sum+=$6; sumsq+=$6*$6} END{mu=sum/count; var=sumsq/count-mu*mu; print count, mu, sqrt(var)}' $file`
+    set mean = `awk -vm=$sample '{count++; up=$2-$4-($5*$3)/m; sum+=up; sumsq+=up*up} END{mu=sum/count; var=sumsq/count-mu*mu; print count, mu, sqrt(var)}' $file`
 
     set sigma_var_source = `echo "sqrt( ${sigma_mu2_on}^2 + ${sigma_mu2_off}^2 + $term1 + $term2 + $term3 + $term4 )" | bc -l`
 
