@@ -57,6 +57,7 @@ void usage ()
     " -r Nsamp    use rectangular impulse amplitude modulation function \n"
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
     " -t          report only theoretical predictions \n"
+    " -d          report the means and variances of the Stokes parameters \n"
        << endl;
 }
 
@@ -129,10 +130,10 @@ int main (int argc, char** argv)
 
   bool print = false;
   bool rho_stats = false;
-  bool variances_only = false;
+  bool variances_and_means = false;
   
   int c;
-  while ((c = getopt(argc, argv, "hN:n:SC:D:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "hN:n:SC:dD:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -229,7 +230,7 @@ int main (int argc, char** argv)
       break;
 
     case 'd':
-      variances_only = true;
+      variances_and_means = true;
       break;
       
     case 't':
@@ -335,11 +336,13 @@ int main (int argc, char** argv)
   else
     totsq -= outer(tot,tot);
 
-  if (variances_only)
+  if (variances_and_means)
   {
     for (unsigned i=0; i<4; i++)
+    {
+      cout << "mean[" << i << "] = " << tot[i] << endl;
       cout << "var[" << i << "] = " << totsq[i][i] << endl;
-    
+    }
     return 0;
   }
 
