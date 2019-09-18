@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Basis.h
+// epsic/src/util/Basis.h
 
 #ifndef __Basis_H
 #define __Basis_H

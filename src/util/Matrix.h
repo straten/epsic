@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Matrix.h
+// epsic/src/util/Matrix.h
 
 #ifndef __Matrix_H
 #define __Matrix_H

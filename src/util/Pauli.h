@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Pauli.h
+// epsic/src/util/Pauli.h
 
 #ifndef __Pauli_H
 #define __Pauli_H

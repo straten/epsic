@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/complex_promote.h
+// epsic/src/util/complex_promote.h
 
 #ifndef __complex_promote_H
 #define __complex_promote_H

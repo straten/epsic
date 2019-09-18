@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// psrchive/psrchive/Util/units/Estimate.h
+// epsic/src/util/Estimate.h
 
 #ifndef __Estimate_h
 #define __Estimate_h
