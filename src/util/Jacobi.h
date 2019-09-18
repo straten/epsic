@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Jacobi.h
+// epsic/src/util/Jacobi.h
 
 #ifndef __Jacobi_H
 #define __Jacobi_H

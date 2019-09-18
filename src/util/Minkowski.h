@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Minkowski.h
+// epsic/src/util/Minkowski.h
 
 #ifndef __Minkowski_H
 #define __Minkowski_H

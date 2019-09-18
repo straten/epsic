@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Quaternion.h
+// epsic/src/util/Quaternion.h
 
 #ifndef __Quaternion_H
 #define __Quaternion_H

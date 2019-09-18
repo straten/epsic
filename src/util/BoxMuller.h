@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/BoxMuller.h
+// epsic/src/util/BoxMuller.h
 
 #ifndef __BoxMuller_h
 #define __BoxMuller_h

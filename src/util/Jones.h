@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Jones.h
+// epsic/src/util/Jones.h
 
 #ifndef __Jones_H
 #define __Jones_H
