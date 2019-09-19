@@ -1,5 +1,7 @@
 #! /bin/csh
 
+cd results
+
 rm -f sigma_*.txt covar_*.txt
 
 set N = 104857600
@@ -40,6 +42,7 @@ foreach delta (0.05 0.10 0.20 0.40)
     # (Square root of) co-variance between first and second noncentral moments of on-pulse intensities
     set mean = `awk '{count++; p=$2+$1*$1; sump+=p; sumpsq+=p*p; sumI+=$1; sumIsq+=$1*$1; cov+=p*$1} END{mup=sump/count; varp=sumpsq/count-mup*mup; muI=sumI/count; varI=sumIsq/count-muI*muI; rho=cov/count-mup*muI; print sqrt(rho)}' $file`
 
+    set I_on = `echo 1.0+$intensity | bc -l`
     set covar_on = `echo "sqrt( $I_on^3 / ($N * $delta) )" | bc -l`
     echo ${delta} ${intensity} ${sample} ${mean} $covar_on | tee >> covar_on.txt
 
