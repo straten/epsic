@@ -7,6 +7,8 @@ rm -f sigma_*.txt covar_*.txt
 set N = 104857600
 set beta = 0.9
 
+echo "delta r m N <Up> sigUp predict approx" | tee sigma_var_source.txt
+
 foreach delta (0.05 0.10 0.20 0.40)
 
   foreach intensity (0.001 0.01 0.1 1.0)
@@ -78,9 +80,7 @@ foreach delta (0.05 0.10 0.20 0.40)
 
     set approximation = `echo "sqrt( (1.0 + 1.0/$sample) / ( 2.0 * $N * $delta * (1.0-$delta) ) )" | bc -l`
 
-    echo $sigma_var_source $approximation
-
-    echo ${delta} ${intensity} ${sample} ${mean} $sigma_var_source $approximation | tee >> sigma_var_source.txt
+    echo ${delta} ${intensity} ${sample} ${mean} $sigma_var_source $approximation | tee -a sigma_var_source.txt
 
   end
  end
