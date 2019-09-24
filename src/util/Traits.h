@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Traits.h
+// epsic/src/util/Traits.h
 
 /*
  * For a useful discussion on traits, please see 

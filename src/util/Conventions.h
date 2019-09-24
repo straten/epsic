@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/Conventions.h
+// epsic/src/util/Conventions.h
 
 #ifndef __Conventions_h
 #define __Conventions_h

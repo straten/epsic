@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/random.h
+// epsic/src/util/random.h
 
 #ifndef __random_H
 #define __random_H

@@ -1,0 +1,14 @@
+
+Copy the contents of this folder to a working space where 
+approximately 270 MB of data can be comfortably accumulated.
+
+Change to this working directory and run
+
+./run.csh
+
+When all of the jobs have finished, run
+
+./collate.csh
+./reduce.csh
+./plots.gnu
+
