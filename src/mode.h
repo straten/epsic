@@ -35,14 +35,14 @@ public:
   virtual Stokes<double> get_Stokes () { return mean; }
 
   //! Return the expected mean Stokes parameters
-  virtual Stokes<double> get_mean () { return mean; }
+  virtual Stokes<double> get_mean () const { return mean; }
 
   //! Return the expected covariances between the Stokes parameters
-  virtual Matrix<4,4, double> get_covariance ()
+  virtual Matrix<4,4, double> get_covariance () const
   { return Minkowski::outer (mean, mean); }
 
   //! Return cross-covariance between Stokes parameters as a function of lag
-  virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag)
+  virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) const
   { if (ilag>0) return 0; else return get_covariance(); }
 
   //! Return a random instance of the electric field vector
@@ -74,8 +74,8 @@ public:
   void set_Stokes (const Stokes<double>& mean) { source->set_Stokes(mean); }
   Stokes<double> get_Stokes () { return source->get_Stokes(); }
 
-  Matrix<4,4, double> get_covariance () { return source->get_covariance(); }
-  Stokes<double> get_mean () { return source->get_mean(); }
+  Matrix<4,4, double> get_covariance () const { return source->get_covariance(); }
+  Stokes<double> get_mean () const { return source->get_mean(); }
 
   Spinor<double> get_field () { return source->get_field(); }
   BoxMuller* get_normal () { return source->get_normal(); }
@@ -83,3 +83,4 @@ public:
 };
 
 #endif
+
