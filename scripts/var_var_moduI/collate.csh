@@ -13,7 +13,7 @@ foreach delta (0.05 0.10 0.20 0.40)
     set file=results_${delta}_${intensity}_${sample}.txt
     echo creating results/$file
 
-    grep -v on_mean data_*_${delta}_${intensity}_${sample}/results.txt > $file
+    cat data_*_${delta}_${intensity}_${sample}/results.txt | grep -v on > $file
 
   end
  end
