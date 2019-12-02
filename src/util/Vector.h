@@ -151,23 +151,35 @@ const Vector<3,T> cross (const Vector<3,T>& a, const Vector<3,T>& b)
   return result;
 }
 
+template <typename T>
+T normsq (const T& v)
+{
+  return v*v;
+}
+
+template <typename T>
+T normsq (const std::complex<T>& v)
+{
+  return std::norm(v);
+}
+
 //! squared "length"/"norm"
 template <unsigned N, typename T>
-T normsq (const Vector< N, std::complex<T> >& v)
+T normsq (const Vector< N, T>& v)
 {
-  T sum = norm(v[0]);
+  T sum = normsq(v[0]);
   for (unsigned i=1; i < N; i++)
-    sum += norm(v[i]);
+    sum += normsq(v[i]);
   return sum;
 }
 
-//! simpler version for scalar types
-template <unsigned N, typename T>
-T normsq(const Vector<N, T> &v)
+//! squared "length"/"norm"
+template <unsigned N, template<typename T> class V, typename U >
+U normsq (const Vector< N, V<U> >& v)
 {
-  T sum = v[0]*v[0];
+  U sum = normsq(v[0]);
   for (unsigned i=1; i < N; i++)
-    sum += v[i]*v[i];
+    sum += normsq(v[i]);
   return sum;
 }
 

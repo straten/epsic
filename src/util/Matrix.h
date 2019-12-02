@@ -386,6 +386,15 @@ Matrix<3,3,T> rotation (const Vector<3,T>& v, double radians)
   return result;
 }
 
+//! squared "length"/"norm"
+template<unsigned R, unsigned C, typename T>
+T normsq (const Matrix<R,C,T>& v)
+{
+  T sum = normsq(v[0]);
+  for (unsigned i=1; i < R; i++)
+    sum += normsq(v[i]);
+  return sum;
+}
 
 //! Maps the structure of Matrix to other template methods
 template<unsigned R, unsigned C, typename T> 
