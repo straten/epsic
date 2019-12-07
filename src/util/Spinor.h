@@ -32,7 +32,8 @@ public:
   std::complex<T> x;
   std::complex<T> y;
 
-  const Spinor& operator *= (T scale) { x *= scale; y *= scale; return *this; }
+  template <typename U>
+  const Spinor& operator *= (U scale) { x *= scale; y *= scale; return *this; }
   const Spinor& operator /= (T norm) { x /= norm; y /= norm; return *this; }
   const Spinor& operator += (const Spinor& e) { x+=e.x; y+=e.y; return *this; }
 };
@@ -58,17 +59,18 @@ const Spinor<T> operator * (const Jones<T>& j, const Spinor<T>& in)
 		     j.j10 * in.x + j.j11 * in.y );
 }
 
-template<typename T>
-const Spinor<T> operator * (double a, Spinor<T> in)
+template<typename T, typename U>
+const Spinor<T> operator * (U a, Spinor<T> in)
 {
   return in *= a;
 }
 
-template<typename T>
-const Spinor<T> operator * (Spinor<T> in, double a)
+template<typename T, typename U>
+const Spinor<T> operator * (Spinor<T> in, U a)
 {
   return in *= a;
 }
+
 
 template<typename T, typename U>
 void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
