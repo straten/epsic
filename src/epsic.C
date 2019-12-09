@@ -51,6 +51,7 @@ void usage ()
     " -S          superposed modes \n"
     " -C f_A      composite modes with fraction of instances in mode A \n"
     " -D F_A      disjoint modes with fraction of samples in mode A \n"
+    " -c cov      coherent superposition of modes \n"
     " -s i,q,u,v  population mean Stokes parameters [default:1,0,0,0]\n"
     " -l beta     modulation index of log-normal amplitude modulation \n"
     " -b Nsamp    box-car smooth the amplitude modulation function \n"
@@ -133,7 +134,7 @@ int main (int argc, char** argv)
   bool variances_and_means = false;
   
   int c;
-  while ((c = getopt(argc, argv, "hN:n:SC:dD:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "hN:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -171,6 +172,10 @@ int main (int argc, char** argv)
       dual = new disjoint( atof(optarg) );
       break;
 
+    case 'c':
+      dual = new coherent( atof(optarg) );
+      break;
+      
     case 's':
     {
       double i,q,u,v;
