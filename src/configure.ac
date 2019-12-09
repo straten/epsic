@@ -6,7 +6,7 @@ AC_INIT([EPSIC],[2019-01-23],[vanstraten.willem@gmail.com])
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])
-AC_CONFIG_SRCDIR([epsic.C])
+AC_CONFIG_SRCDIR([epsic.cpp])
 
 # Initialize automake to place object files in sub-directories
 AM_INIT_AUTOMAKE([foreign subdir-objects])
