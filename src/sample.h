@@ -11,7 +11,10 @@
 #ifndef __sample_H
 #define __sample_H
 
+#include "mode.h"
+
 #include <cstdlib>
+#include <vector>
 
 /***************************************************************************
  *
@@ -34,65 +37,10 @@ public:
   virtual Matrix<4,4, double> get_covariance () = 0;
   virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) = 0;
 
-  //! Sums the sample_size by sample_size square on the diagonal
-  /*! worker function for sub-classes */
-  Matrix<4,4, double> get_covariance (mode* s, unsigned sample_size)
-  {
-    Matrix<4,4, double> result = s->get_covariance ();
+  Matrix<4,4, double> get_covariance (mode* s, unsigned sample_size);
 
-    // sum the sample_size instances along the diagonal
-    result *= sample_size;
-
-    for (unsigned ilag=1; ilag < sample_size; ilag++)
-    {
-      Matrix<4,4, double> out = s->get_crosscovariance (ilag);
-
-#ifdef _DEBUG
-      std::cerr << "ilag=" << ilag << " C=" << out << std::endl;
-#endif
-
-      /*
-	multiply by two to also sum the symmetric lower triangle
-	
-	multiply by sample_size-ilag samples along the diagonal
-	defined by i,i+ilag
-      */
-      out *= 2.0 * (sample_size-ilag);
-      result += out;
-    }
-
-    /*          
-      divide by sample_size squared because this function returns the
-      covariance matrix of the sample mean
-    */
-    
-    result /= sample_size * sample_size;
-    return result;
-  }
-
-  //! Sums the sample_size by sample_size square off the diagonal
-  /*! starts at at_lag * sample_size off the diagonal */
   Matrix<4,4, double> get_crosscovariance (mode* s, unsigned at_lag,
-					   unsigned sample_size)
-  {
-    Matrix<4,4, double> result (0);
-    
-    for (unsigned ilag=0; ilag < sample_size; ilag++)
-      for (unsigned jlag=0; jlag < sample_size; jlag++)
-      {
-	unsigned mode_lag = std::abs(int(at_lag*sample_size+ilag) - int(jlag));
-	result += s->get_crosscovariance (mode_lag);
-      }
-
-    /*          
-      divide by sample_size squared because this function returns the
-      cross covariance matrix of the sample mean
-    */
-    
-    result /= sample_size * sample_size;
-    return result;
-  }
-
+					   unsigned sample_size);
 };
 
 /***************************************************************************
@@ -159,7 +107,8 @@ public:
 
   combination () { A = new mode; B = new mode; }
 
-  void set_normal (BoxMuller* n) { A->set_normal(n); B->set_normal(n); }
+  virtual void set_normal (BoxMuller* n)
+  { A->set_normal(n); B->set_normal(n); }
 
   Matrix<4,4, double> get_crosscovariance (unsigned ilag)
   {
@@ -179,45 +128,9 @@ public:
 
 class superposed : public combination
 {
-  Stokes<double> get_Stokes ()
-  {
-    Stokes<double> result;
-    for (unsigned i=0; i<sample_size; i++)
-    {
-      Spinor<double> e_A = A->get_field();
-      Spinor<double> e_B = B->get_field();
-
-      Vector<4, double> tmp;
-      compute_stokes (tmp, e_A + e_B);
-      result += tmp;
-    }
-    result /= sample_size;
-    return result;
-  }
-
-  Vector<4, double> get_mean ()
-  {
-    return A->get_mean() + B->get_mean();
-  }
-
-  //! Implements Equation (42) of van Straten & Tiburzi (2017)
-  Matrix<4,4, double> get_covariance ()
-  {
-    Matrix<4,4, double> result = sample::get_covariance (A, sample_size);
-    result += sample::get_covariance (B, sample_size);
-
-    Stokes<double> mean_A = A->get_mean();
-    Stokes<double> mean_B = B->get_mean();
-
-    /* Minkowski::outer implements A \otimes B - 0.5 \eta A \cdot B
-       such that Minkowski::outer(A,B) +  Minkowski::outer(B,A)
-       yields Equation (43) of van Straten & Tiburzi (2017) */
-    Matrix<4,4, double> xcovar = Minkowski::outer(mean_A, mean_B);
-    xcovar /= sample_size;
-    result += xcovar + transpose(xcovar);
-    
-    return result;
-  }
+  Stokes<double> get_Stokes ();
+  Vector<4, double> get_mean ();
+  Matrix<4,4, double> get_covariance ();
 };
 
 /***************************************************************************
@@ -234,57 +147,9 @@ public:
 
   composite (double fraction) { A_fraction = fraction; }
 
-  Stokes<double> get_Stokes ()
-  {
-    unsigned A_sample_size = A_fraction * sample_size;
-
-    Stokes<double> result;
-
-    for (unsigned i=0; i<sample_size; i++)
-    {
-      Spinor<double> e;
-      if (i < A_sample_size)
-	e = A->get_field();
-      else
-	e = B->get_field();
-
-      Vector<4, double> tmp;
-      compute_stokes (tmp, e);
-      result += tmp;
-    }
-
-    result /= sample_size;
-    return result;
-  }
-
-  Vector<4, double> get_mean ()
-  {
-    unsigned A_sample_size = A_fraction * sample_size;
-    unsigned B_sample_size = sample_size - A_sample_size;
-    Vector<4,double> result 
-      = A_sample_size * A->get_mean() + B_sample_size * B->get_mean();
-    result /= sample_size;
-    return result;
-  }
-
-  //! Implements Equation (59) of van Straten & Tiburzi (2017)
-  Matrix<4,4, double> get_covariance ()
-  {
-    unsigned A_sample_size = A_fraction * sample_size;
-    unsigned B_sample_size = sample_size - A_sample_size;
-
-    Matrix<4,4,double> C_A = sample::get_covariance (A, A_sample_size);
-    Matrix<4,4,double> C_B = sample::get_covariance (B, B_sample_size);
-
-    // A_fraction * sample_size may not be an integer number of instances
-    double f_A = A_sample_size / double(sample_size);
-    double f_B = B_sample_size / double(sample_size);
-
-    C_A *= f_A * f_A;
-    C_B *= f_B * f_B;
-
-    return C_A + C_B;
-  }
+  Stokes<double> get_Stokes ();
+  Vector<4, double> get_mean ();
+  Matrix<4,4, double> get_covariance ();
 };
 
 /***************************************************************************
@@ -301,58 +166,10 @@ public:
 
   disjoint (double fraction) { A_fraction = fraction; }
 
-  Stokes<double> get_Stokes ()
-  {
-    bool mode_A = random_double() < A_fraction;
-    mode* e = (mode_A) ? A : B;
-
-    Stokes<double> result;
-
-    for (unsigned i=0; i<sample_size; i++)
-    {
-      Vector<4, double> tmp;
-      compute_stokes (tmp, e->get_field());
-      result += tmp;
-    }
-
-    result /= sample_size;
-    return result;
-  }
-
-  Vector<4, double> get_mean ()
-  {
-    return A_fraction * A->get_mean() + (1-A_fraction) * B->get_mean();
-  }
-
-  //! Implements Equation (39) of van Straten & Tiburzi (2017)
-  Matrix<4,4, double> get_covariance ()
-  {
-    Matrix<4,4,double> C_A = sample::get_covariance (A, sample_size);
-    Matrix<4,4,double> C_B = sample::get_covariance (B, sample_size);
-
-    Vector<4,double> diff = A->get_mean() - B->get_mean();
-    Matrix<4,4,double> D = outer (diff, diff);
-
-    C_A *= A_fraction;
-    C_B *= (1-A_fraction);
-    D *= A_fraction * (1-A_fraction);
-
-    return C_A + C_B + D;
-  }
-
-  Matrix<4,4, double> get_crosscovariance (unsigned ilag)
-  {
-    if (ilag == 0)
-      return get_covariance();
-
-    Matrix<4,4,double> Acov = A->get_crosscovariance(ilag);
-    Acov *= A_fraction * A_fraction;
-
-    Matrix<4,4,double> Bcov = B->get_crosscovariance(ilag);
-    Bcov *= (1-A_fraction) * (1-A_fraction);
-
-    return Acov + Bcov;
-  }
+  Stokes<double> get_Stokes ();
+  Vector<4, double> get_mean ();
+  Matrix<4,4, double> get_covariance ();
+  Matrix<4,4, double> get_crosscovariance (unsigned ilag);
 };
 
 
@@ -396,5 +213,30 @@ public:
     return result;
   }
 };
+
+
+class coherent : public combination
+{
+  Spinor<double> a;
+  Spinor<double> b;
+
+  mode* coupling;
+  double coherence;
+  
+  bool built;
+  void build();
+
+ 
+public:
+
+  coherent (double coherence);
+  void set_normal (BoxMuller*);
+  
+  Stokes<double> get_Stokes ();
+  Vector<4, double> get_mean ();
+  Matrix<4,4, double> get_covariance ();
+ 
+};
+
 
 #endif
