@@ -7,13 +7,17 @@
 
 /*
 
-  Simulates the higher order moments of polarized electromagnetic radiation.
+  Simulates the fourth order moments of polarized electromagnetic radiation.
   This software was written to verify the equations presented in
 
   van Straten & Tiburzi 2017, The Astrophysical Journal, 835:293
   http://dx.doi.org/10.3847/1538-4357/835/2/293
 
 */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include "Pauli.h"
 #include "Dirac.h"
@@ -23,6 +27,12 @@
 #include "modulated.h"
 #include "smoothed.h"
 #include "sample.h"
+
+#if HAVE_HEALPIX
+#include "healpix_map.h"
+#include "healpix_map_fitsio.h"
+#include "fitshandle.h"
+#endif
 
 #include <iostream>
 #include <stdio.h>
@@ -59,6 +69,9 @@ void usage ()
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
     " -t          report only theoretical predictions \n"
     " -d          report the means and variances of the Stokes parameters \n"
+#if HAVE_HEALPIX
+    " -H k        compute spherical histogram using 12*2^2k HEALPix pixels \n"
+#endif
        << endl;
 }
 
@@ -132,9 +145,23 @@ int main (int argc, char** argv)
   bool print = false;
   bool rho_stats = false;
   bool variances_and_means = false;
+
+#if HAVE_HEALPIX
+  //! Order of healpix maps
+  int healpix_order = 0;
+
+  //! Ordering scheme of healpix maps
+  string healpix_scheme = "RING";
+
+  //! Healpix workers
+  Healpix_Map<double> healpix_map;
+
+  //! Weight each pixel by the polarized flux
+  bool weight_by_pol_flux = true;
+#endif
   
   int c;
-  while ((c = getopt(argc, argv, "hN:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "hH:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -152,6 +179,10 @@ int main (int argc, char** argv)
       usage ();
       return 0;
 
+    case 'H':
+      healpix_order = atoi (optarg);
+      break;
+      
     case 'N':
       nsamp = nsamp * atof (optarg);
       break;
@@ -289,7 +320,15 @@ int main (int argc, char** argv)
   vector< Matrix<4,4, double> > acf (nlag);
   vector< Vector<4, double> > samples (nlag);
   unsigned current_sample = 0;
-  
+
+#if HAVE_HEALPIX
+  if (healpix_order > 0)
+  {
+    healpix_map.Set ( healpix_order, string2HealpixScheme(healpix_scheme) );
+    healpix_map.fill( 0.0 );
+  }
+#endif
+	
   for (uint64_t idat=0; run_simulation && idat<nsamp; idat++)
   {
     Vector<4, double> mean_stokes;
@@ -330,6 +369,17 @@ int main (int argc, char** argv)
       tot_rho += rho;
       totsq_rho += direct (rho, rho);
     }
+
+#if HAVE_HEALPIX
+
+    if (healpix_order)
+    {
+      const vec3 pol = vec3 (mean_stokes[1], mean_stokes[2], mean_stokes[3]);
+      double weight = weight_by_pol_flux ? sqrt( psq ) : mean_stokes[0];
+      healpix_map[healpix_map.vec2pix( pol )] += weight;
+    }
+    
+#endif
   }
 
   totp /= ntot;
@@ -407,6 +457,16 @@ int main (int argc, char** argv)
       plot << endl;
     }
   }
+
+#if HAVE_HEALPIX
+
+  if (healpix_order)
+  {
+    string out_name = "healpix.fits";
+    write_Healpix_map_to_fits ( out_name, healpix_map, PLANCK_FLOAT64 );
+  }
+  
+#endif
   
   if (!rho_stats)
     return 0;

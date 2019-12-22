@@ -8,10 +8,10 @@ pkginclude_HEADERS = mode.h modulated.h sample.h smoothed.h
 
 bin_PROGRAMS = epsic
 epsic_SOURCES = epsic.cpp
-LDADD = $(top_builddir)/libepsic.la
+LDADD = $(top_builddir)/libepsic.la @HEALPIX_LIBS@
 
 libepsic_la_LIBADD = util/libutil.la 
-AM_CPPFLAGS = -I$(top_srcdir)/util -I$(top_builddir)/util
+AM_CPPFLAGS = -I$(top_srcdir)/util -I$(top_builddir)/util @HEALPIX_CFLAGS@
 SUBDIRS = util
 
 
