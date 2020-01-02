@@ -1,13 +1,14 @@
 /***************************************************************************
  *
- *   Copyright (C) 2016 - 2017 by Willem van Straten
+ *   Copyright (C) 2016 - 2019 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
 
 /*
 
-  Simulates the fourth order moments of polarized electromagnetic radiation.
+  Simulates the fourth-order moments of polarized electromagnetic radiation.
+
   This software was written to verify the equations presented in
 
   van Straten & Tiburzi 2017, The Astrophysical Journal, 835:293
@@ -70,7 +71,7 @@ void usage ()
     " -t          report only theoretical predictions \n"
     " -d          report the means and variances of the Stokes parameters \n"
 #if HAVE_HEALPIX
-    " -H k        compute spherical histogram using 12*2^2k HEALPix pixels \n"
+    " -H k        compute spherical histogram using 12*4^k HEALPix pixels \n"
 #endif
        << endl;
 }
@@ -179,10 +180,12 @@ int main (int argc, char** argv)
       usage ();
       return 0;
 
+#if HAVE_HEALPIX
     case 'H':
       healpix_order = atoi (optarg);
       break;
-      
+#endif
+
     case 'N':
       nsamp = nsamp * atof (optarg);
       break;
