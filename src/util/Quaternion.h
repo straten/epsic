@@ -373,12 +373,12 @@ const Quaternion<T,Unitary> eigen (const Quaternion<T,Hermitian>& q)
   if (q.s1 < 0 && q.s0 != 0)
   {
     T m = 1.0 / sqrt( 2.0*p*(p-q.s1) );
-    return Quaternion<T,Unitary> (m*q.s3, -m*q.s2, -m*(p-q.s1), 0.0);
+    return Quaternion<T,Unitary> (m*q.s3, m*q.s2, m*(p-q.s1), 0.0);
   }
   else
   {
     T m = 1.0 / sqrt( 2.0*p*(p+q.s1) );
-    return Quaternion<T,Unitary> (m*(p+q.s1), 0.0, -m*q.s3, m*q.s2);
+    return Quaternion<T,Unitary> (m*(p+q.s1), 0.0, m*q.s3, m*q.s2);
   }
 }
 
