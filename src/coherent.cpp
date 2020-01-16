@@ -21,7 +21,9 @@ Spinor<double> spinor (const Stokes<double>& stokes)
   Jones<double> jones = convert(unit);
   cerr << "Jones=" << jones << endl;
   
-  return Spinor<double> (jones.j00, jones.j10);
+  Spinor<double> result (jones.j00, jones.j01);
+  result *= sqrt(stokes[0]);
+  return result;
 }
 
 coherent::coherent (double _coh)
