@@ -70,6 +70,7 @@ void usage ()
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
     " -t          report only theoretical predictions \n"
     " -d          report the means and variances of the Stokes parameters \n"
+    " -f          print the sample-mean Stokes parameters to stokes.txt \n"
 #if HAVE_HEALPIX
     " -H k        compute spherical histogram using 12*4^k HEALPix pixels \n"
 #endif
@@ -160,9 +161,11 @@ int main (int argc, char** argv)
   //! Weight each pixel by the polarized flux
   bool weight_by_pol_flux = true;
 #endif
-  
+ 
+  bool output_stokes = false;
+ 
   int c;
-  while ((c = getopt(argc, argv, "hH:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "fhH:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -175,6 +178,10 @@ int main (int argc, char** argv)
     
     switch (c)
     {
+
+    case 'f':
+      output_stokes = true;
+      break;
 
     case 'h':
       usage ();
@@ -331,12 +338,22 @@ int main (int argc, char** argv)
     healpix_map.fill( 0.0 );
   }
 #endif
-	
+
+  ofstream outfile;
+  if (output_stokes)
+    outfile.open ("stokes.txt");
+
   for (uint64_t idat=0; run_simulation && idat<nsamp; idat++)
   {
     Vector<4, double> mean_stokes;
 
     mean_stokes = stokes_sample->get_Stokes();
+
+    if (output_stokes)
+      outfile << mean_stokes[0] << " "
+              << mean_stokes[1] << " "
+              << mean_stokes[2] << " " 
+              << mean_stokes[3] << " " << endl;
 
     tot += mean_stokes;
     totsq += outer(mean_stokes, mean_stokes);
