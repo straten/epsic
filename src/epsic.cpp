@@ -129,6 +129,7 @@ int main (int argc, char** argv)
   bool run_simulation = true;
   
   uint64_t Mega = 1024 * 1024;
+  uint64_t Kilo = 1024;
   uint64_t nsamp = Mega;       // number of Stokes samples
   unsigned nint = 1;           // number of instances in each Stokes sample
   unsigned nlag = 0;           // number of lags to compute in ACF
@@ -194,7 +195,13 @@ int main (int argc, char** argv)
 #endif
 
     case 'N':
-      nsamp = nsamp * atof (optarg);
+      if (optarg[strlen(optarg)-1] == 'k')
+      {
+        optarg[strlen(optarg)-1] = '\0';
+        nsamp = Kilo * atof (optarg);
+      }
+      else
+        nsamp = Mega * atof (optarg);
       break;
 
     case 'n':
