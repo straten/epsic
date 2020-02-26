@@ -34,6 +34,8 @@ coherent::coherent (double _coh)
   coherence = _coh;
   Stokes<double> S (2,0,2*coherence,0);
   coupling->set_Stokes (S);
+
+  a_xform = b_xform = 0;
 }
 
 void coherent::set_normal (BoxMuller* n)
@@ -47,7 +49,7 @@ Stokes<double> coherent::get_Stokes ()
   if (!built)
     build ();
 
-#if 0
+#if 1
   double phi = drand48() * 2*M_PI;
   Stokes<double> S (1,0, coherence*cos(phi), coherence*sin(phi));
   coupling->set_Stokes (2.0*S);
@@ -55,14 +57,20 @@ Stokes<double> coherent::get_Stokes ()
 
   Stokes<double> result;
   for (unsigned i=0; i<sample_size; i++)
-    {
-      Spinor<double> amps = coupling->get_field();
-      Spinor<double> e = amps.x * a + amps.y * b;
-      
-      Vector<4, double> tmp;
-      compute_stokes (tmp, e);
-      result += tmp;
-    }
+  {
+    Spinor<double> amps = coupling->get_field();
+    Spinor<double> a_e = amps.x * a;
+    if (a_xform)
+      a_e = a_xform->transform(a_e);
+
+    Spinor<double> b_e = amps.y * b;
+    if (b_xform) 
+      b_e = b_xform->transform(b_e); 
+
+    Vector<4, double> tmp;
+    compute_stokes (tmp, a_e + b_e);
+    result += tmp;
+  }
   result /= sample_size;
   return result;
 }
@@ -71,6 +79,10 @@ void coherent::build ()
 {
   a = spinor (A->get_Stokes());
   b = spinor (B->get_Stokes());
+
+  a_xform = dynamic_cast<field_transformer*> (A);
+  b_xform = dynamic_cast<field_transformer*> (B);
+
   built = true;
 }
 

@@ -52,6 +52,9 @@ public:
   virtual BoxMuller* get_normal () { return normal; }
   virtual void set_normal (BoxMuller* n) { normal = n; }
 
+  //! Return the Jones matrix used to polarize
+  const Jones<double>& get_polarizer () const { return polarizer; }
+    
 private:
   Stokes<double> mean;
   Jones<double> polarizer;
@@ -74,12 +77,24 @@ public:
   void set_Stokes (const Stokes<double>& mean) { source->set_Stokes(mean); }
   Stokes<double> get_Stokes () { return source->get_Stokes(); }
 
-  Matrix<4,4, double> get_covariance () const { return source->get_covariance(); }
+  Matrix<4,4,double> get_covariance() const { return source->get_covariance(); }
   Stokes<double> get_mean () const { return source->get_mean(); }
 
   Spinor<double> get_field () { return source->get_field(); }
   BoxMuller* get_normal () { return source->get_normal(); }
   void set_normal (BoxMuller* n) { source->set_normal(n); }
+};
+
+class field_transformer : public mode_decorator
+{
+public:
+
+  field_transformer (mode* s) : mode_decorator (s) { }
+
+  Spinor<double> get_field () { return transform( source->get_field() ); }
+
+  virtual Spinor<double> transform ( const Spinor<double>& ) = 0;
+
 };
 
 #endif

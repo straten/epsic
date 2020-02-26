@@ -17,7 +17,7 @@
  *
  ***************************************************************************/
 
-class modulated_mode : public mode_decorator
+class modulated_mode : public field_transformer
 {
 #if _DEBUG
   double tot, totsq;
@@ -26,7 +26,8 @@ class modulated_mode : public mode_decorator
 
 public:
 
-  modulated_mode (mode* s) : mode_decorator(s) { 
+  modulated_mode (mode* s) : field_transformer(s)
+  { 
 #if -DEBUG
     tot=0; totsq=0; count=0; 
 #endif
@@ -41,7 +42,7 @@ public:
   // return the variance of the scalar modulation factor
   virtual double get_mod_variance () const = 0;
 
-  Spinor<double> get_field ()
+  Spinor<double> transform (const Spinor<double>& field)
   {
     double mod = modulation();
 #if _DEBUG
@@ -49,7 +50,7 @@ public:
     totsq+=mod*mod;
     count+=1;
 #endif
-    return sqrt(mod) * source->get_field();
+    return sqrt(mod) * field;
   }
 
   Matrix<4,4,double> get_covariance () const
@@ -216,7 +217,7 @@ public:
       return 0;
 
     Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
-    result *= double (width - ilag) / width * get_mod_variance();
+    result *= /* double (width - ilag) / width * */ get_mod_variance();
     return result;
   }
 };

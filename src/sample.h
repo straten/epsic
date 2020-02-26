@@ -220,6 +220,9 @@ class coherent : public combination
   Spinor<double> a;
   Spinor<double> b;
 
+  field_transformer* a_xform;
+  field_transformer* b_xform;
+
   mode* coupling;
   double coherence;
   
