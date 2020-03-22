@@ -2,9 +2,9 @@
 lib_LTLIBRARIES = libepsic.la
 
 libepsic_la_SOURCES = mode.cpp sample.cpp \
-	superposed.cpp composite.cpp disjoint.cpp coherent.cpp
+	superposed.cpp composite.cpp disjoint.cpp coherent.cpp covariant.cpp
 
-pkginclude_HEADERS = mode.h modulated.h sample.h smoothed.h
+pkginclude_HEADERS = mode.h modulated.h sample.h smoothed.h covariant.h
 
 bin_PROGRAMS = epsic
 epsic_SOURCES = epsic.cpp

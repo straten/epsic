@@ -1,4 +1,3 @@
-//-*-C++-*-
 /***************************************************************************
  *
  *   Copyright (C) 2020 by Willem van Straten
@@ -6,69 +5,86 @@
  *
  ***************************************************************************/
 
-// epsic/src/util/covariant.h
+#include "covariant.h"
 
-#include <queue>
-
-#ifndef __covariant_H
-#define __covariant_H
-
-/***************************************************************************
- *
- *  models covariant mode intensities
- *
- ***************************************************************************/
-
-class covariant_mode : public modulated_mode
+double covariant_mode::modulation ()
 {
-  friend class covariant_coordinator;
+  if (amps.size() == 0)
+    coordinator->get();
 
-  covariant_coordinator* coordinator;
-  std::queue<double> amps;
+  double retval = amps.front();
+  amps.pop();
+  return retval;
+}
 
-  double mean;
-  double variance;
+covariant_coordinator::covariant_coordinator (double covariance)
+{
+  a_in = b_in = 0;
+  a_out = b_out = 0;
 
-public:
+  covar[0][0] = covar[1][1] = 1.0;
+  covar[0][1] = covar[1][0] = covariance;
+}
 
-  // initialize based on the modulation index beta
-  covariant_mode (mode* s) : modulated_mode (s) { coordinator = 0; }
+void covariant_coordinator::set_modeA_input (modulated_mode* m)
+{
+  a_in = m;
+}
 
-  // return a random scalar modulation factor
-  double modulation ()
+void covariant_coordinator::set_modeB_input (modulated_mode* m)
+{
+  b_in = m;
+}
+
+modulated_mode* covariant_coordinator::get_modeA_output ()
+{
+  if (!a_out)
   {
-    if (amps.size() == 0)
-      coordinator->get();
+    if (!a_in)
+      throw std::runtime_error( "covariant_coordinator::get_modeA_output "
+                                "modeA_input not set" );
 
-    return amps.pop_front();
+    a_out = new covariant_mode ( a_in->get_source() );
+    a_out->coordinator = this;
   }
 
-  double get_mod_mean () const { return mean; }
-  
-  double get_mod_variance () const { return variance; }
+  return a_out;
+}
 
-};
-
-class covariant_coordinator
+modulated_mode* covariant_coordinator::get_modeB_output ()
 {
-  modulated_mode* a_in;
-  covariant_mode* a_out;
+  if (!b_out)
+  {
+    if (!b_in)
+      throw std::runtime_error( "covariant_coordinator::get_modeB_output "
+                                "modeB_input not set" );
 
-  modulated_mode* b_in;
-  covariant_mode* b_out;
+    b_out = new covariant_mode ( b_in->get_source() );
+    b_out->coordinator = this;
+  }
 
-  friend class covariant_mode;
-  void get();
+  return b_out;
+}
 
-public:
+void covariant_coordinator::get()
+{
+  if (!a_in)
+    throw std::runtime_error( "covariant_coordinator::get "
+                              "modeA_input not set" );
+  if (!b_in)
+    throw std::runtime_error( "covariant_coordinator::get "
+                              "modeB_input not set" );
+  if (!a_out)
+    throw std::runtime_error( "covariant_coordinator::get "
+                              "modeA_output not set" );
+  if (!b_out)
+    throw std::runtime_error( "covariant_coordinator::get "
+                              "modeB_output not set" );
 
-  covariant_coordinator ();
+  Vector<2,double> amps (a_in->modulation(), b_in->modulation());
+  Vector<2,double> result = covar * amps;
 
-  void set_modeA_input (modulated_mode*);
-  void set_modeB_input (modulated_mode*);
+  a_out->amps.push( result[0] );
+  b_out->amps.push( result[1] );
+}
 
-  modulated_mode* get_modeA_output ();
-  modulated_mode* get_modeB_output ();
-};
-
-#endif

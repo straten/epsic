@@ -11,6 +11,10 @@
 #ifndef __modulated_H
 #define __modulated_H
 
+#include "mode.h"
+
+#include <vector>
+
 /***************************************************************************
  *
  *  an amplitude modulated mode of electromagnetic radiation
@@ -217,7 +221,7 @@ public:
       return 0;
 
     Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
-    result *= /* double (width - ilag) / width * */ get_mod_variance();
+    result *= double (width - ilag) / width * get_mod_variance();
     return result;
   }
 };

@@ -28,6 +28,7 @@
 #include "modulated.h"
 #include "smoothed.h"
 #include "sample.h"
+#include "covariant.h"
 
 #if HAVE_HEALPIX
 #include "healpix_map.h"
@@ -67,6 +68,7 @@ void usage ()
     " -l beta     modulation index of log-normal amplitude modulation \n"
     " -b Nsamp    box-car smooth the amplitude modulation function \n"
     " -r Nsamp    use rectangular impulse amplitude modulation function \n"
+    " -k cov      covariant modulation intensities \n"
     " -X Nlag     compute cross-covariance matrices up to Nlag-1 \n"
     " -t          report only theoretical predictions \n"
     " -d          report the means and variances of the Stokes parameters \n"
@@ -141,6 +143,7 @@ int main (int argc, char** argv)
   mode source;
   combination* dual = NULL;
   sample* stokes_sample = NULL;
+  covariant_coordinator* covariant = NULL;
 
   mode_setup setup_A;
   mode_setup setup_B;
@@ -166,7 +169,7 @@ int main (int argc, char** argv)
   bool output_stokes = false;
  
   int c;
-  while ((c = getopt(argc, argv, "fhH:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "fhH:k:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -256,6 +259,10 @@ int main (int argc, char** argv)
       setup->square_modulator = atoi (usearg);
       break;
 
+    case 'k':
+      covariant = new covariant_coordinator( atof(optarg) );
+      break;
+
     case 'X':
       nlag = atoi (optarg);
       break;
@@ -300,6 +307,30 @@ int main (int argc, char** argv)
 
     dual->A = setup_A.setup_mode (dual->A);
     dual->B = setup_B.setup_mode (dual->B);
+
+    if (covariant)
+    {
+      modulated_mode* Ain = dynamic_cast<modulated_mode*> (dual->A);
+      if (!Ain)
+      {
+        cerr << "epsic: mode A not modulated and cannot be covariant" << endl;
+        return -1;
+      }
+
+      modulated_mode* Bin = dynamic_cast<modulated_mode*> (dual->B);
+      if (!Bin)
+      {
+        cerr << "epsic: mode B not modulated and cannot be covariant" << endl;
+        return -1;
+      }
+
+      covariant->set_modeA_input (Ain);
+      covariant->set_modeB_input (Bin);
+
+      dual->A = covariant->get_modeA_output ();
+      dual->B = covariant->get_modeB_output ();
+    }
+
   }
   else
   {
@@ -457,6 +488,8 @@ int main (int argc, char** argv)
   
   if (nlag)
   {
+    cerr << "ACF output in acf.txt and acf_plot.txt" << endl;
+
     ofstream out ("acf.txt");
     ofstream plot ("acf_plot.txt");
     

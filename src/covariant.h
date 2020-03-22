@@ -8,16 +8,21 @@
 
 // epsic/src/util/covariant.h
 
-#include <queue>
-
 #ifndef __covariant_H
 #define __covariant_H
+
+#include "modulated.h"
+#include "Matrix.h"
+
+#include <queue>
 
 /***************************************************************************
  *
  *  models covariant mode intensities
  *
  ***************************************************************************/
+
+class covariant_coordinator;
 
 class covariant_mode : public modulated_mode
 {
@@ -35,13 +40,7 @@ public:
   covariant_mode (mode* s) : modulated_mode (s) { coordinator = 0; }
 
   // return a random scalar modulation factor
-  double modulation ()
-  {
-    if (amps.size() == 0)
-      coordinator->get();
-
-    return amps.pop_front();
-  }
+  double modulation ();
 
   double get_mod_mean () const { return mean; }
   
@@ -60,9 +59,11 @@ class covariant_coordinator
   friend class covariant_mode;
   void get();
 
+  Matrix<2,2,double> covar;
+
 public:
 
-  covariant_coordinator ();
+  covariant_coordinator (double covariance);
 
   void set_modeA_input (modulated_mode*);
   void set_modeB_input (modulated_mode*);
