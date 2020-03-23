@@ -76,6 +76,7 @@ void usage ()
     " -f          print the sample-mean Stokes parameters to stokes.txt \n"
 #if HAVE_HEALPIX
     " -H k        compute spherical histogram using 12*4^k HEALPix pixels \n"
+    " -w 1|p|I    weight each count by unity, polarized flux, or total flux \n"
 #endif
        << endl;
 }
@@ -163,14 +164,16 @@ int main (int argc, char** argv)
   //! Healpix workers
   Healpix_Map<double> healpix_map;
 
-  //! Weight each pixel by the polarized flux
-  bool weight_by_pol_flux = true;
+  //! Weight each count by unity, polarized flux, or total flux
+  typedef enum { Unity, PolarizedFlux, TotalFlux } Weight;
+
+  Weight weight = PolarizedFlux;
 #endif
  
   bool output_stokes = false;
  
   int c;
-  while ((c = getopt(argc, argv, "fhH:k:N:n:Sc:C:dD:s:l:b:r:X:t")) != -1)
+  while ((c = getopt(argc, argv, "fhH:k:N:n:Sc:C:dD:s:l:b:r:X:tw:")) != -1)
   {
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
@@ -297,6 +300,25 @@ int main (int argc, char** argv)
     case 't':
       run_simulation = false;
       break;
+
+    case 'w':
+      switch (optarg[0])
+      {
+        case '1':
+          weight = Unity;
+          cerr << "epsic: will weight each count by unity" << endl;
+          break;
+        case 'p':
+          weight = PolarizedFlux;
+          cerr << "epsic: will weight each count by polarized flux" << endl;
+          break;
+        case 'I':
+          weight = TotalFlux;
+          cerr << "epsic: will weight each count by total flux" << endl;
+          break;
+      }
+      break;
+
     }
   }
 
@@ -434,8 +456,12 @@ int main (int argc, char** argv)
     if (healpix_order)
     {
       const vec3 pol = vec3 (mean_stokes[1], mean_stokes[2], mean_stokes[3]);
-      double weight = weight_by_pol_flux ? sqrt( psq ) : mean_stokes[0];
-      healpix_map[healpix_map.vec2pix( pol )] += weight;
+      double count = 1.0;
+      if (weight == PolarizedFlux)
+        count = sqrt( psq );
+      else if (weight == TotalFlux)
+        count = mean_stokes[0];
+      healpix_map[healpix_map.vec2pix( pol )] += count;
     }
     
 #endif
@@ -524,6 +550,7 @@ int main (int argc, char** argv)
   if (healpix_order)
   {
     string out_name = "healpix.fits";
+    unlink (out_name.c_str());
     write_Healpix_map_to_fits ( out_name, healpix_map, PLANCK_FLOAT64 );
   }
   
