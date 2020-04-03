@@ -163,12 +163,12 @@ int main (int argc, char** argv)
 
   //! Healpix workers
   Healpix_Map<double> healpix_map;
+#endif
 
   //! Weight each count by unity, polarized flux, or total flux
   typedef enum { Unity, PolarizedFlux, TotalFlux } Weight;
 
   Weight weight = PolarizedFlux;
-#endif
  
   bool output_stokes = false;
  
