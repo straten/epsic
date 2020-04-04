@@ -13,15 +13,15 @@ using namespace std;
 Spinor<double> spinor (const Stokes<double>& stokes)
 {
   cerr << "Stokes=" << stokes << endl;
-  Quaternion<double, Hermitian> herm = natural(stokes);
-  cerr << "Natural=" << herm << endl;
-  Quaternion<double, Unitary> unit = eigen (herm);
-  cerr << "Unitary=" << unit << endl;
+  Quaternion<double, Hermitian> H = natural(stokes);
+  cerr << "Natural=" << H << endl;
+  Quaternion<double, Unitary> U = eigen (H);
+  cerr << "Unitary=" << U << endl;
 
-  Jones<double> jones = convert(unit);
+  Jones<double> jones = herm( convert(U) );
   cerr << "Jones=" << jones << endl;
   
-  Spinor<double> result (jones.j00, jones.j01);
+  Spinor<double> result (jones.j00, jones.j10);
   result *= sqrt(stokes[0]);
   return result;
 }
