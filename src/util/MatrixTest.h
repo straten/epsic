@@ -15,7 +15,7 @@ class MatrixTest {
  public:
   
   MatrixTest ()
-    { verbose = false; scale=1e3; tolerance = 1e-12; }
+    { verbose = false; scale=1e3; tolerance = 1e-12; random_init(); }
 
   virtual ~MatrixTest () {}
   
