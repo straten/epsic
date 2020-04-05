@@ -50,26 +50,61 @@ public:
 
 class covariant_coordinator
 {
-  modulated_mode* a_in;
-  covariant_mode* a_out;
-
-  modulated_mode* b_in;
-  covariant_mode* b_out;
+private:
+  covariant_mode* out[2];
 
   friend class covariant_mode;
   void get();
 
-  Matrix<2,2,double> covar;
+  // coefficient of mode intensity correlation
+  double correlation;
+
+protected:
+
+  double get_correlation () const { return correlation; }
+
+  //! Derived classes return a pair of mode intensities
+  virtual void get_modulation (double& A, double& B) = 0;
 
 public:
 
-  covariant_coordinator (double covariance);
+  //! Construct with correlation coefficient
+  covariant_coordinator (double correlation);
 
-  void set_modeA_input (modulated_mode*);
-  void set_modeB_input (modulated_mode*);
+  modulated_mode* get_modulated_mode (unsigned index, mode*);
+};
 
-  modulated_mode* get_modeA_output ();
-  modulated_mode* get_modeB_output ();
+class bivariate_lognormal_modes : public covariant_coordinator
+{
+  Matrix<2,2,double> meansq;
+  Vector<2,double> mean;
+  unsigned count;
+
+  Matrix<2,2,double> correlator;
+  void build ();
+  bool built;
+  double log_sigma[2];
+
+  //! random number generator
+  BoxMuller* normal;
+
+protected:
+  void get_modulation (double& A, double& B);
+
+public:
+
+  bivariate_lognormal_modes (double correlation) 
+  : covariant_coordinator(correlation) 
+  { built = false; set_beta(0,1.0); set_beta(1,1.0); }
+
+  ~bivariate_lognormal_modes ();
+
+  void set_beta (unsigned index, double);
+
+  //! Return BoxMuller object used to generate normally distributed numbers
+  virtual BoxMuller* get_normal () { return normal; }
+  virtual void set_normal (BoxMuller* n) { normal = n; }
+
 };
 
 #endif

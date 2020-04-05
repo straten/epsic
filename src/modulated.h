@@ -105,6 +105,12 @@ public:
     return sqrt( get_mod_variance() );
   }
 
+  //! return the standard deviation of the logarithm of amplitude
+  double get_log_sigma () const
+  {
+    return log_sigma;
+  }
+
   // return a random scalar modulation factor
   double modulation ()
   {

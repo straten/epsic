@@ -95,22 +95,32 @@ public:
   // modulation index of log-normal modulation function
   double beta;
 
+  // manages covariant modes
+  bivariate_lognormal_modes* covariant;
+
   mode_setup () : mean (1,0,0,0)
   {
     smooth_before = 0;
     smooth_modulator = 0;
     square_modulator = 0;
     beta = 0;
+    covariant = 0;
   }
 
-  mode* setup_mode (mode* s)
+  mode* setup_mode (mode* s, unsigned index = 0)
   {
     modulated_mode* mod = 0;
 
     if (s)
       s->set_Stokes (mean);
-    
-    if (beta)
+
+    if (covariant)
+    {
+      if (beta)
+        covariant->set_beta (index, beta);
+      s = mod = covariant->get_modulated_mode (index, s);
+    }
+    else if (beta)
       s = mod = new lognormal_mode (s, beta);
 
     if (smooth_modulator > 1 && mod)
@@ -145,7 +155,7 @@ int main (int argc, char** argv)
   mode source;
   combination* dual = NULL;
   sample* stokes_sample = NULL;
-  covariant_coordinator* covariant = NULL;
+  bivariate_lognormal_modes* covariant = NULL;
 
   mode_setup setup_A;
   mode_setup setup_B;
@@ -264,7 +274,9 @@ int main (int argc, char** argv)
       break;
 
     case 'k':
-      covariant = new covariant_coordinator( atof(optarg) );
+      covariant = new bivariate_lognormal_modes( atof(optarg) );
+      setup_A.covariant = covariant;
+      setup_B.covariant = covariant;
       break;
 
     case 'X':
@@ -328,36 +340,12 @@ int main (int argc, char** argv)
   {
     stokes_sample = dual;
 
-    dual->A = setup_A.setup_mode (dual->A);
-    dual->B = setup_B.setup_mode (dual->B);
-
-    if (covariant)
-    {
-      modulated_mode* Ain = dynamic_cast<modulated_mode*> (dual->A);
-      if (!Ain)
-      {
-        cerr << "epsic: mode A not modulated and cannot be covariant" << endl;
-        return -1;
-      }
-
-      modulated_mode* Bin = dynamic_cast<modulated_mode*> (dual->B);
-      if (!Bin)
-      {
-        cerr << "epsic: mode B not modulated and cannot be covariant" << endl;
-        return -1;
-      }
-
-      covariant->set_modeA_input (Ain);
-      covariant->set_modeB_input (Bin);
-
-      dual->A = covariant->get_modeA_output ();
-      dual->B = covariant->get_modeB_output ();
-    }
-
+    dual->A = setup_A.setup_mode (dual->A, 0);
+    dual->B = setup_B.setup_mode (dual->B, 1);
   }
   else
   {
-    mode* s = setup_A.setup_mode(&source);
+    mode* s = setup_A.setup_mode (&source);
 
     if (smooth_after > 1)
       stokes_sample = new boxcar_sample (s, smooth_after);
@@ -372,6 +360,9 @@ int main (int argc, char** argv)
 
   random_init ();
   BoxMuller gasdev (time(NULL));
+
+  if (covariant)
+    covariant->set_normal (&gasdev);
 
   if (dual)
     dual->set_normal (&gasdev);
@@ -555,7 +546,10 @@ int main (int argc, char** argv)
   }
   
 #endif
-  
+ 
+  if (covariant)
+    delete covariant;
+ 
   if (!rho_stats)
     return 0;
 

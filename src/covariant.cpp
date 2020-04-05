@@ -7,6 +7,10 @@
 
 #include "covariant.h"
 
+#include <assert.h>
+
+using namespace std;
+
 double covariant_mode::modulation ()
 {
   if (amps.size() == 0)
@@ -17,74 +21,118 @@ double covariant_mode::modulation ()
   return retval;
 }
 
-covariant_coordinator::covariant_coordinator (double covariance)
+covariant_coordinator::covariant_coordinator (double _correlation)
 {
-  a_in = b_in = 0;
-  a_out = b_out = 0;
-
-  covar[0][0] = covar[1][1] = 1.0;
-  covar[0][1] = covar[1][0] = covariance;
+  correlation = _correlation;
+  out[0] = out[1] = 0;
 }
 
-void covariant_coordinator::set_modeA_input (modulated_mode* m)
+modulated_mode* covariant_coordinator::get_modulated_mode (unsigned index, mode* in)
 {
-  a_in = m;
-}
+  assert (index < 2);
 
-void covariant_coordinator::set_modeB_input (modulated_mode* m)
-{
-  b_in = m;
-}
-
-modulated_mode* covariant_coordinator::get_modeA_output ()
-{
-  if (!a_out)
+  if (!out[index])
   {
-    if (!a_in)
-      throw std::runtime_error( "covariant_coordinator::get_modeA_output "
-                                "modeA_input not set" );
+    if (!in)
+      throw std::runtime_error( "covariant_coordinator::get_modulated_mode "
+                                "input not set" );
 
-    a_out = new covariant_mode ( a_in->get_source() );
-    a_out->coordinator = this;
+    out[index] = new covariant_mode ( in );
+    out[index]->coordinator = this;
   }
 
-  return a_out;
-}
-
-modulated_mode* covariant_coordinator::get_modeB_output ()
-{
-  if (!b_out)
-  {
-    if (!b_in)
-      throw std::runtime_error( "covariant_coordinator::get_modeB_output "
-                                "modeB_input not set" );
-
-    b_out = new covariant_mode ( b_in->get_source() );
-    b_out->coordinator = this;
-  }
-
-  return b_out;
+  return out[index];
 }
 
 void covariant_coordinator::get()
 {
-  if (!a_in)
-    throw std::runtime_error( "covariant_coordinator::get "
-                              "modeA_input not set" );
-  if (!b_in)
-    throw std::runtime_error( "covariant_coordinator::get "
-                              "modeB_input not set" );
-  if (!a_out)
-    throw std::runtime_error( "covariant_coordinator::get "
-                              "modeA_output not set" );
-  if (!b_out)
-    throw std::runtime_error( "covariant_coordinator::get "
-                              "modeB_output not set" );
+  for (unsigned i=0; i<2; i++)
+    if (!out[i])
+      throw std::runtime_error( "covariant_coordinator::get "
+                                "output not set" );
 
-  Vector<2,double> amps (a_in->modulation(), b_in->modulation());
-  Vector<2,double> result = covar * amps;
+  double a0, a1;
+  get_modulation (a0, a1);
 
-  a_out->amps.push( result[0] );
-  b_out->amps.push( result[1] );
+  // cerr << "covariant_coordinator::get a0=" << a0 << " a1=" << a1 << endl;
+
+  out[0]->amps.push( a0 );
+  out[1]->amps.push( a1 );
+}
+
+Matrix<2,2,double> sqrt (const Matrix<2,2,double>& C)
+{
+  double det = C[0][0]*C[1][1] - C[0][1]*C[1][0];
+  double trace = C[0][0]+C[1][1];
+
+  double s = sqrt(det);
+  double t = sqrt(trace + 2*s);
+
+  Matrix<2,2,double> result (s);
+  result += C;
+  result /= t;
+  return result;
+}
+
+bivariate_lognormal_modes::~bivariate_lognormal_modes ()
+{
+  mean /= count;
+  meansq /= count;
+  meansq -= outer (mean, mean);
+
+  cerr << "bivariate_lognormal_modes mean=" << mean << " covar=\n" << meansq << endl;
+}
+
+void bivariate_lognormal_modes::build ()
+{
+  double correlation = get_correlation();
+
+  Matrix<2,2,double> covar;
+
+  covar[0][0] = log_sigma[0]*log_sigma[0];
+  covar[1][1] = log_sigma[1]*log_sigma[1];
+
+  double beta0 = sqrt( exp(covar[0][0]) - 1.0 );
+  double beta1 = sqrt( exp(covar[1][1]) - 1.0 );
+
+  covar[0][1] = covar[1][0] = log( correlation * beta0 * beta1 + 1 );
+
+  correlator = sqrt(covar);
+
+  cerr << "covar=\n" << covar << " correlator=\n" << correlator << endl;
+
+  meansq = 0;
+  mean = 0;
+  count = 0;
+
+  built = true;
+}
+
+void bivariate_lognormal_modes::get_modulation (double& A, double& B)
+{
+  if (!built)
+    build ();
+
+  assert (normal != NULL);
+
+  Vector<2,double> amps;
+  amps[0] = normal->evaluate();
+  amps[1] = normal->evaluate();
+
+  amps = correlator * amps;
+
+  amps[0] = A = exp (amps[0] - 0.5*log_sigma[0]*log_sigma[0]);
+  amps[1] = B = exp (amps[1] - 0.5*log_sigma[1]*log_sigma[1]);
+
+  mean += amps;
+  meansq += outer (amps, amps);
+  count ++;
+}
+
+void bivariate_lognormal_modes::set_beta (unsigned index, double beta)
+{
+  assert (index < 2);
+  log_sigma[index] = sqrt( log( beta*beta + 1.0 ) );
+  built = false;
 }
 
