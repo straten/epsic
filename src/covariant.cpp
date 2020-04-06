@@ -80,7 +80,10 @@ bivariate_lognormal_modes::~bivariate_lognormal_modes ()
   meansq /= count;
   meansq -= outer (mean, mean);
 
-  cerr << "bivariate_lognormal_modes mean=" << mean << " covar=\n" << meansq << endl;
+  cerr << "\n"
+          "bivariate_lognormal_modes mean=" << mean << " "
+          "rho=" << meansq[0][1]/sqrt(meansq[0][0]*meansq[1][1]) << "\n"
+          "covar=\n" << meansq << endl;
 }
 
 void bivariate_lognormal_modes::build ()
@@ -95,11 +98,31 @@ void bivariate_lognormal_modes::build ()
   double beta0 = sqrt( exp(covar[0][0]) - 1.0 );
   double beta1 = sqrt( exp(covar[1][1]) - 1.0 );
 
+  double denom = beta0 * beta1;
+  double max_correlation = (exp(log_sigma[0]*log_sigma[1]) - 1.0) / denom;
+  double min_correlation = (exp(-log_sigma[0]*log_sigma[1]) - 1.0) / denom;
+
+  if (correlation > max_correlation)
+  {
+    cerr << "bivariate_lognormal_modes::build correlation=" << correlation
+         << " > max=" << max_correlation << endl;
+
+    throw std::runtime_error( "bivariate_lognormal_modes::build "
+                              "maximum correlation exceeded" );
+  }
+
+  if (correlation < min_correlation)
+  { 
+    cerr << "bivariate_lognormal_modes::build correlation=" << correlation
+         << " < min =" << min_correlation << endl;
+    
+    throw std::runtime_error( "bivariate_lognormal_modes::build "
+                              "minimum correlation exceeded" );
+  }
+
   covar[0][1] = covar[1][0] = log( correlation * beta0 * beta1 + 1 );
 
   correlator = sqrt(covar);
-
-  cerr << "covar=\n" << covar << " correlator=\n" << correlator << endl;
 
   meansq = 0;
   mean = 0;
