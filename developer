@@ -1,0 +1,23 @@
+#!/bin/csh -fe
+
+if ( "$1" == "-h" || "$1" == "--help" ) then
+  echo
+  echo "developer: updates Git administration files with developer name"
+  echo
+  echo "usage:"
+  echo "  developer <anon>"
+  echo
+  echo "where:"
+  echo "  <anon> switch to anonymous"
+  echo
+  exit
+endif
+
+if ( "$1" == "anon" ) then
+  echo "Git repository access changed to anonymous"
+  git config remote.origin.url https://github.com/straten/epsic.git
+else
+  echo "Git repository developer name changed to straten"
+  git config remote.origin.url git@github.com:straten/epsic.git
+endif
+
