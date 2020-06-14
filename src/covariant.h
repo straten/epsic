@@ -71,6 +71,9 @@ public:
   //! Construct with correlation coefficient
   covariant_coordinator (double correlation);
 
+  //! Virtual destructor (required for abstract base class)
+  virtual ~covariant_coordinator () {}
+
   modulated_mode* get_modulated_mode (unsigned index, mode*);
 };
 
