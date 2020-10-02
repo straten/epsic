@@ -24,3 +24,5 @@ clean-local:
 	perl -pi -e 's|mode\.C|mode\.cpp|g' .deps/mode.Plo
 	perl -pi -e 's|epsic\.C|epsic\.cpp|g' .deps/epsic.Po
 
+include $(top_srcdir)/config/Makefile.local
+
