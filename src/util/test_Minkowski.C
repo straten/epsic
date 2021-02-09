@@ -5,6 +5,7 @@
  *
  ***************************************************************************/
 
+#include "Minkowski.h"
 #include "Dirac.h"
 #include "Jacobi.h"
 
@@ -12,27 +13,43 @@ using namespace std;
 
 int main () 
 {
-  // test that Dirac matrices are orthogonal to each other
+  // test that the Minkowski basis matrices are orthogonal to each other
+
+  unsigned count = 0;
 
   for (unsigned i=0; i<4; i++)
    {
-    for (unsigned j=0; j<4; j++)
+    for (unsigned j=i; j<4; j++)
     {
-      Dirac::type M1 = Dirac::matrix (i, j);
+      Stokes<double> A = 0.0;
+      Stokes<double> B = 0.0;
+
+      A[i] = 1.0;
+      B[j] = 1.0;
+
+      Matrix<4,4,double> M1 = Minkowski::outer (A, B) + Minkowski::outer (B, A);
+      cerr << count << "::" << M1 << endl;
+      count ++;
 
       for (unsigned k=0; k<4; k++)
       {
-        for (unsigned l=0; l<4; l++)
+        for (unsigned l=k; l<4; l++)
         {
-          Dirac::type M2 = Dirac::matrix (k, l);
+          Stokes<double> A = 0.0;
+          Stokes<double> B = 0.0;
 
-          // Dirac::type R = M1 * M2;
+          A[k] = 1.0;
+          B[l] = 1.0;
 
-          complex<double> tr = trace(M1 * M2);
+          Matrix<4,4,double> M2 = Minkowski::outer (A, B) + Minkowski::outer (B, A);
 
-          complex<double> expect (0,0);
+          double tr = trace(M1 * M2);
+
+          double expect = 0.0;
           if (i==k && j==l)
-            expect = complex<double> (4,0);
+            expect = 2;
+          if (i==j)
+            expect *= 2;
 
           if (tr != expect)
           {   
