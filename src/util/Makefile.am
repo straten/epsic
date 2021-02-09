@@ -56,3 +56,5 @@ noinst_PROGRAMS                 = generate_PromoteTraits
 generate_PromoteTraits_SOURCES  = generate_PromoteTraits.C
 generate_PromoteTraits_LDADD    =
 
+include $(top_srcdir)/config/Makefile.local
+

@@ -13,7 +13,7 @@ double conj (double x) { return x; }
 
 // specialize for complex matrices
 template <unsigned RC, typename T>
-void test_Jacobi (Matrix<RC,RC,T>& matrix, float tolerance)
+void test_Jacobi (Matrix<RC,RC,T>& matrix, double tolerance)
 {
   unsigned i,j;
 
@@ -57,7 +57,7 @@ void test_Jacobi (Matrix<RC,RC,T>& matrix, float tolerance)
 }
 
 template<typename T, unsigned dim> 
-void runtest (unsigned loops, float tolerance)
+void runtest (unsigned loops, double tolerance)
 {
   std::cerr << loops << " " << dim << "x" << dim << " Jacobi solutions" << std::endl;
 
@@ -74,7 +74,7 @@ void runtest (unsigned loops, float tolerance)
 int main () try {
 
   unsigned loops = 100000;
-  float tolerance = 1e-12;
+  double tolerance = 1e-12;
 
   std::cerr << "Testing symmetric: ";
   runtest<double,7> (loops, tolerance);

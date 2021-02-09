@@ -1,0 +1,6 @@
+
+all_headers := $(nodist_pkginclude_HEADERS) $(pkginclude_HEADERS)
+
+all-local:
+	-for file in $(all_headers); do rm -f $(includedir)/$$file ; done
+

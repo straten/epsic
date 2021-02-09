@@ -13,7 +13,7 @@ template <typename T> T sqr (T x) { return x*x; }
 
 
 template <typename T, QBasis B>
-void test_det (const Quaternion<T, B>& q, float tolerance)
+void test_det (const Quaternion<T, B>& q, double tolerance)
 {
   Jones<T> j = convert(q);
 
@@ -28,7 +28,7 @@ void test_det (const Quaternion<T, B>& q, float tolerance)
 }
 
 template <typename T>
-void test_polar (const Jones<T>& j, float tolerance)
+void test_polar (const Jones<T>& j, double tolerance)
 {
   // pull the jones matrix apart into its Hermitian and Unitary components
   std::complex<T> d;
@@ -75,7 +75,7 @@ void test_polar (const Jones<T>& j, float tolerance)
 template <typename T>
 void test_matrix (const Jones<T>& j1, const Jones<T>& j2,
 		  const Quaternion<T>& q, const std::complex<T>& c,
-		  float scale, float tolerance, bool verbose)
+		  double scale, double tolerance, bool verbose)
 {
   if (verbose)
     cerr << "test_matrix Jones/Quaternion Isomorphism" << endl;

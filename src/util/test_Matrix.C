@@ -11,9 +11,9 @@ using namespace std;
 
 int main ()
 {
-  Matrix<3, 4, float> m1;
-  Matrix<4, 5, float> m2;
-  Vector<4, float> v;
+  Matrix<3, 4, double> m1;
+  Matrix<4, 5, double> m2;
+  Vector<4, double> v;
 
   random_matrix (m1, 10.0);
   random_matrix (m2, 10.0);

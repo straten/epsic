@@ -15,8 +15,8 @@ int main ()
 {
   unsigned loops = 1024 * 1024;
 
-  MatrixTest <Quaternion<float,Unitary>,
-    Quaternion<double,Unitary>, float> testu;
+  MatrixTest <Quaternion<double,Unitary>,
+    Quaternion<double,Unitary>, double> testu;
 
   try {
     cerr << "Testing " << loops << " Unitary Quaternion variations" << endl;
@@ -30,8 +30,8 @@ int main ()
 
 
 
-  MatrixTest <Quaternion<std::complex<float>,Hermitian>, 
-    Quaternion<std::complex<double>,Hermitian>, std::complex<float> > testh;
+  MatrixTest <Quaternion<std::complex<double>,Hermitian>, 
+    Quaternion<std::complex<double>,Hermitian>, std::complex<double> > testh;
 
   try {
     cerr 
@@ -44,8 +44,8 @@ int main ()
   }
 
 
-  MatrixTest <Quaternion<std::complex<float>, Unitary>, 
-    Quaternion<std::complex<double>, Unitary>, std::complex<float> > testub;
+  MatrixTest <Quaternion<std::complex<double>, Unitary>, 
+    Quaternion<std::complex<double>, Unitary>, std::complex<double> > testub;
 
   try {
     cerr 

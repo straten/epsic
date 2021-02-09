@@ -13,7 +13,7 @@ using namespace std;
 template <typename T> T sqr (T x) { return x*x; }
 
 template <typename T>
-void test_eigen(const Quaternion<T, Hermitian>& q, float tolerance)
+void test_eigen(const Quaternion<T, Hermitian>& q, double tolerance)
 {
   // cerr << "test_eigen: q=" << q << endl;
 
@@ -66,7 +66,7 @@ template <typename T>
 void test_matrix (const Quaternion<T, Hermitian>& q1, 
 		  const Quaternion<T, Hermitian>& q2,
 		  const double& c0, const double& c1,
-		  float scale, float tolerance, bool verbose)
+		  double scale, double tolerance, bool verbose)
 {
   if (verbose)
     cerr << "test_matrix eigen quaternion" << endl;

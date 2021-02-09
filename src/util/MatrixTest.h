@@ -23,9 +23,9 @@ class MatrixTest {
   
   bool verbose;
 
-  float scale;
+  double scale;
 
-  float tolerance;
+  double tolerance;
 
 };
 
@@ -40,7 +40,7 @@ T max (const T& a, const U& b)
 
 template <class Type1, class Type2, class Element>
 void test_matrix (const Type1& t1_1, const Type1& t1_2, const Type2& t2_null,
-		  const Element& p, float scale, float tolerance, bool verbose)
+		  const Element& p, double scale, double tolerance, bool verbose)
 {
   Type1 temp1;
   Type1 temp2;
@@ -220,7 +220,7 @@ void test_matrix (const Type1& t1_1, const Type1& t1_2, const Type2& t2_null,
   t2_2 = t1_1;
 
   if (verbose) std::cerr << "norm (Type2)" << std::endl;
-  float variance1 = norm(t2_2);
+  double variance1 = norm(t2_2);
 
   if (verbose) std::cerr << "herm (Type2)" << std::endl;
   t2_1 = t2_2*herm(t2_2);
@@ -251,7 +251,7 @@ void test_matrix (const Type1& t1_1, const Type1& t1_2, const Type2& t2_null,
   if (verbose) std::cerr << "Type2 * Type2" << std::endl;
   t2_1 = Type2(t1_1) * t2_2;
 
-  float threshold = tolerance * max (norm(t1_1), norm(t2_2));
+  double threshold = tolerance * max (norm(t1_1), norm(t2_2));
 
   if (verbose) std::cerr << "norm (Type2)" << std::endl;
   variance1 = norm (Type2::identity() - t2_1);

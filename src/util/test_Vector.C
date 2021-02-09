@@ -11,8 +11,8 @@ using namespace std;
 
 int main ()
 {
-  Vector<3,float> v1;
-  Vector<3,float> v2;
+  Vector<3,double> v1;
+  Vector<3,double> v2;
 
   random_vector (v1, 10.0);
   random_vector (v2, 10.0);

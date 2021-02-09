@@ -13,7 +13,7 @@ int main ()
 {
   unsigned loops = 1024 * 1024;
 
-  MatrixTest <Jones<float>, Jones<double>, std::complex<float> > test;
+  MatrixTest <Jones<double>, Jones<double>, std::complex<double> > test;
 
   try {
     cerr << "Testing " << loops << " Jones matrix variations" << endl;
