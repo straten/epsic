@@ -16,10 +16,10 @@ int main ()
   // test addition
   //
   
-  Estimate<float> e1 (5, 1);
-  Estimate<float> e2 (7, 1);
+  Estimate<double> e1 (5, 1);
+  Estimate<double> e2 (7, 1);
   
-  Estimate<float> result = e1 + e2;
+  Estimate<double> result = e1 + e2;
   
   if (result.val != 12.0 || result.var != 2.0) {
     cerr << "test_Estimate: Estimate addition error " << result << endl;
@@ -27,8 +27,8 @@ int main ()
   }
       
   
-  Estimate<float> x (4.6, 0.09);
-  Estimate<float> y (-0.5, 0.01);
+  Estimate<double> x (4.6, 0.09);
+  Estimate<double> y (-0.5, 0.01);
 
   // ///////////////////////////////////////////////////////////////////////
   //
@@ -67,7 +67,7 @@ int main ()
   // test the accumulation of mean 
   //
 
-  MeanEstimate<float> mean;
+  MeanEstimate<double> mean;
 
   mean += e1;
   mean += e2;
