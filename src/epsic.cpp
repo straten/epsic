@@ -94,7 +94,9 @@ public:
   unsigned square_modulator;
   // modulation index of log-normal modulation function
   double beta;
-
+  // sample size
+  unsigned nint;
+  
   // manages covariant modes
   bivariate_lognormal_modes* covariant;
 
@@ -105,6 +107,7 @@ public:
     square_modulator = 0;
     beta = 0;
     covariant = 0;
+    nint = 1;
   }
 
   mode* setup_mode (mode* s, unsigned index = 0)
@@ -127,7 +130,7 @@ public:
       s = new boxcar_modulated_mode (mod, smooth_modulator);
 
     if (square_modulator > 1 && mod)
-      s = new square_modulated_mode (mod, square_modulator);
+      s = new square_modulated_mode (mod, square_modulator, nint);
 
     if (smooth_before > 1)
       s = new boxcar_mode (s, smooth_before);
@@ -336,6 +339,9 @@ int main (int argc, char** argv)
 
   source.set_Stokes (stokes);
 
+  // some modulators need to know the sample size
+  setup_A.nint = setup_B.nint = nint;
+  
   if (dual)
   {
     stokes_sample = dual;

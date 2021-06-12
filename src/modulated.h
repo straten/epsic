@@ -187,6 +187,7 @@ public:
 
 class square_modulated_mode : public modulated_mode
 {
+  unsigned sample_size;
   unsigned width;
   unsigned current;
   double value;
@@ -195,8 +196,9 @@ class square_modulated_mode : public modulated_mode
 
 public:
 
-  square_modulated_mode (modulated_mode* s, unsigned n)
-    : modulated_mode(s->get_source()) { width = n; current = n; mod = s; }
+  square_modulated_mode (modulated_mode* s, unsigned n, unsigned sz)
+    : modulated_mode(s->get_source())
+  { width = n; current = n; mod = s; sample_size = sz; }
 
   double modulation ()
   {
@@ -227,7 +229,17 @@ public:
       return 0;
 
     Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
-    result *= double (width - ilag) / width * get_mod_variance();
+
+    if (sample_size % width == 0)
+    {
+      unsigned pulses = sample_size / width;
+      double zeroes = ilag * (pulses - 1);
+      double length = sample_size - ilag;
+      result *= get_mod_variance() * (1.0 - zeroes / length);
+    }
+    else
+      result *= get_mod_variance() * double (width - ilag) / width;
+
     return result;
   }
 };
