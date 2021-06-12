@@ -51,6 +51,7 @@ PromoteTraits.h: $(srcdir)/header_PromoteTraits ./generate_PromoteTraits
 random.lo: PromoteTraits.h
 
 BUILT_SOURCES = PromoteTraits.h
+DISTCLEANFILES = PromoteTraits.h
 
 noinst_PROGRAMS                 = generate_PromoteTraits
 generate_PromoteTraits_SOURCES  = generate_PromoteTraits.C
