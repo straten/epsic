@@ -29,10 +29,8 @@ class covariant_mode : public modulated_mode
   friend class covariant_coordinator;
 
   covariant_coordinator* coordinator;
+  unsigned index;
   std::queue<double> amps;
-
-  double mean;
-  double variance;
 
 public:
 
@@ -42,10 +40,8 @@ public:
   // return a random scalar modulation factor
   double modulation ();
 
-  double get_mod_mean () const { return mean; }
-  
-  double get_mod_variance () const { return variance; }
-
+  double get_mod_mean () const;
+  double get_mod_variance () const;
 };
 
 class covariant_coordinator
@@ -61,8 +57,6 @@ private:
 
 protected:
 
-  double get_correlation () const { return correlation; }
-
   //! Derived classes return a pair of mode intensities
   virtual void get_modulation (double& A, double& B) = 0;
 
@@ -73,6 +67,14 @@ public:
 
   //! Virtual destructor (required for abstract base class)
   virtual ~covariant_coordinator () {}
+
+  double get_correlation () const { return correlation; }
+
+  double get_intensity_covariance () const
+  { return correlation * sqrt( get_mod_variance (0) * get_mod_variance (1) ); }
+
+  virtual double get_mod_mean (unsigned mode_index) const = 0;
+  virtual double get_mod_variance (unsigned mode_index) const = 0;
 
   modulated_mode* get_modulated_mode (unsigned index, mode*);
 };
@@ -103,6 +105,9 @@ public:
   ~bivariate_lognormal_modes ();
 
   void set_beta (unsigned index, double);
+
+  double get_mod_mean (unsigned mode_index) const { return 1.0; }
+  double get_mod_variance (unsigned i) const { return exp(log_sigma[i]*log_sigma[i]) - 1.0; }
 
   //! Return BoxMuller object used to generate normally distributed numbers
   virtual BoxMuller* get_normal () { return normal; }

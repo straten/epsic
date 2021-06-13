@@ -101,14 +101,20 @@ public:
 
 class combination : public sample
 {
+protected:
+  double intensity_covariance;
+
 public:
   mode* A;
   mode* B;
 
-  combination () { A = new mode; B = new mode; }
+  combination () { A = new mode; B = new mode; intensity_covariance = 0; }
 
   virtual void set_normal (BoxMuller* n)
   { A->set_normal(n); B->set_normal(n); }
+
+  //! Covariant mode intensities
+  void set_intensity_covariance (double covar) { intensity_covariance = covar; }
 
   Matrix<4,4, double> get_crosscovariance (unsigned ilag)
   {

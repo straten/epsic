@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *
  *   Copyright (C) 2016 by Willem van Straten
@@ -7,6 +6,8 @@
  ***************************************************************************/
 
 #include "sample.h"
+
+using namespace std;
 
 Stokes<double> superposed::get_Stokes ()
 {
@@ -42,8 +43,17 @@ Matrix<4,4, double> superposed::get_covariance ()
      such that Minkowski::outer(A,B) +  Minkowski::outer(B,A)
      yields Equation (43) of van Straten & Tiburzi (2017) */
   Matrix<4,4, double> xcovar = Minkowski::outer(mean_A, mean_B);
-  xcovar /= sample_size;
+
+  // assumes that the mean of the modulating function is unity
+  xcovar *= (1.0 + intensity_covariance) / sample_size;
+
+  Matrix<4,4, double> extra = outer(mean_A, mean_B);
+  extra *= intensity_covariance / sample_size;
+
+  xcovar += extra;
+
   result += xcovar + transpose(xcovar);
-  
+
   return result;
 }
+

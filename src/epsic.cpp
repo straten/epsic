@@ -348,6 +348,9 @@ int main (int argc, char** argv)
 
     dual->A = setup_A.setup_mode (dual->A, 0);
     dual->B = setup_B.setup_mode (dual->B, 1);
+
+    if (setup_A.covariant)
+      dual->set_intensity_covariance (setup_A.covariant->get_intensity_covariance());
   }
   else
   {
