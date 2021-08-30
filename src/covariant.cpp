@@ -21,6 +21,16 @@ double covariant_mode::modulation ()
   return retval;
 }
 
+double covariant_mode::get_mod_mean () const
+{
+  return coordinator->get_mod_mean (index);
+}
+
+double covariant_mode::get_mod_variance () const 
+{ 
+  return coordinator->get_mod_variance (index);
+}
+
 covariant_coordinator::covariant_coordinator (double _correlation)
 {
   correlation = _correlation;
@@ -38,6 +48,7 @@ modulated_mode* covariant_coordinator::get_modulated_mode (unsigned index, mode*
                                 "input not set" );
 
     out[index] = new covariant_mode ( in );
+    out[index]->index = index;
     out[index]->coordinator = this;
   }
 

@@ -1,7 +1,7 @@
 //-*-C++-*-
 /***************************************************************************
  *
- *   Copyright (C) 2016 by Willem van Straten
+ *   Copyright (C) 2016 - 2021 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
@@ -13,7 +13,14 @@
 
 #include "mode.h"
 
+#define _DEBUG 0
+
 #include <vector>
+
+#if _DEBUG
+#include <iostream>
+using namespace std;
+#endif
 
 /***************************************************************************
  *
@@ -24,7 +31,7 @@
 class modulated_mode : public field_transformer
 {
 #if _DEBUG
-  double tot, totsq;
+  mutable double tot, totsq;
   uint64_t count;
 #endif
 
@@ -35,7 +42,7 @@ public:
 #if -DEBUG
     tot=0; totsq=0; count=0; 
 #endif
-}
+  }
 
   // return a random scalar modulation factor
   virtual double modulation () = 0;
@@ -193,11 +200,16 @@ class square_modulated_mode : public modulated_mode
 
   modulated_mode* mod;
 
+  std::vector<double> cross_correlation;
+
 public:
 
-  square_modulated_mode (modulated_mode* s, unsigned n)
-    : modulated_mode(s->get_source()) { width = n; current = n; mod = s; }
+  square_modulated_mode (modulated_mode*,
+			 unsigned width,
+			 unsigned sample_size);
 
+  void compute_cross_correlation (unsigned sample_size);
+  
   double modulation ()
   {
     if (current == width)
@@ -227,7 +239,8 @@ public:
       return 0;
 
     Matrix<4,4, double> result = outer(source->get_mean(), source->get_mean());
-    result *= double (width - ilag) / width * get_mod_variance();
+    result *= cross_correlation[ilag] * get_mod_variance();
+
     return result;
   }
 };

@@ -15,7 +15,7 @@ nodist_pkginclude_HEADERS = PromoteTraits.h
 
 TESTS = test_Basis test_Dirac test_Jones test_Mueller test_Quaternion test_Vector \
 	test_Conventions test_Jacobi test_Matrix test_Pauli test_Stokes test_eigen \
-	test_inner_product test_Estimate
+	test_inner_product test_Estimate test_Minkowski
 
 check_PROGRAMS = $(TESTS)
 
@@ -30,6 +30,7 @@ test_Pauli_SOURCES              = test_Pauli.C
 test_Dirac_SOURCES              = test_Dirac.C
 test_Basis_SOURCES              = test_Basis.C
 test_Stokes_SOURCES             = test_Stokes.C
+test_Minkowski_SOURCES		= test_Minkowski.C
 test_Mueller_SOURCES            = test_Mueller.C
 test_inner_product_SOURCES      = test_inner_product.C
 test_Estimate_SOURCES		= test_Estimate.C
