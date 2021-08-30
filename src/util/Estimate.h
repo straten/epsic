@@ -160,6 +160,11 @@ class Estimate
   friend const Estimate cos (const Estimate& u)
   { T val = ::cos (u.val); return Estimate (val, (1-val*val)*u.var); }
 
+  //! \f$ {\partial\over\partial x} \cos^-1 (x) = -(1-x^2)^{-1/2} \f$
+  friend const Estimate acos (const Estimate& u)
+  { T val = ::acos (u.val); T del=-1.0/sqrt(1.0-u.val*u.val);
+    return Estimate (val, del*del*u.var); }
+
   //! \f$ {\partial\over\partial x} \tan^-1 (x) = (1+x^2)^{-1} \f$
   friend const Estimate atan (const Estimate& u)
   { T val = ::atan (u.val); T del=1/(1+u.val*u.val);
