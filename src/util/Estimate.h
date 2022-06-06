@@ -216,8 +216,6 @@ template <class T, class U> struct DatumTraits< Estimate<T,U> >
   { return t.val; }
 };
 
-#ifdef PROMOTE_TRAITS_SPECIALIZE
-
 template <class T, class U, class V, class W>
 class PromoteTraits< Estimate<T,U>, Estimate<V,W> >
 {
@@ -239,8 +237,6 @@ class PromoteTraits< V, Estimate<T,U> >
   public:
     typedef Estimate<typename PromoteTraits<T,V>::promote_type,U> promote_type;
 };
-
-#endif
 
 namespace std
 {
