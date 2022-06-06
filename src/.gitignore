@@ -53,3 +53,4 @@ util/test_Stokes
 util/test_Vector
 util/test_eigen
 util/test_inner_product
+util/test_rotation
