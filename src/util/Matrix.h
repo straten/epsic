@@ -366,7 +366,11 @@ void compose (Matrix<M+1,M+1,T>& covariance,
   compose (covariance, ul, ur, bl, cov_matrix);
 }
 
-//! Return a 3-dimensional rotation about an arbitrary axis
+//! Return a 3-dimensional rotation about an axis
+/*! After multiplying a Vector by the return value of this function,
+    that Vector will be rotated about the axis, v, by an angle in
+    radians in a direction that is consistent with the right-hand rule. */
+
 template<typename T>
 Matrix<3,3,T> rotation (const Vector<3,T>& v, double radians)
 {
