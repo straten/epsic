@@ -12,10 +12,11 @@
 #define _epsic_complex_math_H
 
 #include <complex>
+#include <cmath>
 
 template<typename T>
 bool isfinite (const std::complex<T>& z)
-{ return isfinite(z.real()) && isfinite(z.imag()); }
+{ return std::isfinite(z.real()) && std::isfinite(z.imag()); }
 
 #endif
 
