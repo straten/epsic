@@ -218,6 +218,15 @@ Vector<N, std::complex<T> > conj (const Vector< N, std::complex<T> >& input)
   return result;
 }
 
+template<unsigned N, typename T>
+bool isfinite (const Vector< N, T>& input)
+{
+  for (unsigned i=0; i < N; i++)
+    if (!isfinite( input[i] ))
+      return false;
+  return true;
+}
+
 //! Maps the structure of Vector to other template methods
 template<unsigned N, typename T> struct DatumTraits< Vector<N,T> >
 {
