@@ -280,12 +280,12 @@ T norm (const Jones<T>& j)
 }
 
 template<typename T>
-bool finite (const std::complex<T>& z)
-{ return finite(z.real()) && finite(z.imag()); }
+bool isfinite (const std::complex<T>& z)
+{ return isfinite(z.real()) && isfinite(z.imag()); }
 
 template<typename T>
-bool finite (const Jones<T>& j)
-{ return finite(j.j00) && finite(j.j01) && finite(j.j10) && finite(j.j11); }
+bool isfinite (const Jones<T>& j)
+{ return isfinite(j.j00) && isfinite(j.j01) && isfinite(j.j10) && isfinite(j.j11); }
 
 template<typename T>
 T fabs (const Jones<T>& j)
