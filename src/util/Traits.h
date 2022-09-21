@@ -112,12 +112,12 @@ std::complex<T> ci (const T& real)
 
 //! Return the conjugate of a real number
 template<typename T>
-T myconj (const T& x) { return ElementTraits<T>::conjugate(x); };
+T myconj (const T& x) { return ElementTraits<T>::conjugate(x); }
 
 //! Return the real part of a real number
 template<typename T>
 typename ElementTraits<T>::real
-myreal (const T& x) { return ElementTraits<T>::to_real(x); };
+myreal (const T& x) { return ElementTraits<T>::to_real(x); }
 
 #endif
 
