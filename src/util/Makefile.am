@@ -4,7 +4,8 @@ noinst_LTLIBRARIES = libutil.la
 libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C
 
 pkginclude_HEADERS = \
-Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   complex_promote.h \
+Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
+complex_math.h complex_promote.h \
 BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
 Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h
 

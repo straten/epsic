@@ -14,6 +14,7 @@
 #include "Matrix.h"
 #include "Traits.h"
 #include "complex_promote.h"
+#include "complex_math.h"
 
 //! Jones matrices are 2x2 matrices with complex elements
 template<typename T> class Jones {
@@ -278,10 +279,6 @@ T norm (const Jones<T>& j)
     norm(j.j00) + norm(j.j01) + 
     norm(j.j10) + norm(j.j11);
 }
-
-template<typename T>
-bool isfinite (const std::complex<T>& z)
-{ return isfinite(z.real()) && isfinite(z.imag()); }
 
 template<typename T>
 bool isfinite (const Jones<T>& j)
