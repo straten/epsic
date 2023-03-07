@@ -10,3 +10,5 @@ cd src/
 make
 ```
 
+The project is documented at https://straten.github.io/epsic/
+
