@@ -1,0 +1,12 @@
+name: epsic
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - scipy
+  - pip
+  - pip:
+    - matplotlib
+    - ipython
+    - ipywidgets
