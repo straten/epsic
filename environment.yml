@@ -1,9 +1,0 @@
-name: epsic
-dependencies:
-  - python
-  - numpy
-  - pip
-  - pip:
-    - matplotlib
-    - ipython
-    - ipywidgets
