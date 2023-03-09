@@ -1,6 +1,2 @@
-ipykernel >= 6.0
-ipython >= 7.0
-ipywidgets >= 7.0
 matplotlib >= 3.0
 numpy >= 1.0
-widgetsnbextension >= 4.0
