@@ -188,8 +188,8 @@ class Estimate
   { T val = ::atanh (u.val); T del=1/(1-u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
-  friend int isfinite (const Estimate& u)
-  { return isfinite (u.val); }
+  friend int myfinite (const Estimate& u)
+  { return myfinite (u.val); }
 
   friend int isinf (const Estimate& u)
   { return isinf (u.val); }

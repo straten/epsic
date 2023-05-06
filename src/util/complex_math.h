@@ -15,8 +15,8 @@
 #include <cmath>
 
 template<typename T>
-bool isfinite (const std::complex<T>& z)
-{ return std::isfinite(z.real()) && std::isfinite(z.imag()); }
+bool myfinite (const std::complex<T>& z)
+{ return myfinite(z.real()) && myfinite(z.imag()); }
 
 #endif
 

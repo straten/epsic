@@ -281,8 +281,8 @@ T norm (const Jones<T>& j)
 }
 
 template<typename T>
-bool isfinite (const Jones<T>& j)
-{ return isfinite(j.j00) && isfinite(j.j01) && isfinite(j.j10) && isfinite(j.j11); }
+bool myfinite (const Jones<T>& j)
+{ return myfinite(j.j00) && myfinite(j.j01) && myfinite(j.j10) && myfinite(j.j11); }
 
 template<typename T>
 T fabs (const Jones<T>& j)

@@ -219,10 +219,10 @@ Vector<N, std::complex<T> > conj (const Vector< N, std::complex<T> >& input)
 }
 
 template<unsigned N, typename T>
-bool isfinite (const Vector< N, T>& input)
+bool myfinite (const Vector< N, T>& input)
 {
   for (unsigned i=0; i < N; i++)
-    if (!isfinite( input[i] ))
+    if (!myfinite( input[i] ))
       return false;
   return true;
 }
