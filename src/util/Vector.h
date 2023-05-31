@@ -12,6 +12,7 @@
 #define __Vector_H
 
 #include "Traits.h"
+#include "Estimate.h"
 
 #include <iostream>
 #include <complex>
@@ -161,6 +162,12 @@ template <typename T>
 T normsq (const std::complex<T>& v)
 {
   return std::norm(v);
+}
+
+template <typename T, typename U=T>
+T normsq (const class Estimate<T,U>& estimate)
+{
+  return normsq(estimate.get_value());
 }
 
 //! squared "length"/"norm"
