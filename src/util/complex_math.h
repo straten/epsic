@@ -12,7 +12,7 @@
 #define _epsic_complex_math_H
 
 #include <complex>
-#include <cmath>
+#include "myfinite.h"
 
 template<typename T>
 bool myfinite (const std::complex<T>& z)
