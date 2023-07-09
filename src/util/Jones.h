@@ -214,20 +214,6 @@ template<typename T> struct DatumTraits< Jones<T> >
   { return t[i]; }
 };
 
-//! Partial specialization for Jones elements
-template< class E > struct ElementTraits< Jones<E> >
-{
-  //! How to cast a complex type to the Jones element type
-  template< class T >
-  static inline Jones<E> from_complex (const std::complex<T>& value)
-  { return value; }
-
-  //! How to cast an element type to real
-  static inline double to_real (const Jones<E>& element)
-  { return trace(element).real(); }
-
-};
-
 //! Multiply another Jones<T> instance into this one (this=this*j)
 template<typename T>
 Jones<T>& Jones<T>::operator *= (const Jones<T>& j)
