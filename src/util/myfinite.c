@@ -5,6 +5,6 @@
 
 int myfinite (double x)
 {
-  return isfinite (x);
+  return isfinite (x) && !isnan (x);
 }
 
