@@ -136,8 +136,10 @@ int main ()
 
   const double tol = 1e-10;
 
+  cerr << "Complex values:" << endl;
+
   cresult = a*b;
-  cerr << cresult << endl;
+  cerr << a << " * " << b << " = " << cresult << endl;
   if (fabs(cresult.real().val-33.24)>tol || fabs(cresult.imag().val-9.68)>tol)
   {
     cerr << "test_Estimate: complex multiply error " << cresult << endl;
@@ -145,7 +147,7 @@ int main ()
   }
 
   result = norm(a);
-  cerr << result << endl;
+  cerr << "norm(" << a << ") = " << result << endl;
   if (fabs(result.val-13.0)>tol)
   {
     cerr << "test_Estimate: complex norm error " << cresult << endl;
