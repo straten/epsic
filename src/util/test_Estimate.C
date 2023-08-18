@@ -7,6 +7,8 @@
 #include "Estimate.h"
 #include "Stokes.h"
 
+#include <complex>
+
 using namespace std;
 
 int main ()
@@ -121,6 +123,38 @@ int main ()
 
 
   // norm=[h:(1.02625±0.00117418),(0.215127±0.000759488),(0.0641592±0.000744965),(-0.0528321±0.000768368)]
+
+  // ///////////////////////////////////////////////////////////////////////
+  //
+  // test complex<Estimate> operations
+  //
+
+  std::complex< Estimate<double> > a (Estimate<double> (1.2,0.1), Estimate<double> (3.4, 0.1));
+  std::complex< Estimate<double> > b (Estimate<double> (5.6,0.1), Estimate<double> (-7.8, 0.1));
+
+  std::complex< Estimate<double> > cresult;
+
+  const double tol = 1e-10;
+
+  cerr << "Complex values:" << endl;
+
+  cresult = a*b;
+  cerr << a << " * " << b << " = " << cresult << endl;
+  if (fabs(cresult.real().val-33.24)>tol || fabs(cresult.imag().val-9.68)>tol)
+  {
+    cerr << "test_Estimate: complex multiply error " << cresult << endl;
+    return -1;
+  }
+
+  result = norm(a);
+  cerr << "norm(" << a << ") = " << result << endl;
+  if (fabs(result.val-13.0)>tol)
+  {
+    cerr << "test_Estimate: complex norm error " << cresult << endl;
+    return -1;
+  }
+
+  
   return 0;
 }
 

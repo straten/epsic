@@ -11,6 +11,8 @@
 #ifndef __Estimate_h
 #define __Estimate_h
 
+#include <config.h>
+
 #include "PromoteTraits.h"
 #include "Traits.h"
 
@@ -129,7 +131,7 @@ class Estimate
 
   friend const Estimate operator - (Estimate a, const Estimate& b)
   { return a-=b; }
-  
+
   friend const Estimate operator * (Estimate a, const Estimate& b)
   { return a*=b; }
   
@@ -139,6 +141,19 @@ class Estimate
   //! Negation operator
   friend const Estimate operator - (Estimate a)
   { return Estimate (-a.val, a.var); }
+
+#ifndef HAVE_COMPLEX_TEMPLATES
+  friend const std::complex<Estimate> operator * (const std::complex<Estimate>& a, const std::complex<Estimate>& b)
+  {
+    return std::complex<Estimate> (
+        a.real()*b.real() - a.imag()*b.imag(),
+        a.real()*b.imag() + a.imag()*b.real()
+        );
+  }
+
+  friend const Estimate norm (const std::complex<Estimate>& u)
+  { return u.real()*u.real() + u.imag()*u.imag(); }
+#endif
 
   //! See http://mathworld.wolfram.com/ErrorPropagation.html Equation (15)
   friend const Estimate exp (const Estimate& u)
