@@ -20,8 +20,15 @@ template<typename T> class X {
   public:
     T val; 
     X(T _val=0) { val=_val; }
-    const X& operator*= (const X& b) { val*=b.val; return *this; }
-    friend const X operator * (X a, const X& b) { return a*=b; }
+    bool operator == (const X &b) const { return val==b.val; }
+    // The "canonical" operator approach looks like this:
+    //const X& operator*= (const X& b) { val*=b.val; return *this; }
+    //friend const X operator * (X a, const X& b) { return a*=b; }
+    // This one is a bit more compact:
+    friend const X operator * (X a, const X& b) { return X(a.val*b.val); }
+    friend const X operator / (X a, const X& b) { return X(a.val/b.val); }
+    friend const X operator + (X a, const X& b) { return X(a.val+b.val); }
+    friend const X operator - (X a, const X& b) { return X(a.val-b.val); }
 };
 
 #include <complex>
