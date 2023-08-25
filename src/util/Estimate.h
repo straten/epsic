@@ -11,8 +11,6 @@
 #ifndef __Estimate_h
 #define __Estimate_h
 
-#include <config.h>
-
 #include "PromoteTraits.h"
 #include "Traits.h"
 
@@ -142,7 +140,7 @@ class Estimate
   friend const Estimate operator - (Estimate a)
   { return Estimate (-a.val, a.var); }
 
-#ifndef HAVE_COMPLEX_TEMPLATES
+#if COMPLEX_SPECIALIZE
   friend const std::complex<Estimate> operator * (const std::complex<Estimate>& a, const std::complex<Estimate>& b)
   {
     return std::complex<Estimate> (
