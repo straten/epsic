@@ -68,6 +68,10 @@ int main (int argc, char** argv)
   out << "#define PROMOTE_TRAITS_SPECIALIZE 1\n" << endl;
 #endif
 
+#if !defined(HAVE_COMPLEX_TEMPLATES)
+  out << "#define COMPLEX_SPECIALIZE 1\n" << endl;
+#endif
+
   out << "#endif // !__epsic_PromoteTraits_h\n" << endl;
 
   out.close ();
@@ -75,4 +79,3 @@ int main (int argc, char** argv)
   return 0;
 
 }
-
