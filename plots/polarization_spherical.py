@@ -53,16 +53,11 @@ minor_color = "#1f449c"
 
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams["mathtext.fontset"] = "dejavuserif"
-plt.rc('font', size=32)
+plt.rc('font', size=28)
 
 fig = plt.figure(figsize=(8,8))
 ax = fig.add_subplot(111, projection='3d')
 ax.set_box_aspect([1,1,1])
-
-# Set up the figure axes, etc.
-#ax.set_xlim(-1.0, 1.0)
-#ax.set_ylim(-1.0, 1.0)
-#ax.set_zlim(-1.0, 1.0)
 
 plt.axis('off')
 
@@ -78,9 +73,9 @@ ax.arrow3D(0,-len,0, 0,2*len,0, arrowstyle="-|>", mutation_scale=30, fc='black',
 ax.arrow3D(0,0,-len, 0,0,2*len, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
 
 # label the x, y, and z axes
-ax.text(1.01,-0.3,-0.1,"$S_1$")
-ax.text(0.03,1.01,0,"$S_2$")
-ax.text(0.03,0,1.01,"$S_3$")
+ax.text(len,0,0,"$S_1$", ha='right')
+ax.text(0,len,0,"$S_2$")
+ax.text(0,0,len,"$S_3$")
 
 chi_deg = 60.0
 psi_deg = 60.0
@@ -103,17 +98,20 @@ radius=1.0
 phi = np.linspace(0, psi, N)
 
 # reserve an extra point for the apex = (arcx[0], arcy[0])
-arcx = np.zeros(N+1)
-arcy = np.zeros(N+1)
-arcz = np.zeros(N+1)
+psix = np.zeros(N+1)
+psiy = np.zeros(N+1)
+psiz = np.zeros(N+1)
 
-arcx[1:] = radius * np.cos(phi)
-arcy[1:] = radius * np.sin(phi)
+psix[1:] = radius * np.cos(phi)
+psiy[1:] = radius * np.sin(phi)
 
-verts = [list(zip(arcx, arcy, arcz))]
+verts = [list(zip(psix, psiy, psiz))]
 poly = Poly3DCollection(verts, alpha=0.6, color=psi_color)
 ax.add_collection3d(poly)
-#ax.plot(arcx[1:], arcy[1:], arcz[1:], color='k')
+ax.plot(psix[1:], psiy[1:], psiz[1:], color=major_color)
+
+stretch=1.5
+ax.text(stretch*psix[N//2], stretch*psiy[N//2], stretch*psiz[N//2], "$2\psi$", ha='center')
 
 # Plot the meridian
 half_circle = np.linspace(-np.pi/2, np.pi/2, 100)
@@ -124,13 +122,22 @@ ax.plot(x_long, y_long, z_long, color='k', linestyle='dotted')
 
 # create the arc through chi at the origin
 phi = np.linspace(0, chi, N)
-arcx[1:] = radius * np.cos(psi) * np.cos(phi)
-arcy[1:] = radius * np.sin(psi) * np.cos(phi)
-arcz[1:] = radius * np.sin(phi)
 
-verts = [list(zip(arcx, arcy, arcz))]
+# reserve an extra point for the apex = (arcx[0], arcy[0])
+chix = np.zeros(N+1)
+chiy = np.zeros(N+1)
+chiz = np.zeros(N+1)
+
+chix[1:] = radius * np.cos(psi) * np.cos(phi)
+chiy[1:] = radius * np.sin(psi) * np.cos(phi)
+chiz[1:] = radius * np.sin(phi)
+
+verts = [list(zip(chix, chiy, chiz))]
 poly = Poly3DCollection(verts, alpha=0.6, color=chi_color)
 ax.add_collection3d(poly)
-ax.plot(arcx[1:], arcy[1:], arcz[1:], color='k')
+ax.plot(chix[1:], chiy[1:], chiz[1:], color=minor_color)
+
+stretch=1.4
+ax.text(stretch*chix[N//2], stretch*chiy[N//2], stretch*chiz[N//2], "$2\chi$", ha='center')
 
 plt.show()
