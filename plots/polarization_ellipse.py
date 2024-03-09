@@ -32,7 +32,7 @@ plt.text(0.03,1.0,"$y$")
 
 # draw the ellipse
 chi_deg = 30.0
-psi_deg = 40.0
+psi_deg = 30.0
 r = 1.0
 
 chi = chi_deg*math.pi/180.0
@@ -91,7 +91,7 @@ arcy = linspace(0,1,N+1)
 arcx[1:] = radius * cos(phi)
 arcy[1:] = radius * sin(phi)
 
-plt.fill(arcx,arcy, color=psi_color)
+plt.fill(arcx,arcy, color=psi_color, alpha=0.6)
 plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
 
 # label the position angle
@@ -107,7 +107,7 @@ arcy[1:] = y[q] + radius * sin(phi)
 arcx[0] = x[q]
 arcy[0] = y[q]
 
-plt.fill(arcx,arcy, color=chi_color)
+plt.fill(arcx,arcy, color=chi_color, alpha=0.6)
 plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
 
 # label the ellipticity angle
