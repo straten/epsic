@@ -1,5 +1,5 @@
-import math
-from numpy import *
+import sys
+import numpy as np
 import matplotlib.pyplot as plt
 
 # https://www.datylon.com/blog/data-visualization-for-colorblind-readers
@@ -35,20 +35,20 @@ chi_deg = 30.0
 psi_deg = 30.0
 r = 1.0
 
-chi = chi_deg*math.pi/180.0
-psi = psi_deg*math.pi/180.0
+chi = chi_deg*np.pi/180.0
+psi = psi_deg*np.pi/180.0
 
 # 60 steps around ellipse (+1 because 0 and 2pi overlap)
 N = 61
-phi = linspace(0, 2*pi, N)
+phi = np.linspace(0, 2*np.pi, N)
         
 ## Equation 4
-xprime = r*cos(chi)*sin(phi)
-yprime = r*sin(chi)*cos(phi)
+xprime = r*np.cos(chi)*np.sin(phi)
+yprime = r*np.sin(chi)*np.cos(phi)
         
 ## Inverse of Equations 2 and 3
-x = xprime*cos(psi) - yprime*sin(psi)
-y = xprime*sin(psi) + yprime*cos(psi)
+x = xprime*np.cos(psi) - yprime*np.sin(psi)
+y = xprime*np.sin(psi) + yprime*np.cos(psi)
 
 # Set up the figure and the objects to hold plot data
 plt.plot(x, y, color='k', linewidth=2)
@@ -82,14 +82,14 @@ plt.plot(linx, liny, color='k', linewidth=2)
 # create the arc through psi at the origin
 N = 10
 radius=0.4
-phi = linspace(0, psi, N)
+phi = np.linspace(0, psi, N)
 
 # reserve an extra point for the apex = (arcx[0], arcy[0])
-arcx = linspace(0,1,N+1)
-arcy = linspace(0,1,N+1)
+arcx = np.linspace(0,1,N+1)
+arcy = np.linspace(0,1,N+1)
 
-arcx[1:] = radius * cos(phi)
-arcy[1:] = radius * sin(phi)
+arcx[1:] = radius * np.cos(phi)
+arcy[1:] = radius * np.sin(phi)
 
 plt.fill(arcx,arcy, color=psi_color, alpha=0.6)
 plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
@@ -100,10 +100,10 @@ plt.text(arcx[N//2],arcy[N//2],"$\psi$")
 # create the arc through chi at the origin
 N = 10
 radius=0.3
-phi = linspace(psi-chi, psi, N)
+phi = np.linspace(psi-chi, psi, N)
 
-arcx[1:] = x[q] + radius * cos(phi)
-arcy[1:] = y[q] + radius * sin(phi)
+arcx[1:] = x[q] + radius * np.cos(phi)
+arcy[1:] = y[q] + radius * np.sin(phi)
 arcx[0] = x[q]
 arcy[0] = y[q]
 
@@ -113,4 +113,7 @@ plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
 # label the ellipticity angle
 plt.text(arcx[N//2]+0.02,arcy[N//2]+0.02,"$\chi$")
 
-plt.show()
+if np.size(sys.argv) > 1:
+    plt.savefig(sys.argv[1])
+else:
+    plt.show()

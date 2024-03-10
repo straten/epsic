@@ -1,4 +1,4 @@
-import math
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -53,24 +53,34 @@ minor_color = "#1f449c"
 
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams["mathtext.fontset"] = "dejavuserif"
-plt.rc('font', size=28)
+plt.rc('font', size=24)
 
 fig = plt.figure(figsize=(8,8))
 ax = fig.add_subplot(111, projection='3d')
 ax.set_box_aspect([1,1,1])
 
+limit = 0.85
+ax.set_xlim3d(-limit, limit)
+ax.set_zlim3d(-limit, limit)
+ax.set_ylim3d(-limit, limit)
+
 plt.axis('off')
 
-elev = 30
-azim = 30
+elev = 25
+azim = 25
 roll = 0
 ax.view_init(elev, azim, roll)
 
 # draw the x, y, and z axes
 len=1.5
-ax.arrow3D(-len,0,0, 2*len,0,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
-ax.arrow3D(0,-len,0, 0,2*len,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
-ax.arrow3D(0,0,-len, 0,0,2*len, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
+ax.arrow3D(0,0,0, len,0,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
+ax.arrow3D(0,0,0, 0,len,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
+ax.arrow3D(0,0,0, 0,0,len, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
+
+zx=[0,0]
+zy=[0,0]
+zz=[-1.1,-0.9]
+ax.plot(zx,zy,zz,color='k')
 
 # label the x, y, and z axes
 ax.text(len,0,0,"$S_1$", ha='right')
@@ -81,8 +91,8 @@ chi_deg = 60.0
 psi_deg = 60.0
 r = 1.0
 
-chi = chi_deg*math.pi/180.0
-psi = psi_deg*math.pi/180.0
+chi = chi_deg*np.pi/180.0
+psi = psi_deg*np.pi/180.0
 
 # Plot the equator
 circle = np.linspace(0, 2*np.pi, 100)
@@ -110,7 +120,7 @@ poly = Poly3DCollection(verts, alpha=0.6, color=psi_color)
 ax.add_collection3d(poly)
 ax.plot(psix[1:], psiy[1:], psiz[1:], color=major_color)
 
-stretch=1.5
+stretch=1.35
 ax.text(stretch*psix[N//2], stretch*psiy[N//2], stretch*psiz[N//2], "$2\psi$", ha='center')
 
 # Plot the meridian
@@ -137,7 +147,10 @@ poly = Poly3DCollection(verts, alpha=0.6, color=chi_color)
 ax.add_collection3d(poly)
 ax.plot(chix[1:], chiy[1:], chiz[1:], color=minor_color)
 
-stretch=1.4
+stretch=1.2
 ax.text(stretch*chix[N//2], stretch*chiy[N//2], stretch*chiz[N//2], "$2\chi$", ha='center')
 
-plt.show()
+if np.size(sys.argv) > 1:
+    plt.savefig(sys.argv[1])
+else:
+    plt.show()
