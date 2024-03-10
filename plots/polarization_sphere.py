@@ -36,7 +36,7 @@ class Arrow3D(FancyArrowPatch):
         return np.min(zs) 
     
 def _arrow3D(ax, x, y, z, dx, dy, dz, *args, **kwargs):
-    '''Add an 3d arrow to an `Axes3D` instance.'''
+    '''Add a 3d arrow to an `Axes3D` instance.'''
 
     arrow = Arrow3D(x, y, z, dx, dy, dz, *args, **kwargs)
     ax.add_artist(arrow)
@@ -51,12 +51,11 @@ chi_color = "#7ca1cc"
 major_color = "#f05039"
 minor_color = "#1f449c"
 
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams["mathtext.fontset"] = "dejavuserif"
-plt.rc('font', size=24)
+plt.rc('font', family='serif', serif='cm10', size=24)
+plt.rc('text', usetex=True)
 
 fig = plt.figure(figsize=(8,8))
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(111, projection='3d', proj_type='ortho')
 ax.set_box_aspect([1,1,1])
 
 limit = 0.85
@@ -73,9 +72,10 @@ ax.view_init(elev, azim, roll)
 
 # draw the x, y, and z axes
 len=1.5
-ax.arrow3D(0,0,0, len,0,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
-ax.arrow3D(0,0,0, 0,len,0, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
-ax.arrow3D(0,0,0, 0,0,len, arrowstyle="-|>", mutation_scale=30, fc='black', ec='black')
+astyle="-|>,head_width=0.2,head_length=0.6"
+ax.arrow3D(0,0,0, len,0,0, arrowstyle=astyle, mutation_scale=30, fc='black', ec='black')
+ax.arrow3D(0,0,0, 0,len,0, arrowstyle=astyle, mutation_scale=30, fc='black', ec='black')
+ax.arrow3D(0,0,0, 0,0,len, arrowstyle=astyle, mutation_scale=30, fc='black', ec='black')
 
 zx=[0,0]
 zy=[0,0]
@@ -150,7 +150,16 @@ ax.plot(chix[1:], chiy[1:], chiz[1:], color=minor_color)
 stretch=1.2
 ax.text(stretch*chix[N//2], stretch*chiy[N//2], stretch*chiz[N//2], "$2\chi$", ha='center')
 
+# finally, draw the polarization vector
+r=1.8
+S1 = r * np.cos(psi) * np.cos(chi)
+S2 = r * np.sin(psi) * np.cos(chi)
+S3 = r * np.sin(chi)
+
+ax.arrow3D(0,0,0, S1,S2,S3, linewidth=2.0, arrowstyle=astyle, mutation_scale=30, fc='black', ec='black')
+ax.text(S1,S2,S3,r'\textbf{\textit{S}}')
+
 if np.size(sys.argv) > 1:
-    plt.savefig(sys.argv[1])
+    plt.savefig(sys.argv[1], pad_inches=0)
 else:
     plt.show()

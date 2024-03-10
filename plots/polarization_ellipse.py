@@ -9,9 +9,8 @@ chi_color = "#7ca1cc"
 major_color = "#f05039"
 minor_color = "#1f449c"
 
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['mathtext.fontset'] = 'dejavuserif'
-plt.rc('font', size=32)
+plt.rc('font', family='serif', serif='cm10', size=32)
+plt.rc('text', usetex=True)
 
 fig = plt.figure(figsize=(8,8))
 
@@ -52,7 +51,6 @@ y = xprime*np.sin(psi) + yprime*np.cos(psi)
 
 # Set up the figure and the objects to hold plot data
 plt.plot(x, y, color='k', linewidth=2)
-
 
 # draw tangential arrow at pi/4 (one eighth of the way) around the ellipse
 q=N//8
@@ -95,7 +93,11 @@ plt.fill(arcx,arcy, color=psi_color, alpha=0.6)
 plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
 
 # label the position angle
-plt.text(arcx[N//2],arcy[N//2],"$\psi$")
+phimid=phi[2*N//5] # chosen by eye
+radius=0.45
+xl = radius * np.cos(phimid)
+yl = radius * np.sin(phimid)
+plt.text(xl,yl,"$\psi$")
 
 # create the arc through chi at the origin
 N = 10
@@ -111,9 +113,13 @@ plt.fill(arcx,arcy, color=chi_color, alpha=0.6)
 plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
 
 # label the ellipticity angle
-plt.text(arcx[N//2]+0.02,arcy[N//2]+0.02,"$\chi$")
+phimid=phi[2*N//5] # chosen by eye
+radius=0.35
+xl = x[q] + radius * np.cos(phimid)
+yl = y[q] + radius * np.sin(phimid)
+plt.text(xl,yl,"$\chi$")
 
 if np.size(sys.argv) > 1:
-    plt.savefig(sys.argv[1])
+    plt.savefig(sys.argv[1], bbox_inches='tight')
 else:
     plt.show()
