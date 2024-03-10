@@ -75,48 +75,46 @@ q=(3*N)//4
 u=N//2
 linx=[x[q],x[u]]
 liny=[y[q],y[u]]
-plt.plot(linx, liny, color='k', linewidth=2)
+plt.plot(linx, liny, color='k', linewidth=1)
 
 # create the arc through psi at the origin
 N = 10
-radius=0.4
+arc_radius=0.35
 phi = np.linspace(0, psi, N)
 
 # reserve an extra point for the apex = (arcx[0], arcy[0])
 arcx = np.linspace(0,1,N+1)
 arcy = np.linspace(0,1,N+1)
 
-arcx[1:] = radius * np.cos(phi)
-arcy[1:] = radius * np.sin(phi)
+arcx[1:] = arc_radius * np.cos(phi)
+arcy[1:] = arc_radius * np.sin(phi)
 
 plt.fill(arcx,arcy, color=psi_color, alpha=0.6)
-plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
+plt.plot(arcx[1:], arcy[1:], color=major_color, linewidth=1)
 
 # label the position angle
+label_offset = 0.05
 phimid=phi[2*N//5] # chosen by eye
-radius=0.45
-xl = radius * np.cos(phimid)
-yl = radius * np.sin(phimid)
+xl = (arc_radius + label_offset) * np.cos(phimid)
+yl = (arc_radius + label_offset) * np.sin(phimid)
 plt.text(xl,yl,"$\psi$")
 
 # create the arc through chi at the origin
 N = 10
-radius=0.3
 phi = np.linspace(psi-chi, psi, N)
 
-arcx[1:] = x[q] + radius * np.cos(phi)
-arcy[1:] = y[q] + radius * np.sin(phi)
+arcx[1:] = x[q] + arc_radius * np.cos(phi)
+arcy[1:] = y[q] + arc_radius * np.sin(phi)
 arcx[0] = x[q]
 arcy[0] = y[q]
 
 plt.fill(arcx,arcy, color=chi_color, alpha=0.6)
-plt.plot(arcx[1:], arcy[1:], color='k', linewidth=1)
+plt.plot(arcx[1:], arcy[1:], color=minor_color, linewidth=1)
 
 # label the ellipticity angle
 phimid=phi[2*N//5] # chosen by eye
-radius=0.35
-xl = x[q] + radius * np.cos(phimid)
-yl = y[q] + radius * np.sin(phimid)
+xl = x[q] + (arc_radius + label_offset) * np.cos(phimid)
+yl = y[q] + (arc_radius + label_offset) * np.sin(phimid)
 plt.text(xl,yl,"$\chi$")
 
 if np.size(sys.argv) > 1:
