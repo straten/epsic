@@ -17,7 +17,8 @@ nodist_pkginclude_HEADERS = PromoteTraits.h
 TESTS = test_Vector test_Matrix test_rotation \
 	test_Basis test_Dirac test_Jones test_Mueller test_Quaternion \
 	test_Conventions test_Jacobi test_Pauli test_Stokes test_eigen \
-	test_inner_product test_Estimate test_Minkowski test_myfinite
+	test_inner_product test_Estimate test_Minkowski test_myfinite \
+	test_BoxMuller
 
 check_PROGRAMS = $(TESTS)
 
@@ -38,6 +39,7 @@ test_Mueller_SOURCES            = test_Mueller.C
 test_inner_product_SOURCES      = test_inner_product.C
 test_Estimate_SOURCES		= test_Estimate.C
 test_myfinite_SOURCES		= test_myfinite.C
+test_BoxMuller_SOURCES		= test_BoxMuller.C
 
 LDADD = libutil.la
 
