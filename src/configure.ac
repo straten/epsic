@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([EPSIC],[2019-01-23],[vanstraten.willem@gmail.com])
+AC_INIT([EPSIC],[1.0.0],[vanstraten.willem@gmail.com])
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])
