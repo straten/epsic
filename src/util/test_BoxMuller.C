@@ -26,14 +26,13 @@ int main ()
   unsigned npts = 10;
   vector<float> data (npts, 0.0);
 
-  std::generate(data.begin(), data.end(), BoxMuller());
+  std::generate(data.begin(), data.end(), BoxMuller(13));
 
   std::ostringstream os;
   for (const auto& datum : data)
     os << datum << ' ';
 
-  std::string expect = "-0.243308 -0.734373 -0.901952 -0.0282791 1.51791 -2.58562 -0.504347 0.626208 0.724619 0.114231 ";
-
+  std::string expect = "-0.0190504 0.892552 0.225053 0.484419 -1.50899 1.84724 -1.08279 -0.145933 -0.567948 0.78989 ";
   std::string got = os.str();
  
   if (got != expect)
