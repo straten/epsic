@@ -6,10 +6,10 @@
  *
  ***************************************************************************/
 
-// epsic/src/util/mode.h
+// epsic/src/mode.h
 
-#ifndef __mode_H
-#define __mode_H
+#ifndef __epsic_mode_h
+#define __epsic_mode_h
 
 #include "Stokes.h"
 #include "Spinor.h"
@@ -19,83 +19,83 @@
 
 #include <iostream>
 
-/***************************************************************************
- *
- *  a single source of electromagnetic radiation
- *
- ***************************************************************************/
-
-class mode
+namespace epsic
 {
-public:
-  mode ();
-  virtual ~mode () { }
 
-  virtual void set_Stokes (const Stokes<double>& mean);
-  virtual Stokes<double> get_Stokes () { return mean; }
+  /***************************************************************************
+   *
+   *  a single source of electromagnetic radiation
+   *
+   ***************************************************************************/
 
-  //! Return the expected mean Stokes parameters
-  virtual Stokes<double> get_mean () const { return mean; }
+  class mode
+  {
+  public:
+    mode ();
+    virtual ~mode () { }
 
-  //! Return the expected covariances between the Stokes parameters
-  virtual Matrix<4,4, double> get_covariance () const
-  { return Minkowski::outer (mean, mean); }
+    virtual void set_Stokes (const Stokes<double>& mean);
+    virtual Stokes<double> get_Stokes () { return mean; }
 
-  //! Return cross-covariance between Stokes parameters as a function of lag
-  virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) const
-  { if (ilag>0) return 0; else return get_covariance(); }
+    //! Return the expected mean Stokes parameters
+    virtual Stokes<double> get_mean () const { return mean; }
 
-  //! Return a random instance of the electric field vector
-  virtual Spinor<double> get_field ();
+    //! Return the expected covariances between the Stokes parameters
+    virtual Matrix<4,4, double> get_covariance () const
+    { return Minkowski::outer (mean, mean); }
 
-  //! Return BoxMuller object used to generate normally distributed numbers
-  virtual BoxMuller* get_normal () { return normal; }
-  virtual void set_normal (BoxMuller* n) { normal = n; }
+    //! Return cross-covariance between Stokes parameters as a function of lag
+    virtual Matrix<4,4, double> get_crosscovariance (unsigned ilag) const
+    { if (ilag>0) return 0; else return get_covariance(); }
 
-  //! Return the Jones matrix used to polarize
-  const Jones<double>& get_polarizer () const { return polarizer; }
-    
-private:
-  Stokes<double> mean;
-  Jones<double> polarizer;
+    //! Return a random instance of the electric field vector
+    virtual Spinor<double> get_field ();
 
-  BoxMuller* normal;
-  double rms;
-};
-  
+    //! Return BoxMuller object used to generate normally distributed numbers
+    virtual BoxMuller* get_normal () { return normal; }
+    virtual void set_normal (BoxMuller* n) { normal = n; }
 
+    //! Return the Jones matrix used to polarize
+    const Jones<double>& get_polarizer () const { return polarizer; }
+      
+  private:
+    Stokes<double> mean;
+    Jones<double> polarizer;
 
-class mode_decorator : public mode
-{
-protected:
-  mode* source;
+    BoxMuller* normal;
+    double rms;
+  };
 
-public:
-  mode_decorator (mode* s) { source = s; }
-  mode* get_source () { return source; }
+  class mode_decorator : public mode
+  {
+  protected:
+    mode* source;
 
-  void set_Stokes (const Stokes<double>& mean) { source->set_Stokes(mean); }
-  Stokes<double> get_Stokes () { return source->get_Stokes(); }
+  public:
+    mode_decorator (mode* s) { source = s; }
+    mode* get_source () { return source; }
 
-  Matrix<4,4,double> get_covariance() const { return source->get_covariance(); }
-  Stokes<double> get_mean () const { return source->get_mean(); }
+    void set_Stokes (const Stokes<double>& mean) { source->set_Stokes(mean); }
+    Stokes<double> get_Stokes () { return source->get_Stokes(); }
 
-  Spinor<double> get_field () { return source->get_field(); }
-  BoxMuller* get_normal () { return source->get_normal(); }
-  void set_normal (BoxMuller* n) { source->set_normal(n); }
-};
+    Matrix<4,4,double> get_covariance() const { return source->get_covariance(); }
+    Stokes<double> get_mean () const { return source->get_mean(); }
 
-class field_transformer : public mode_decorator
-{
-public:
+    Spinor<double> get_field () { return source->get_field(); }
+    BoxMuller* get_normal () { return source->get_normal(); }
+    void set_normal (BoxMuller* n) { source->set_normal(n); }
+  };
 
-  field_transformer (mode* s) : mode_decorator (s) { }
+  class field_transformer : public mode_decorator
+  {
+  public:
+    field_transformer (mode* s) : mode_decorator (s) { }
 
-  Spinor<double> get_field () { return transform( source->get_field() ); }
+    Spinor<double> get_field () { return transform( source->get_field() ); }
 
-  virtual Spinor<double> transform ( const Spinor<double>& ) = 0;
+    virtual Spinor<double> transform ( const Spinor<double>& ) = 0;
+  };
 
-};
+} // namespace epsic
 
-#endif
-
+#endif // ! defined __epsic_mode_h

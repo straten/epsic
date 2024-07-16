@@ -7,9 +7,7 @@
 
 #include "modulated.h"
 
-using namespace std;
-
-square_modulated_mode::square_modulated_mode (modulated_mode* _mode,
+epsic::square_modulated_mode::square_modulated_mode (modulated_mode* _mode,
 					      unsigned _width,
 					      unsigned sample_size)
   : modulated_mode( _mode->get_source() )
@@ -21,7 +19,7 @@ square_modulated_mode::square_modulated_mode (modulated_mode* _mode,
   compute_cross_correlation (sample_size);
 }
 
-void square_modulated_mode::compute_cross_correlation (unsigned sample_size)
+void epsic::square_modulated_mode::compute_cross_correlation (unsigned sample_size)
 {
   cross_correlation.resize( width );
 
@@ -33,7 +31,7 @@ void square_modulated_mode::compute_cross_correlation (unsigned sample_size)
     return;
   }
 
-  vector<double> matrix ( sample_size * sample_size, 0.0 );
+  std::vector<double> matrix ( sample_size * sample_size, 0.0 );
 
   unsigned cur = 0;
   unsigned populations = 0;
@@ -50,7 +48,7 @@ void square_modulated_mode::compute_cross_correlation (unsigned sample_size)
 	cur = 0;
 
 #if _DEBUG
-      cerr << "ioff=" << ioff << " cur=" << cur << " end=" << end << endl;
+      std::cerr << "ioff=" << ioff << " cur=" << cur << " end=" << end << std::endl;
 #endif
       
       for (; cur < end ; cur++)
@@ -65,14 +63,14 @@ void square_modulated_mode::compute_cross_correlation (unsigned sample_size)
     for (unsigned irow=0; irow < sample_size; irow++)
     {
       for (unsigned icol=0; icol < sample_size; icol++)
-	{
-	  unsigned jrow=irow;
-	  unsigned jcol=icol;
-	  if (jcol < jrow)
-	    swap (jcol, jrow);
-	  cerr << matrix[ jrow*sample_size + jcol ] << " ";
-	}
-      cerr << endl;
+      {
+        unsigned jrow=irow;
+        unsigned jcol=icol;
+        if (jcol < jrow)
+          swap (jcol, jrow);
+        std::cerr << matrix[ jrow*sample_size + jcol ] << " ";
+      }
+      std::cerr << std::endl;
     }
 #endif
     
@@ -80,8 +78,8 @@ void square_modulated_mode::compute_cross_correlation (unsigned sample_size)
   }
 
 #if _DEBUG
-  cerr << "square_modulated_mode::compute_cross_correlation "
-       << populations << " populations" << endl;
+  std::cerr << "epsic::square_modulated_mode::compute_cross_correlation "
+       << populations << " populations" << std::endl;
 #endif
   
   for (unsigned ilag=0; ilag < width; ilag++)

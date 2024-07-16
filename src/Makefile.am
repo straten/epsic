@@ -14,7 +14,7 @@ LDADD = $(top_builddir)/libepsic.la @HEALPIX_LIBS@
 libepsic_la_LIBADD = util/libutil.la 
 
 # version-info should match AC_INIT version in configure.ac
-libepsic_la_LDFLAGS = -version-info 1:0:1
+libepsic_la_LDFLAGS = -version-info 2:0:0
 
 AM_CPPFLAGS = -I$(top_srcdir)/util -I$(top_builddir)/util @HEALPIX_CFLAGS@
 SUBDIRS = util

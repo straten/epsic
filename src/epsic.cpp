@@ -47,7 +47,9 @@
 
 // #define _DEBUG 1
 
-using namespace std;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 void usage ()
 {
@@ -98,7 +100,7 @@ public:
   unsigned nint;
   
   // manages covariant modes
-  bivariate_lognormal_modes* covariant;
+  epsic::bivariate_lognormal_modes* covariant;
 
   mode_setup () : mean (1,0,0,0)
   {
@@ -110,9 +112,9 @@ public:
     nint = 1;
   }
 
-  mode* setup_mode (mode* s, unsigned index = 0)
+  epsic::mode* setup_mode (epsic::mode* s, unsigned index = 0)
   {
-    modulated_mode* mod = 0;
+    epsic::modulated_mode* mod = 0;
 
     if (s)
       s->set_Stokes (mean);
@@ -124,16 +126,16 @@ public:
       s = mod = covariant->get_modulated_mode (index, s);
     }
     else if (beta)
-      s = mod = new lognormal_mode (s, beta);
+      s = mod = new epsic::lognormal_mode (s, beta);
 
     if (smooth_modulator > 1 && mod)
-      s = new boxcar_modulated_mode (mod, smooth_modulator);
+      s = new epsic::boxcar_modulated_mode (mod, smooth_modulator);
 
     if (square_modulator > 1 && mod)
-      s = new square_modulated_mode (mod, square_modulator, nint);
+      s = new epsic::square_modulated_mode (mod, square_modulator, nint);
 
     if (smooth_before > 1)
-      s = new boxcar_mode (s, smooth_before);
+      s = new epsic::boxcar_mode (s, smooth_before);
 
     return s;
   }
@@ -155,10 +157,10 @@ int main (int argc, char** argv)
   Stokes<double> stokes = 1.0;
   bool subtract_outer_population_mean = false;
 
-  mode source;
-  combination* dual = NULL;
-  sample* stokes_sample = NULL;
-  bivariate_lognormal_modes* covariant = NULL;
+  epsic::mode source;
+  epsic::combination* dual = NULL;
+  epsic::sample* stokes_sample = NULL;
+  epsic::bivariate_lognormal_modes* covariant = NULL;
 
   mode_setup setup_A;
   mode_setup setup_B;
@@ -229,19 +231,19 @@ int main (int argc, char** argv)
       break;
 
     case 'S':
-      dual = new superposed;
+      dual = new epsic::superposed;
       break;
 
     case 'C':
-      dual = new composite( atof(optarg) );
+      dual = new epsic::composite( atof(optarg) );
       break;
 
     case 'D':
-      dual = new disjoint( atof(optarg) );
+      dual = new epsic::disjoint( atof(optarg) );
       break;
 
     case 'c':
-      dual = new coherent( atof(optarg) );
+      dual = new epsic::coherent( atof(optarg) );
       break;
       
     case 's':
@@ -249,14 +251,15 @@ int main (int argc, char** argv)
       double i,q,u,v;
       if (sscanf (usearg, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
       {
-	cerr << "Error parsing " << usearg << " as 4-vector" << endl;
-	return -1;
+        cerr << "Error parsing " << usearg << " as 4-vector" << endl;
+        return -1;
       }
       stokes = Stokes<double> (i,q,u,v);
 
-      if (stokes.abs_vect() > i) {
-	cerr << "Invalid Stokes parameters (p>I) " << stokes << endl;
-	return -1;
+      if (stokes.abs_vect() > i)
+      {
+        cerr << "Invalid Stokes parameters (p>I) " << stokes << endl;
+        return -1;
       }
 
       setup->mean = stokes;
@@ -277,7 +280,7 @@ int main (int argc, char** argv)
       break;
 
     case 'k':
-      covariant = new bivariate_lognormal_modes( atof(optarg) );
+      covariant = new epsic::bivariate_lognormal_modes( atof(optarg) );
       setup_A.covariant = covariant;
       setup_B.covariant = covariant;
       break;
@@ -354,12 +357,12 @@ int main (int argc, char** argv)
   }
   else
   {
-    mode* s = setup_A.setup_mode (&source);
+    epsic::mode* s = setup_A.setup_mode (&source);
 
     if (smooth_after > 1)
-      stokes_sample = new boxcar_sample (s, smooth_after);
+      stokes_sample = new epsic::boxcar_sample (s, smooth_after);
     else
-      stokes_sample = new single(s);
+      stokes_sample = new epsic::single(s);
   }
 
   stokes_sample->sample_size = nint;
@@ -385,11 +388,11 @@ int main (int argc, char** argv)
   Vector<4, double> tot;
   Matrix<4,4, double> totsq;
 
-  Matrix<2,2, complex<double> > tot_rho;
-  Matrix<4,4, complex<double> > totsq_rho;
+  Matrix<2,2, std::complex<double> > tot_rho;
+  Matrix<4,4, std::complex<double> > totsq_rho;
 
-  vector< Matrix<4,4, double> > acf (nlag);
-  vector< Vector<4, double> > samples (nlag);
+  std::vector< Matrix<4,4, double> > acf (nlag);
+  std::vector< Vector<4, double> > samples (nlag);
   unsigned current_sample = 0;
 
 #if HAVE_HEALPIX
@@ -400,7 +403,7 @@ int main (int argc, char** argv)
   }
 #endif
 
-  ofstream outfile;
+  std::ofstream outfile;
   if (output_stokes)
     outfile.open ("stokes.txt");
 
@@ -425,18 +428,18 @@ int main (int argc, char** argv)
       samples[current_sample] = mean_stokes;
       current_sample ++;
       if (current_sample == nlag)
-	current_sample = 0;
+        current_sample = 0;
 
       if (ntot >= nlag)
       {
-	Vector<4, double> Sj = samples[current_sample];
-	for (unsigned ilag=0; ilag<nlag; ilag++)
-	{
-	  Vector<4, double> Si = samples[(current_sample+ilag)%nlag];
-	  acf[ilag] += outer(Si,Sj);
-	}
+        Vector<4, double> Sj = samples[current_sample];
+        for (unsigned ilag=0; ilag<nlag; ilag++)
+        {
+          Vector<4, double> Si = samples[(current_sample+ilag)%nlag];
+          acf[ilag] += outer(Si,Sj);
+        }
 
-	ntot_lag++;
+        ntot_lag++;
       }
     }
     
@@ -445,7 +448,7 @@ int main (int argc, char** argv)
       
     if (rho_stats)
     {
-      Matrix<2,2, complex<double> > rho = convert (Stokes<double>(mean_stokes));
+      Matrix<2,2, std::complex<double> > rho = convert (Stokes<double>(mean_stokes));
     
       tot_rho += rho;
       totsq_rho += direct (rho, rho);
@@ -517,8 +520,8 @@ int main (int argc, char** argv)
   {
     cerr << "ACF output in acf.txt and acf_plot.txt" << endl;
 
-    ofstream out ("acf.txt");
-    ofstream plot ("acf_plot.txt");
+    std::ofstream out ("acf.txt");
+    std::ofstream plot ("acf_plot.txt");
     
     for (unsigned ilag=0; ilag<nlag; ilag++)
     {
@@ -528,19 +531,21 @@ int main (int argc, char** argv)
       Matrix<4,4,double> exp = stokes_sample->get_crosscovariance(ilag);
       
       out << "============================================================\n"
-	"lag=" << ilag << endl;
+            "lag=" << ilag << endl;
       if (run_simulation)
-	out << "mean=" << acf[ilag] << endl;
+        out << "mean=" << acf[ilag] << endl;
       out << "expected=" << exp << endl;
 
       plot << ilag << " ";
       for (unsigned i=0; i<4; i++)
-	for (unsigned j=0; j<4; j++)
-	{
-	  plot << exp[i][j] << " ";
-	  if (run_simulation)
-	    plot  << acf[ilag][i][j] << " ";
-	}
+      {
+        for (unsigned j=0; j<4; j++)
+        {
+          plot << exp[i][j] << " ";
+          if (run_simulation)
+            plot  << acf[ilag][i][j] << " ";
+        }
+      }
       plot << endl;
     }
   }
@@ -580,22 +585,22 @@ int main (int argc, char** argv)
   cerr << "rho mean=\n" << tot_rho << endl;
   cerr << "rho covar=\n" << totsq_rho << endl;
 
-  Matrix<4,4, complex<double> > candidate;
+  Matrix<4,4, std::complex<double> > candidate;
   for (unsigned i=0; i<4; i++)
     for (unsigned j=0; j<4; j++)
       {
-	Matrix<4,4,complex<double> > temp = Dirac::matrix (i,j);
-	temp *= expected_covariance[i][j] * 0.25;
+        Matrix<4,4,std::complex<double> > temp = Dirac::matrix (i,j);
+        temp *= expected_covariance[i][j] * 0.25;
 
-	candidate += temp;
+        candidate += temp;
       }
 
   cerr << "candidate=\n" << candidate << endl;
 
-  Matrix<4, 4, complex<double> > eigenvectors;
+  Matrix<4, 4, std::complex<double> > eigenvectors;
   Vector<4, double> eigenvalues;
 
-  Matrix<4, 4, complex<double> > temp = candidate;
+  Matrix<4, 4, std::complex<double> > temp = candidate;
   Jacobi (temp, eigenvectors, eigenvalues);
 
   for (unsigned i=0; i<4; i++)

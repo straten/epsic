@@ -6,52 +6,56 @@
  *
  ***************************************************************************/
 
-// epsic/src/util/smoothed.h
+// epsic/src/smoothed.h
 
-#ifndef __smoothed_H
-#define __smoothed_H
+#ifndef __epsic_smoothed_h
+#define __epsic_smoothed_h
 
 #include "mode.h"
 
-/***************************************************************************
- *
- *  a boxcar-smoothed mode of electromagnetic radiation
- *
- ***************************************************************************/
-
-class boxcar_mode : public mode_decorator
+namespace epsic
 {
-  std::vector< Spinor<double> > instances;
-  unsigned smooth;
-  unsigned current;
+  /***************************************************************************
+   *
+   *  a boxcar-smoothed mode of electromagnetic radiation
+   *
+   ***************************************************************************/
 
-  void setup()
+  class boxcar_mode : public mode_decorator
   {
-    current = 0;
-    instances.resize (smooth);
-    for (unsigned i=1; i<smooth; i++)
-      instances[i] = source->get_field();
-  }
+    std::vector< Spinor<double> > instances;
+    unsigned smooth;
+    unsigned current;
 
-public:
+    void setup()
+    {
+      current = 0;
+      instances.resize (smooth);
+      for (unsigned i=1; i<smooth; i++)
+        instances[i] = source->get_field();
+    }
 
-  boxcar_mode (mode* s, unsigned n) : mode_decorator(s) { smooth = n; }
+  public:
 
-  Spinor<double> get_field ()
-  {
-    if (instances.size() < smooth)
-      setup ();
+    boxcar_mode (mode* s, unsigned n) : mode_decorator(s) { smooth = n; }
 
-    instances[current] = source->get_field();
-    current = (current + 1) % smooth;
+    Spinor<double> get_field ()
+    {
+      if (instances.size() < smooth)
+        setup ();
 
-    Spinor<double> result;
-    for (unsigned i=0; i<smooth; i++)
-      result += instances[i];
+      instances[current] = source->get_field();
+      current = (current + 1) % smooth;
 
-    result /= sqrt(smooth);
-    return result;
-  }
-};
+      Spinor<double> result;
+      for (unsigned i=0; i<smooth; i++)
+        result += instances[i];
 
-#endif
+      result /= sqrt(smooth);
+      return result;
+    }
+  };
+
+} // namespace epsic
+
+#endif // ! defined __epsic_smoothed_h

@@ -9,9 +9,7 @@
 
 #include <assert.h>
 
-using namespace std;
-
-double covariant_mode::modulation ()
+double epsic::covariant_mode::modulation ()
 {
   if (amps.size() == 0)
     coordinator->get();
@@ -21,23 +19,24 @@ double covariant_mode::modulation ()
   return retval;
 }
 
-double covariant_mode::get_mod_mean () const
+double epsic::covariant_mode::get_mod_mean () const
 {
   return coordinator->get_mod_mean (index);
 }
 
-double covariant_mode::get_mod_variance () const 
+double epsic::covariant_mode::get_mod_variance () const 
 { 
   return coordinator->get_mod_variance (index);
 }
 
-covariant_coordinator::covariant_coordinator (double _correlation)
+epsic::covariant_coordinator::covariant_coordinator (double _correlation)
 {
   correlation = _correlation;
   out[0] = out[1] = 0;
 }
 
-modulated_mode* covariant_coordinator::get_modulated_mode (unsigned index, mode* in)
+epsic::modulated_mode* 
+epsic::covariant_coordinator::get_modulated_mode (unsigned index, mode* in)
 {
   assert (index < 2);
 
@@ -47,7 +46,7 @@ modulated_mode* covariant_coordinator::get_modulated_mode (unsigned index, mode*
       throw std::runtime_error( "covariant_coordinator::get_modulated_mode "
                                 "input not set" );
 
-    out[index] = new covariant_mode ( in );
+    out[index] = new epsic::covariant_mode ( in );
     out[index]->index = index;
     out[index]->coordinator = this;
   }
@@ -55,7 +54,7 @@ modulated_mode* covariant_coordinator::get_modulated_mode (unsigned index, mode*
   return out[index];
 }
 
-void covariant_coordinator::get()
+void epsic::covariant_coordinator::get()
 {
   for (unsigned i=0; i<2; i++)
     if (!out[i])
@@ -65,7 +64,7 @@ void covariant_coordinator::get()
   double a0, a1;
   get_modulation (a0, a1);
 
-  // cerr << "covariant_coordinator::get a0=" << a0 << " a1=" << a1 << endl;
+  // std::cerr << "covariant_coordinator::get a0=" << a0 << " a1=" << a1 << std::endl;
 
   out[0]->amps.push( a0 );
   out[1]->amps.push( a1 );
@@ -85,19 +84,19 @@ Matrix<2,2,double> sqrt (const Matrix<2,2,double>& C)
   return result;
 }
 
-bivariate_lognormal_modes::~bivariate_lognormal_modes ()
+epsic::bivariate_lognormal_modes::~bivariate_lognormal_modes ()
 {
   mean /= count;
   meansq /= count;
   meansq -= outer (mean, mean);
 
-  cerr << "\n"
+  std::cerr << "\n"
           "bivariate_lognormal_modes mean=" << mean << " "
           "rho=" << meansq[0][1]/sqrt(meansq[0][0]*meansq[1][1]) << "\n"
-          "covar=\n" << meansq << endl;
+          "covar=\n" << meansq << std::endl;
 }
 
-void bivariate_lognormal_modes::build ()
+void epsic::bivariate_lognormal_modes::build ()
 {
   double correlation = get_correlation();
 
@@ -115,8 +114,8 @@ void bivariate_lognormal_modes::build ()
 
   if (correlation > max_correlation)
   {
-    cerr << "bivariate_lognormal_modes::build correlation=" << correlation
-         << " > max=" << max_correlation << endl;
+    std::cerr << "bivariate_lognormal_modes::build correlation=" << correlation
+         << " > max=" << max_correlation << std::endl;
 
     throw std::runtime_error( "bivariate_lognormal_modes::build "
                               "maximum correlation exceeded" );
@@ -124,8 +123,8 @@ void bivariate_lognormal_modes::build ()
 
   if (correlation < min_correlation)
   { 
-    cerr << "bivariate_lognormal_modes::build correlation=" << correlation
-         << " < min =" << min_correlation << endl;
+    std::cerr << "bivariate_lognormal_modes::build correlation=" << correlation
+         << " < min =" << min_correlation << std::endl;
     
     throw std::runtime_error( "bivariate_lognormal_modes::build "
                               "minimum correlation exceeded" );
@@ -142,7 +141,7 @@ void bivariate_lognormal_modes::build ()
   built = true;
 }
 
-void bivariate_lognormal_modes::get_modulation (double& A, double& B)
+void epsic::bivariate_lognormal_modes::get_modulation (double& A, double& B)
 {
   if (!built)
     build ();
@@ -163,7 +162,7 @@ void bivariate_lognormal_modes::get_modulation (double& A, double& B)
   count ++;
 }
 
-void bivariate_lognormal_modes::set_beta (unsigned index, double beta)
+void epsic::bivariate_lognormal_modes::set_beta (unsigned index, double beta)
 {
   assert (index < 2);
   log_sigma[index] = sqrt( log( beta*beta + 1.0 ) );

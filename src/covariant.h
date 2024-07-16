@@ -6,10 +6,10 @@
  *
  ***************************************************************************/
 
-// epsic/src/util/covariant.h
+// epsic/src/covariant.h
 
-#ifndef __covariant_H
-#define __covariant_H
+#ifndef __epsic_covariant_h
+#define __epsic_covariant_h
 
 #include "modulated.h"
 #include "Matrix.h"
@@ -22,97 +22,100 @@
  *
  ***************************************************************************/
 
-class covariant_coordinator;
-
-class covariant_mode : public modulated_mode
+namespace epsic
 {
-  friend class covariant_coordinator;
+  class covariant_coordinator;
 
-  covariant_coordinator* coordinator;
-  unsigned index;
-  std::queue<double> amps;
+  class covariant_mode : public modulated_mode
+  {
+    friend class covariant_coordinator;
 
-public:
+    covariant_coordinator* coordinator;
+    unsigned index;
+    std::queue<double> amps;
 
-  // initialize based on the modulation index beta
-  covariant_mode (mode* s) : modulated_mode (s) { coordinator = 0; }
+  public:
 
-  // return a random scalar modulation factor
-  double modulation ();
+    // initialize based on the modulation index beta
+    covariant_mode (mode* s) : modulated_mode (s) { coordinator = 0; }
 
-  double get_mod_mean () const;
-  double get_mod_variance () const;
-};
+    // return a random scalar modulation factor
+    double modulation ();
 
-class covariant_coordinator
-{
-private:
-  covariant_mode* out[2];
+    double get_mod_mean () const;
+    double get_mod_variance () const;
+  };
 
-  friend class covariant_mode;
-  void get();
+  class covariant_coordinator
+  {
+  private:
+    covariant_mode* out[2];
 
-  // coefficient of mode intensity correlation
-  double correlation;
+    friend class covariant_mode;
+    void get();
 
-protected:
+    // coefficient of mode intensity correlation
+    double correlation;
 
-  //! Derived classes return a pair of mode intensities
-  virtual void get_modulation (double& A, double& B) = 0;
+  protected:
 
-public:
+    //! Derived classes return a pair of mode intensities
+    virtual void get_modulation (double& A, double& B) = 0;
 
-  //! Construct with correlation coefficient
-  covariant_coordinator (double correlation);
+  public:
 
-  //! Virtual destructor (required for abstract base class)
-  virtual ~covariant_coordinator () {}
+    //! Construct with correlation coefficient
+    covariant_coordinator (double correlation);
 
-  double get_correlation () const { return correlation; }
+    //! Virtual destructor (required for abstract base class)
+    virtual ~covariant_coordinator () {}
 
-  double get_intensity_covariance () const
-  { return correlation * sqrt( get_mod_variance (0) * get_mod_variance (1) ); }
+    double get_correlation () const { return correlation; }
 
-  virtual double get_mod_mean (unsigned mode_index) const = 0;
-  virtual double get_mod_variance (unsigned mode_index) const = 0;
+    double get_intensity_covariance () const
+    { return correlation * sqrt( get_mod_variance (0) * get_mod_variance (1) ); }
 
-  modulated_mode* get_modulated_mode (unsigned index, mode*);
-};
+    virtual double get_mod_mean (unsigned mode_index) const = 0;
+    virtual double get_mod_variance (unsigned mode_index) const = 0;
 
-class bivariate_lognormal_modes : public covariant_coordinator
-{
-  Matrix<2,2,double> meansq;
-  Vector<2,double> mean;
-  unsigned count;
+    modulated_mode* get_modulated_mode (unsigned index, mode*);
+  };
 
-  Matrix<2,2,double> correlator;
-  void build ();
-  bool built;
-  double log_sigma[2];
+  class bivariate_lognormal_modes : public covariant_coordinator
+  {
+    Matrix<2,2,double> meansq;
+    Vector<2,double> mean;
+    unsigned count;
 
-  //! random number generator
-  BoxMuller* normal;
+    Matrix<2,2,double> correlator;
+    void build ();
+    bool built;
+    double log_sigma[2];
 
-protected:
-  void get_modulation (double& A, double& B);
+    //! random number generator
+    BoxMuller* normal;
 
-public:
+  protected:
+    void get_modulation (double& A, double& B);
 
-  bivariate_lognormal_modes (double correlation) 
-  : covariant_coordinator(correlation) 
-  { built = false; set_beta(0,1.0); set_beta(1,1.0); }
+  public:
 
-  ~bivariate_lognormal_modes ();
+    bivariate_lognormal_modes (double correlation) 
+    : covariant_coordinator(correlation) 
+    { built = false; set_beta(0,1.0); set_beta(1,1.0); }
 
-  void set_beta (unsigned index, double);
+    ~bivariate_lognormal_modes ();
 
-  double get_mod_mean (unsigned mode_index) const { return 1.0; }
-  double get_mod_variance (unsigned i) const { return exp(log_sigma[i]*log_sigma[i]) - 1.0; }
+    void set_beta (unsigned index, double);
 
-  //! Return BoxMuller object used to generate normally distributed numbers
-  virtual BoxMuller* get_normal () { return normal; }
-  virtual void set_normal (BoxMuller* n) { normal = n; }
+    double get_mod_mean (unsigned mode_index) const { return 1.0; }
+    double get_mod_variance (unsigned i) const { return exp(log_sigma[i]*log_sigma[i]) - 1.0; }
 
-};
+    //! Return BoxMuller object used to generate normally distributed numbers
+    virtual BoxMuller* get_normal () { return normal; }
+    virtual void set_normal (BoxMuller* n) { normal = n; }
+  };
 
-#endif
+} // namespace epsic
+
+#endif // ! defined __epsic_covariant_h

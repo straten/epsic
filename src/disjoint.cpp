@@ -8,7 +8,7 @@
 
 #include "sample.h"
 
-Stokes<double> disjoint::get_Stokes ()
+Stokes<double> epsic::disjoint::get_Stokes ()
 {
   bool mode_A = random_double() < A_fraction;
   mode* e = (mode_A) ? A : B;
@@ -26,13 +26,13 @@ Stokes<double> disjoint::get_Stokes ()
   return result;
 }
 
-Vector<4, double> disjoint::get_mean ()
+Vector<4, double> epsic::disjoint::get_mean ()
 {
   return A_fraction * A->get_mean() + (1-A_fraction) * B->get_mean();
 }
 
 //! Implements Equation (39) of van Straten & Tiburzi (2017)
-Matrix<4,4, double> disjoint::get_covariance ()
+Matrix<4,4, double> epsic::disjoint::get_covariance ()
 {
   Matrix<4,4,double> C_A = sample::get_covariance (A, sample_size);
   Matrix<4,4,double> C_B = sample::get_covariance (B, sample_size);
@@ -47,7 +47,7 @@ Matrix<4,4, double> disjoint::get_covariance ()
   return C_A + C_B + D;
 }
 
-Matrix<4,4, double> disjoint::get_crosscovariance (unsigned ilag)
+Matrix<4,4, double> epsic::disjoint::get_crosscovariance (unsigned ilag)
 {
   if (ilag == 0)
     return get_covariance();

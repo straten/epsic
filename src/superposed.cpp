@@ -7,31 +7,29 @@
 
 #include "sample.h"
 
-using namespace std;
-
-Stokes<double> superposed::get_Stokes ()
+Stokes<double> epsic::superposed::get_Stokes ()
 {
   Stokes<double> result;
   for (unsigned i=0; i<sample_size; i++)
-    {
-      Spinor<double> e_A = A->get_field();
-      Spinor<double> e_B = B->get_field();
-      
-      Vector<4, double> tmp;
-      compute_stokes (tmp, e_A + e_B);
-      result += tmp;
-    }
+  {
+    Spinor<double> e_A = A->get_field();
+    Spinor<double> e_B = B->get_field();
+    
+    Vector<4, double> tmp;
+    compute_stokes (tmp, e_A + e_B);
+    result += tmp;
+  }
   result /= sample_size;
   return result;
 }
 
-Vector<4, double> superposed::get_mean ()
+Vector<4, double> epsic::superposed::get_mean ()
 {
   return A->get_mean() + B->get_mean();
 }
 
 //! Implements Equation (42) of van Straten & Tiburzi (2017)
-Matrix<4,4, double> superposed::get_covariance ()
+Matrix<4,4, double> epsic::superposed::get_covariance ()
 {
   Matrix<4,4, double> result = sample::get_covariance (A, sample_size);
   result += sample::get_covariance (B, sample_size);

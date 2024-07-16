@@ -8,25 +8,23 @@
 #include "sample.h"
 #include "Pauli.h"
 
-using namespace std;
-
 Spinor<double> spinor (const Stokes<double>& stokes)
 {
-  cerr << "Stokes=" << stokes << endl;
+  //cerr << "Stokes=" << stokes << endl;
   Quaternion<double, Hermitian> H = natural(stokes);
-  cerr << "Natural=" << H << endl;
+  //cerr << "Natural=" << H << endl;
   Quaternion<double, Unitary> U = eigen (H);
-  cerr << "Unitary=" << U << endl;
+  //cerr << "Unitary=" << U << endl;
 
   Jones<double> jones = herm( convert(U) );
-  cerr << "Jones=" << jones << endl;
+  //cerr << "Jones=" << jones << endl;
   
   Spinor<double> result (jones.j00, jones.j10);
   result *= sqrt(stokes[0]);
   return result;
 }
 
-coherent::coherent (double _coh)
+epsic::coherent::coherent (double _coh)
 {
   built = false;
   coupling = new mode;
@@ -38,13 +36,13 @@ coherent::coherent (double _coh)
   a_xform = b_xform = 0;
 }
 
-void coherent::set_normal (BoxMuller* n)
+void epsic::coherent::set_normal (BoxMuller* n)
 {
   coupling->set_normal(n);
   combination::set_normal (n);
 }
 
-Stokes<double> coherent::get_Stokes ()
+Stokes<double> epsic::coherent::get_Stokes ()
 {
   if (!built)
     build ();
@@ -75,7 +73,7 @@ Stokes<double> coherent::get_Stokes ()
   return result;
 }
 
-void coherent::build ()
+void epsic::coherent::build ()
 {
   a = spinor (A->get_Stokes());
   b = spinor (B->get_Stokes());
@@ -86,13 +84,13 @@ void coherent::build ()
   built = true;
 }
 
-Vector<4, double> coherent::get_mean ()
+Vector<4, double> epsic::coherent::get_mean ()
 {
   return A->get_mean() + B->get_mean();
 }
 
 //! Implements Equation (42) of van Straten & Tiburzi (2017)
-Matrix<4,4, double> coherent::get_covariance ()
+Matrix<4,4, double> epsic::coherent::get_covariance ()
 {
   Matrix<4,4, double> result = sample::get_covariance (A, sample_size);
   result += sample::get_covariance (B, sample_size);

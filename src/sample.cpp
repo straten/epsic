@@ -10,7 +10,7 @@
 
 //! Sums the sample_size by sample_size square on the diagonal
 /*! worker function for sub-classes */
-Matrix<4,4, double> sample::get_covariance (mode* s, unsigned sample_size)
+Matrix<4,4, double> epsic::sample::get_covariance (mode* s, unsigned sample_size)
 {
   Matrix<4,4, double> result = s->get_covariance ();
 
@@ -46,7 +46,7 @@ Matrix<4,4, double> sample::get_covariance (mode* s, unsigned sample_size)
 
 //! Sums the sample_size by sample_size square off the diagonal
 /*! starts at at_lag * sample_size off the diagonal */
-Matrix<4,4, double> sample::get_crosscovariance (mode* s, unsigned at_lag,
+Matrix<4,4, double> epsic::sample::get_crosscovariance (mode* s, unsigned at_lag,
 						 unsigned sample_size)
 {
   Matrix<4,4, double> result (0);

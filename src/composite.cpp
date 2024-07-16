@@ -7,8 +7,6 @@
 
 #include "sample.h"
 
-using namespace std;
-
 void add (Stokes<double>& result, Spinor<double>& e)
 {
   Vector<4, double> tmp;
@@ -16,7 +14,7 @@ void add (Stokes<double>& result, Spinor<double>& e)
   result += tmp;
 }
 
-Stokes<double> composite::get_Stokes ()
+Stokes<double> epsic::composite::get_Stokes ()
 {
   unsigned A_sample_size = A_fraction * sample_size;
   unsigned B_sample_size = sample_size - A_fraction;
@@ -41,7 +39,7 @@ Stokes<double> composite::get_Stokes ()
   return result;
 }
 
-Vector<4, double> composite::get_mean ()
+Vector<4, double> epsic::composite::get_mean ()
 {
   unsigned A_sample_size = A_fraction * sample_size;
   unsigned B_sample_size = sample_size - A_sample_size;
@@ -53,7 +51,7 @@ Vector<4, double> composite::get_mean ()
 }
 
 //! Implements Equation (59) of van Straten & Tiburzi (2017)
-Matrix<4,4, double> composite::get_covariance ()
+Matrix<4,4, double> epsic::composite::get_covariance ()
 {
   unsigned A_sample_size = A_fraction * sample_size;
   unsigned B_sample_size = sample_size - A_sample_size;

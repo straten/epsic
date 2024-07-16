@@ -9,9 +9,7 @@
 #include "Quaternion.h"
 #include "Pauli.h"
 
-using namespace std;
-
-mode::mode ()
+epsic::mode::mode ()
 {
   normal = 0;
   rms = 0.5;
@@ -19,7 +17,7 @@ mode::mode ()
   set_Stokes (Stokes<double>(1.0));
 }
 
-void mode::set_Stokes (const Stokes<double>& _mean)
+void epsic::mode::set_Stokes (const Stokes<double>& _mean)
 {
   mean = _mean;
 
@@ -27,28 +25,19 @@ void mode::set_Stokes (const Stokes<double>& _mean)
   polarizer = convert (root);
 }
 
-Spinor<double> mode::get_field ()
+Spinor<double> epsic::mode::get_field ()
 {
   if (!normal)
-    throw std::runtime_error( "mode::get_field - BoxMuller not set");
+    throw std::runtime_error( "epsic::mode::get_field - BoxMuller not set");
 
   BoxMuller& gasdev = *normal;
 
-  complex<double> x (rms * gasdev(), rms * gasdev());
-  complex<double> y (rms * gasdev(), rms * gasdev());
+  std::complex<double> x (rms * gasdev(), rms * gasdev());
+  std::complex<double> y (rms * gasdev(), rms * gasdev());
 
   Spinor<double> e (x, y);
 
   return polarizer * e;
 }
 
-#if 0
-void mode::powerlaw (Spinor<double>& e)
-{
-  double y = random_double(); 
-  double index = -4;
-
-  e *= pow( pow(inner_scale,index+1) * (1.0 - y), 1.0/(index+1) );
-}
-#endif
 
