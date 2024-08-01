@@ -225,13 +225,16 @@ Vector<N, std::complex<T> > conj (const Vector< N, std::complex<T> >& input)
   return result;
 }
 
-template<unsigned N, typename T>
-bool myfinite (const Vector< N, T>& input)
+namespace true_math
 {
-  for (unsigned i=0; i < N; i++)
-    if (!myfinite( input[i] ))
-      return false;
-  return true;
+  template<unsigned N, typename T>
+  bool finite (const Vector< N, T>& input)
+  {
+    for (unsigned i=0; i < N; i++)
+      if (!true_math::finite( input[i] ))
+        return false;
+    return true;
+  }
 }
 
 //! Maps the structure of Vector to other template methods

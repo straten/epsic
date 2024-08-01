@@ -1,11 +1,11 @@
 
 noinst_LTLIBRARIES = libutil.la
 
-libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C myfinite.c
+libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C true_math.c
 
 pkginclude_HEADERS = \
 Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
-myfinite.h     complex_math.h         complex_promote.h \
+true_math.h    complex_math.h         complex_promote.h \
 BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
 Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h
 
@@ -17,28 +17,28 @@ nodist_pkginclude_HEADERS = PromoteTraits.h
 TESTS = test_Vector test_Matrix test_rotation \
 	test_Basis test_Dirac test_Jones test_Mueller test_Quaternion \
 	test_Conventions test_Jacobi test_Pauli test_Stokes test_eigen \
-	test_inner_product test_Estimate test_Minkowski test_myfinite \
+	test_inner_product test_Estimate test_Minkowski test_true_math \
 	test_BoxMuller
 
 check_PROGRAMS = $(TESTS)
 
-test_Conventions_SOURCES        = test_Conventions.C
-test_Vector_SOURCES             = test_Vector.C
-test_Matrix_SOURCES             = test_Matrix.C
+test_Conventions_SOURCES	= test_Conventions.C
+test_Vector_SOURCES			= test_Vector.C
+test_Matrix_SOURCES			= test_Matrix.C
 test_rotation_SOURCES		= test_rotation.C
-test_Jacobi_SOURCES             = test_Jacobi.C
-test_eigen_SOURCES              = test_eigen.C
-test_Jones_SOURCES              = test_Jones.C
-test_Quaternion_SOURCES         = test_Quaternion.C
-test_Pauli_SOURCES              = test_Pauli.C
-test_Dirac_SOURCES              = test_Dirac.C
-test_Basis_SOURCES              = test_Basis.C
-test_Stokes_SOURCES             = test_Stokes.C
+test_Jacobi_SOURCES			= test_Jacobi.C
+test_eigen_SOURCES			= test_eigen.C
+test_Jones_SOURCES			= test_Jones.C
+test_Quaternion_SOURCES		= test_Quaternion.C
+test_Pauli_SOURCES			= test_Pauli.C
+test_Dirac_SOURCES			= test_Dirac.C
+test_Basis_SOURCES			= test_Basis.C
+test_Stokes_SOURCES			= test_Stokes.C
 test_Minkowski_SOURCES		= test_Minkowski.C
-test_Mueller_SOURCES            = test_Mueller.C
-test_inner_product_SOURCES      = test_inner_product.C
+test_Mueller_SOURCES		= test_Mueller.C
+test_inner_product_SOURCES	= test_inner_product.C
 test_Estimate_SOURCES		= test_Estimate.C
-test_myfinite_SOURCES		= test_myfinite.C
+test_true_math_SOURCES		= test_true_math.C
 test_BoxMuller_SOURCES		= test_BoxMuller.C
 
 LDADD = libutil.la

@@ -266,9 +266,12 @@ T norm (const Jones<T>& j)
     norm(j.j10) + norm(j.j11);
 }
 
-template<typename T>
-bool myfinite (const Jones<T>& j)
-{ return myfinite(j.j00) && myfinite(j.j01) && myfinite(j.j10) && myfinite(j.j11); }
+namespace true_math
+{
+  template<typename T>
+  bool finite (const Jones<T>& j)
+  { return finite(j.j00) && finite(j.j01) && finite(j.j10) && finite(j.j11); }
+}
 
 template<typename T>
 T fabs (const Jones<T>& j)

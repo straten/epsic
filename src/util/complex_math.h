@@ -12,11 +12,14 @@
 #define _epsic_complex_math_H
 
 #include <complex>
-#include "myfinite.h"
+#include "true_math.h"
 
-template<typename T>
-bool myfinite (const std::complex<T>& z)
-{ return myfinite(z.real()) && myfinite(z.imag()); }
+namespace true_math
+{
+  template<typename T>
+  bool finite (const std::complex<T>& z)
+  { return true_math::finite(z.real()) && true_math::finite(z.imag()); }
+}
 
 #endif
 
