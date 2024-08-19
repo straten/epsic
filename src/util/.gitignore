@@ -19,3 +19,5 @@ test_Vector
 test_eigen
 test_inner_product
 test_rotation
+test_BoxMuller
+test_true_math
