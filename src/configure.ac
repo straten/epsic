@@ -4,7 +4,7 @@
 AC_PREREQ(2.57)
 
 # AC_INIT version should match version-info in Makefile.am
-AC_INIT([EPSIC],[2.0.0],[vanstraten.willem@gmail.com])
+AC_INIT([EPSIC],[3.0.0],[vanstraten.willem@gmail.com])
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])
