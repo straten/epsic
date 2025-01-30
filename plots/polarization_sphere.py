@@ -9,6 +9,12 @@ from mpl_toolkits.mplot3d.proj3d import proj_transform
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
+chi_deg = 50.0
+psi_deg = 70.0
+
+chi = chi_deg*np.pi/180.0
+psi = psi_deg*np.pi/180.0
+
 class Arrow3D(FancyArrowPatch):
 
     def __init__(self, x, y, z, dx, dy, dz, *args, **kwargs):
@@ -51,7 +57,7 @@ chi_color = "#7ca1cc"
 major_color = "#f05039"
 minor_color = "#1f449c"
 
-plt.rc('font', family='serif', serif='cm10', size=24)
+plt.rc('font', family='serif', serif='cm10', size=21)
 plt.rc('text', usetex=True)
 
 fig = plt.figure(figsize=(8,8))
@@ -66,7 +72,7 @@ ax.set_ylim3d(-limit, limit)
 plt.axis('off')
 
 elev = 25
-azim = 25
+azim = 35
 roll = 0
 ax.view_init(elev, azim, roll)
 
@@ -82,17 +88,12 @@ zy=[0,0]
 zz=[-1.1,-0.9]
 ax.plot(zx,zy,zz,color='k')
 
+stretch=1.03
+
 # label the x, y, and z axes
-ax.text(len,0,0,"$S_1$", ha='right')
-ax.text(0,len,0,"$S_2$")
-ax.text(0,0,len,"$S_3$")
-
-chi_deg = 60.0
-psi_deg = 60.0
-r = 1.0
-
-chi = chi_deg*np.pi/180.0
-psi = psi_deg*np.pi/180.0
+ax.text(len*stretch,0,0,"$S_1$", ha='right')
+ax.text(0,len*stretch,0,"$S_2$")
+ax.text(0,0,len*stretch,"$S_3$")
 
 # Plot the equator
 circle = np.linspace(0, 2*np.pi, 100)
@@ -120,8 +121,9 @@ poly = Poly3DCollection(verts, alpha=0.6, color=psi_color)
 ax.add_collection3d(poly)
 ax.plot(psix[1:], psiy[1:], psiz[1:], color=major_color)
 
-stretch=1.35
-ax.text(stretch*psix[N//2], stretch*psiy[N//2], stretch*psiz[N//2], "$2\psi$", ha='center')
+stretch=1.37
+idx=N//2
+ax.text(stretch*psix[idx], stretch*psiy[idx], stretch*psiz[idx], "$2\psi$", ha='left')
 
 # Plot the meridian
 half_circle = np.linspace(-np.pi/2, np.pi/2, 100)
@@ -147,8 +149,8 @@ poly = Poly3DCollection(verts, alpha=0.6, color=chi_color)
 ax.add_collection3d(poly)
 ax.plot(chix[1:], chiy[1:], chiz[1:], color=minor_color)
 
-stretch=1.2
-ax.text(stretch*chix[N//2], stretch*chiy[N//2], stretch*chiz[N//2], "$2\chi$", ha='center')
+stretch=1.24
+ax.text(stretch*chix[idx], stretch*chiy[idx], stretch*chiz[idx], "$2\chi$", ha='center')
 
 # finally, draw the polarization vector
 r=1.8
