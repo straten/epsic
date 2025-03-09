@@ -41,7 +41,11 @@ test_Estimate_SOURCES		= test_Estimate.C
 test_true_math_SOURCES		= test_true_math.C
 test_BoxMuller_SOURCES		= test_BoxMuller.C
 
-LDADD = libutil.la
+if HAVE_CUDA
+
+libutil_la_SOURCES += test_Spinor.cu
+
+endif
 
 # ######################################################################
 #
@@ -64,4 +68,8 @@ generate_PromoteTraits_SOURCES  = generate_PromoteTraits.C
 generate_PromoteTraits_LDADD    =
 
 include $(top_srcdir)/config/Makefile.local
+include $(top_srcdir)/config/Makefile.cuda
+
+AM_CPPFLAGS = @CUDA_CFLAGS@
+LDADD = libutil.la @CUDA_LIBS@
 

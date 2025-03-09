@@ -11,6 +11,8 @@
 #ifndef __Jones_H
 #define __Jones_H
 
+#include "epsic/complex.h"
+
 #include "Matrix.h"
 #include "Traits.h"
 #include "complex_promote.h"
@@ -20,23 +22,23 @@
 template<typename T> class Jones {
   
 public:
-  std::complex<T> j00,j01,j10,j11;
+  epsic::complex<T> j00,j01,j10,j11;
 
   //! Default constructor
-  Jones (T scalar = 0.0)
+  __prefix__ constexpr Jones (T scalar = 0.0)
     : j00(scalar), j01(0.0), j10(0.0), j11(scalar) { }
 
   //! Construct from a castable type
   template<typename U> explicit Jones (const U& scalar)
     : j00(scalar), j01(0.0), j10(0.0), j11(scalar) { }
 
-  //! Construct from std::complex<T>
-  Jones (std::complex<T> j00_, std::complex<T> j01_,
-	 std::complex<T> j10_, std::complex<T> j11_)
+  //! Construct from epsic::complex<T>
+  __prefix__ Jones (epsic::complex<T> j00_, epsic::complex<T> j01_,
+	 epsic::complex<T> j10_, epsic::complex<T> j11_)
     : j00(j00_), j01(j01_), j10(j10_), j11(j11_) {  }
 
   //! Construct from another Jones<T> matrix
-  Jones (const Jones& s)
+  __prefix__ Jones (const Jones& s)
     : j00(s.j00), j01(s.j01), j10(s.j10), j11(s.j11) {  }
 
   //! Construct from another Jones<U> matrix
@@ -44,60 +46,62 @@ public:
     { operator=(s); }
 
   //! Construct from a Matrix
-  template<typename U> Jones (const Matrix< 2, 2, std::complex<U> >& M)
+  template<typename U> Jones (const Matrix< 2, 2, epsic::complex<U> >& M)
     : j00(M[0][0]), j01(M[0][1]), j10(M[1][0]),j11(M[1][1]) {  }
 
   //! Set this instance equal to another Jones<T> instance
-  Jones& operator = (const Jones& s)
+  __prefix__ Jones& operator = (const Jones& s)
     { j00=s.j00; j01=s.j01; j10=s.j10; j11=s.j11; return *this; }
 
   //! Set this instance equal to a scalar
-  Jones& operator = (T scalar)
+  __prefix__ Jones& operator = (T scalar)
     { j00=scalar; j01=0; j10=0; j11=scalar; return *this; }
 
   //! Set this instance equal to a complex scalar
-  Jones& operator = (std::complex<T> scalar)
+  __prefix__ Jones& operator = (epsic::complex<T> scalar)
     { j00=scalar; j01=0; j10=0; j11=scalar; return *this; }
 
   //! Set this instance equal to another Jones<U> instance
   template<typename U> Jones& operator = (const Jones<U>& s)
-    { j00=std::complex<T>(s.j00.real(), s.j00.imag()); 
-      j01=std::complex<T>(s.j01.real(), s.j01.imag());
-      j10=std::complex<T>(s.j10.real(), s.j10.imag()); 
-      j11=std::complex<T>(s.j11.real(), s.j11.imag()); return *this; }
+    { j00=epsic::complex<T>(s.j00.real(), s.j00.imag()); 
+      j01=epsic::complex<T>(s.j01.real(), s.j01.imag());
+      j10=epsic::complex<T>(s.j10.real(), s.j10.imag()); 
+      j11=epsic::complex<T>(s.j11.real(), s.j11.imag()); return *this; }
 
-  typedef Matrix< 2, 2, std::complex<T> > equiv;
+  typedef Matrix< 2, 2, epsic::complex<T> > equiv;
 
   //! Cast to Matrix
   operator equiv () const
   { equiv M; M[0][0]=j00; M[0][1]=j01; M[1][0]=j10; M[1][1]=j11; return M; }
 
   //! Add another Jones<T> instance to this one
-  Jones& operator += (const Jones& s)
+  __prefix__ Jones& operator += (const Jones& s)
     { j00+=s.j00; j01+=s.j01; j10+=s.j10; j11+=s.j11; return *this; }
 
   //! Subract another Jones<T> instance from this one
-  Jones& operator -= (const Jones& s)
+  __prefix__ Jones& operator -= (const Jones& s)
     { j00-=s.j00; j01-=s.j01; j10-=s.j10; j11-=s.j11; return *this; }
 
   //! Multiply another Jones<T> instance into this one (this=this*j)
-  Jones& operator *= (const Jones& j);
+  __prefix__ Jones& operator *= (const Jones& j);
 
-  //! Multiply this instance by std::complex<U>
-  template<typename U> Jones& operator *= (const std::complex<U>& au)
-    { std::complex<T>a(au); j00*=a; j01*=a; j10*=a; j11*=a; return *this; }
+  //! Multiply this instance by epsic::complex<U>
+  template<typename U> 
+  __prefix__ Jones& operator *= (const epsic::complex<U>& au)
+    { epsic::complex<T>a(au); j00*=a; j01*=a; j10*=a; j11*=a; return *this; }
 
-  //! Divide this instance by std::complex<U>
-  template<typename U> Jones& operator /= (const std::complex<U>& au)
-    { std::complex<T>a(T(1.0),T(0.0));
+  //! Divide this instance by epsic::complex<U>
+  template<typename U> 
+  __prefix__ Jones& operator /= (const epsic::complex<U>& au)
+    { epsic::complex<T>a(T(1.0),T(0.0));
       a/=au; j00*=a; j01*=a; j10*=a; j11*=a; return *this; }
 
   //! Multiply this instance by T
-  Jones& operator *= (T a)
+  __prefix__ Jones& operator *= (T a)
     { j00*=a; j01*=a; j10*=a; j11*=a; return *this; }
 
   //! Divide this instance by T
-  Jones& operator /= (T a)
+  __prefix__ Jones& operator /= (T a)
     { T d=1.0/a; j00*=d; j01*=d; j10*=d; j11*=d; return *this; }
 
   //! Equality
@@ -111,14 +115,14 @@ public:
   bool operator != (const Jones& b) const
   { return ! Jones::operator==(b); }
 
-  //! Binary multiplication of Jones<T> and std::complex<U>
+  //! Binary multiplication of Jones<T> and epsic::complex<U>
   template<typename U> 
-  const friend Jones operator * (Jones a, std::complex<U> c)
+  const friend Jones operator * (Jones a, epsic::complex<U> c)
     { a*=c; return a; }
 
-  //! Binary multiplication of std::complex<U> and Jones<T>
+  //! Binary multiplication of epsic::complex<U> and Jones<T>
   template<typename U>
-  const friend Jones operator * (std::complex<U> c, Jones a)
+  const friend Jones operator * (epsic::complex<U> c, Jones a)
     { a*=c; return a; }
 
   //! Binary multiplication of Jones<T> and T
@@ -138,24 +142,24 @@ public:
     { s.j00=-s.j00; s.j01=-s.j01; s.j10=-s.j10; s.j11=-s.j11; return s; }
 
   //! Returns reference to the value of the matrix at j(ir,ic)
-  std::complex<T>& operator () (unsigned ir, unsigned ic)
-  { std::complex<T>* val = &j00; return val[ir*2+ic]; }
+  epsic::complex<T>& operator () (unsigned ir, unsigned ic)
+  { epsic::complex<T>* val = &j00; return val[ir*2+ic]; }
   
   //! Returns const reference to the value of the matrix at j(ir,ic)
-  const std::complex<T>& operator () (unsigned ir, unsigned ic) const
-    { const std::complex<T>* val = &j00; return val[ir*2+ic]; }
+  const epsic::complex<T>& operator () (unsigned ir, unsigned ic) const
+    { const epsic::complex<T>* val = &j00; return val[ir*2+ic]; }
 
   //! Alternative access to elements
-  std::complex<T>&  operator [] (unsigned n)
-  { std::complex<T>* val = &j00; return val[n]; }
+  epsic::complex<T>&  operator [] (unsigned n)
+  { epsic::complex<T>* val = &j00; return val[n]; }
 
   //! Alternative access to elements 
-  const std::complex<T>& operator [] (unsigned n) const
-  { const std::complex<T>* val = &j00; return val[n]; }
+  const epsic::complex<T>& operator [] (unsigned n) const
+  { const epsic::complex<T>* val = &j00; return val[n]; }
 
   //! Return true if the off-diagonal elements are zero
-  const bool is_diagonal () const { return (j01==std::complex<T>(0.0)) 
-    && (j10==std::complex<T>(0.0)); }
+  bool is_diagonal () const { return (j01==epsic::complex<T>(0.0)) 
+    && (j10==epsic::complex<T>(0.0)); }
 
   //! The identity matrix
   static const Jones& identity();
@@ -204,13 +208,13 @@ const Jones<T>& Jones<T>::identity ()
 //! Enable the Jones class to be passed to certain template functions
 template<typename T> struct DatumTraits< Jones<T> >
 {
-  ElementTraits< std::complex<T> > element_traits;
-  typedef std::complex<T> element_type;
+  ElementTraits< epsic::complex<T> > element_traits;
+  typedef epsic::complex<T> element_type;
 
   static inline unsigned ndim () { return 4; }
-  static inline std::complex<T>& element (Jones<T>& t, unsigned i) 
+  static inline epsic::complex<T>& element (Jones<T>& t, unsigned i) 
   { return t[i]; }
-  static inline const std::complex<T>& element (const Jones<T>& t, unsigned i)
+  static inline const epsic::complex<T>& element (const Jones<T>& t, unsigned i)
   { return t[i]; }
 };
 
@@ -218,7 +222,7 @@ template<typename T> struct DatumTraits< Jones<T> >
 template<typename T>
 Jones<T>& Jones<T>::operator *= (const Jones<T>& j)
 {
-  std::complex<T> temp (j00 * j.j00 + j01 * j.j10);
+  epsic::complex<T> temp (j00 * j.j00 + j01 * j.j10);
   j01  = j00 * j.j01 + j01 * j.j11; j00=temp;
   temp = j10 * j.j00 + j11 * j.j10;
   j11  = j10 * j.j01 + j11 * j.j11; j10=temp;
@@ -229,7 +233,7 @@ Jones<T>& Jones<T>::operator *= (const Jones<T>& j)
 template<typename T>
 Jones<T> inv (const Jones<T>& j)
 {
-  std::complex<T> d(1.0,0.0); d/=det(j);
+  epsic::complex<T> d(1.0,0.0); d/=det(j);
   return Jones<T>(d*j.j11, -d*j.j01,
 		  -d*j.j10, d*j.j00);
 }
@@ -252,11 +256,11 @@ Jones<T> herm (const Jones<T>& j)
 
 //! Returns the determinant
 template<typename T>
-std::complex<T> det (const Jones<T>& j) { return j.j00*j.j11 - j.j01*j.j10; }
+epsic::complex<T> det (const Jones<T>& j) { return j.j00*j.j11 - j.j01*j.j10; }
 
 //! Returns the trace
 template<typename T>
-std::complex<T> trace (const Jones<T>& j) { return j.j00 + j.j11; }
+epsic::complex<T> trace (const Jones<T>& j) { return j.j00 + j.j11; }
 
 //! Returns the variance (square of the Frobenius norm)
 template<typename T>

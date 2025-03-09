@@ -26,16 +26,16 @@ template<typename T>
 class Spinor
 {
 public:
-  Spinor (const std::complex<T>& _x, const std::complex<T>& _y) : x(_x), y(_y){}
-  Spinor () { }
+  __prefix__ Spinor (const epsic::complex<T>& _x, const epsic::complex<T>& _y) : x(_x), y(_y){}
+  __prefix__ Spinor () { }
 
-  std::complex<T> x;
-  std::complex<T> y;
+  epsic::complex<T> x;
+  epsic::complex<T> y;
 
   template <typename U>
-  const Spinor& operator *= (U scale) { x *= scale; y *= scale; return *this; }
-  const Spinor& operator /= (T norm) { x /= norm; y /= norm; return *this; }
-  const Spinor& operator += (const Spinor& e) { x+=e.x; y+=e.y; return *this; }
+  __prefix__ const Spinor& operator *= (U scale) { x *= scale; y *= scale; return *this; }
+  __prefix__ const Spinor& operator /= (T norm) { x /= norm; y /= norm; return *this; }
+  __prefix__ const Spinor& operator += (const Spinor& e) { x+=e.x; y+=e.y; return *this; }
 };
 
 template <typename T>
@@ -53,32 +53,31 @@ const Spinor<T> operator + (Spinor<T> s, const Spinor<T>& t)
 
 //! returns the input Spinor transformed by the Jones matrix
 template<typename T>
-const Spinor<T> operator * (const Jones<T>& j, const Spinor<T>& in)
+__prefix__ const Spinor<T> operator * (const Jones<T>& j, const Spinor<T>& in)
 {
   return Spinor<T> ( j.j00 * in.x + j.j01 * in.y,
 		     j.j10 * in.x + j.j11 * in.y );
 }
 
 template<typename T, typename U>
-const Spinor<T> operator * (U a, Spinor<T> in)
+__prefix__ const Spinor<T> operator * (U a, Spinor<T> in)
 {
   return in *= a;
 }
 
 template<typename T, typename U>
-const Spinor<T> operator * (Spinor<T> in, U a)
+__prefix__ const Spinor<T> operator * (Spinor<T> in, U a)
 {
   return in *= a;
 }
 
-
 template<typename T, typename U>
-void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
+__prefix__ void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
 {
   double var_x = norm(e.x);
   double var_y = norm(e.y);
 
-  std::complex<double> c_xy = conj(e.x) * e.y;
+  epsic::complex<double> c_xy = conj(e.x) * e.y;
   
   stokes[0] = var_x + var_y;
   stokes[1] = var_x - var_y;
