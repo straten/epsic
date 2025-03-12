@@ -13,39 +13,39 @@
 
 #include "Traits.h"
 #include "Estimate.h"
+#include "epsic/complex.h"
 
 #include <iostream>
-#include <complex>
 
 //! Vector
 template <unsigned N, typename T> 
 class Vector {
 
   template<typename U> 
-  static void zero (Vector<N, U>& v)
+  __prefix__ static void zero (Vector<N, U>& v)
   { for (unsigned i=0; i<N; i++) v.x[i] = T(0.0); }
 
   //! overloaded template fixes Vector<M,Vector<M,T>> default constructor 
   template<unsigned M, typename U> 
-  static void zero (Vector<N, Vector<M, U> >& v)
+  __prefix__ static void zero (Vector<N, Vector<M, U> >& v)
   { /* do nothing */ }
 
 public:
   T x[N];
 
   //! Default constructor
-  Vector () { zero (*this); }
+  __prefix__ constexpr Vector () { zero (*this); }
 
-  Vector (T x0)
+  __prefix__ constexpr Vector (T x0)
   { x[0] = x0; }
 
-  Vector (T x0, T x1)
+  __prefix__ constexpr Vector (T x0, T x1)
   { x[0] = x0; x[1] = x1; }
 
-  Vector (T x0, T x1, T x2)
+  __prefix__ constexpr Vector (T x0, T x1, T x2)
   { x[0] = x0; x[1] = x1; x[2] = x2; }
 
-  Vector (T x0, T x1, T x2, T x3)
+  __prefix__ constexpr Vector (T x0, T x1, T x2, T x3)
   { x[0] = x0; x[1] = x1; x[2] = x2; x[3] = x3; }
 
   //! Construct from another Vector<U> instance
@@ -53,19 +53,20 @@ public:
     { operator=(s); }
 
   //! Set this instance equal to another Vector<U> instance
-  template<typename U> Vector& operator = (const Vector<N, U>& s)
+  template<typename U> 
+  __prefix__ Vector& operator = (const Vector<N, U>& s)
     { for (unsigned i=0; i<N; i++) x[i] = T(s.x[i]); return *this; }
 
   //! Set this instance equal to a scalar
-  Vector& operator = (const T& scalar)
+  __prefix__ Vector& operator = (const T& scalar)
     { x[0] = scalar; for (unsigned i=1; i<N; i++) x[i] = 0.0; return *this; }
 
   //! Vector addition
-  Vector& operator += (const Vector& s)
+  __prefix__ Vector& operator += (const Vector& s)
     { for (unsigned i=0; i<N; i++) x[i] += s.x[i]; return *this; }
 
   //! Vector subtraction
-  Vector& operator -= (const Vector& s)
+  __prefix__ Vector& operator -= (const Vector& s)
     { for (unsigned i=0; i<N; i++) x[i] -= s.x[i]; return *this; }
 
   /*! Vector multiplication
@@ -75,25 +76,25 @@ public:
 
   //! Scalar multiplication
   template<typename U>
-  Vector& operator *= (const U& a)
+  __prefix__ Vector& operator *= (const U& a)
     { for (unsigned i=0; i<N; i++) x[i] *= a; return *this; }
 
   //! Scalar division
   template<typename U>
-  Vector& operator /= (const U& a)
+  __prefix__ Vector& operator /= (const U& a)
     { for (unsigned i=0; i<N; i++) x[i] /= a; return *this; }
 
   //! Equality
-  bool operator == (const Vector& b) const
+  __prefix__ bool operator == (const Vector& b) const
     { for(unsigned i=0; i<N; i++) if(x[i]!=b.x[i]) return false; return true; }
 
   //! Inequality
-  bool operator != (const Vector& b) const
+  __prefix__ bool operator != (const Vector& b) const
     { return ! operator==(b); }
 
   //! Vector addition
   template<typename U>
-  const friend Vector operator + (Vector a, const Vector<N,U>& b)
+  __prefix__ const friend Vector operator + (Vector a, const Vector<N,U>& b)
     { a+=b; return a; }
 
   //! Vector subtraction
@@ -122,11 +123,11 @@ public:
     { for (unsigned i=0; i<N; i++) s.x[i] = -s.x[i]; return s; }
 
   //! Access to elements
-  T& operator [] (unsigned n)
+  __prefix__ T& operator [] (unsigned n)
     { return x[n]; }
   
   //! Alternative access to elements 
-  const T operator [] (unsigned n) const
+  __prefix__ const T operator [] (unsigned n) const
     { return x[n]; }
 
   //! Dimension of data
