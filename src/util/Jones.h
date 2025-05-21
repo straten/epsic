@@ -146,7 +146,7 @@ public:
     { const std::complex<T>* val = &j00; return val[ir*2+ic]; }
 
   //! Alternative access to elements
-  std::complex<T>&  operator [] (unsigned n)
+  std::complex<T>& operator [] (unsigned n)
   { std::complex<T>* val = &j00; return val[n]; }
 
   //! Alternative access to elements 
@@ -154,7 +154,7 @@ public:
   { const std::complex<T>* val = &j00; return val[n]; }
 
   //! Return true if the off-diagonal elements are zero
-  const bool is_diagonal () const { return (j01==std::complex<T>(0.0)) 
+  bool is_diagonal () const { return (j01==std::complex<T>(0.0)) 
     && (j10==std::complex<T>(0.0)); }
 
   //! The identity matrix
