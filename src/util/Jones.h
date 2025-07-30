@@ -150,7 +150,7 @@ public:
     { const epsic::complex<T>* val = &j00; return val[ir*2+ic]; }
 
   //! Alternative access to elements
-  epsic::complex<T>&  operator [] (unsigned n)
+  epsic::complex<T>& operator [] (unsigned n)
   { epsic::complex<T>* val = &j00; return val[n]; }
 
   //! Alternative access to elements 
@@ -158,8 +158,8 @@ public:
   { const epsic::complex<T>* val = &j00; return val[n]; }
 
   //! Return true if the off-diagonal elements are zero
-  bool is_diagonal () const { return (j01==epsic::complex<T>(0.0)) 
-    && (j10==epsic::complex<T>(0.0)); }
+  bool is_diagonal () const
+  { return (j01==epsic::complex<T>(0.0)) && (j10==epsic::complex<T>(0.0)); }
 
   //! The identity matrix
   static const Jones& identity();
