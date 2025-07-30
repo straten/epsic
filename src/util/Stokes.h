@@ -23,47 +23,47 @@ class Stokes : public Vector<4,T>
  public:
   
   //! Default constructor
-  Stokes (T a = T(0.0), T b = T(0.0), T c = T(0.0), T d = T(0.0))
+  __prefix__ Stokes (T a = T(0.0), T b = T(0.0), T c = T(0.0), T d = T(0.0))
     : Vector<4,T> (a,b,c,d) {}
 
   //! Construct from a 4-vector
   template<typename U>
-  Stokes (const Vector<4,U>& v)
+  __prefix__ Stokes (const Vector<4,U>& v)
     : Vector<4,T> (T(v[0]), T(v[1]), T(v[2]), T(v[3])) {}
 
   //! Construct from a scalar and 3-vector
   template<typename U>
-  Stokes (T s, const Vector<3,U>& v)
+  __prefix__ Stokes (T s, const Vector<3,U>& v)
     : Vector<4,T> (s, v[0], v[1], v[2]) {}
 
   template<typename U>
-  Stokes (const Stokes<U>& s)
+  __prefix__ Stokes (const Stokes<U>& s)
     : Vector<4,T> (s[0], s[1], s[2], s[3]) {}
 
   template<typename U, typename Unary>
-  Stokes (const Stokes<U>& s, Unary f) 
+  __prefix__ Stokes (const Stokes<U>& s, Unary f) 
     : Vector<4,T>( f(s[0]), f(s[1]), f(s[2]), f(s[3]) ) {}
 
   //! Access to scalar component
-  T get_scalar () const { return this->x[0]; }
+  __prefix__ T get_scalar () const { return this->x[0]; }
 
   //! Set the scalar component
-  void set_scalar (T s) { this->x[0] = s; }
+  __prefix__ void set_scalar (T s) { this->x[0] = s; }
 
   //! Access to vector component
-  Vector<3,T> get_vector () const 
+  __prefix__ Vector<3,T> get_vector () const 
   { return Vector<3,T> (this->x[1], this->x[2], this->x[3]); }
 
   //! Set the vector component
   template<typename U>
-  void set_vector (const Vector<3,U>& v) 
+  __prefix__ void set_vector (const Vector<3,U>& v) 
   { this->x[1]=v[0]; this->x[2]=v[1]; this->x[3]=v[2]; }
 
-  T sqr_vect () const { return normsq (get_vector()); }
+  __prefix__ T sqr_vect () const { return normsq (get_vector()); }
 
-  T abs_vect () const { return sqrt (sqr_vect()); }
+  __prefix__ T abs_vect () const { return sqrt (sqr_vect()); }
 
-  T invariant () const { return this->x[0]*this->x[0] - sqr_vect(); }
+  __prefix__ T invariant () const { return this->x[0]*this->x[0] - sqr_vect(); }
 
 };
 
