@@ -43,7 +43,9 @@ test_BoxMuller_SOURCES		= test_BoxMuller.C
 
 if HAVE_CUDA
 
-libutil_la_SOURCES += test_Spinor.cu
+check_PROGRAMS += test_Spinor
+test_Spinor_SOURCES = test_Spinor.C test_cuSpinor.cu
+pkginclude_HEADERS += cuSpinor.h
 
 endif
 
@@ -71,5 +73,5 @@ include $(top_srcdir)/config/Makefile.local
 include $(top_srcdir)/config/Makefile.cuda
 
 AM_CPPFLAGS = @CUDA_CFLAGS@
-LDADD = libutil.la @CUDA_LIBS@
+LDADD = libutil.la @CUDA_LIBS@ -ldl
 

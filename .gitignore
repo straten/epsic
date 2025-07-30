@@ -1,2 +1,5 @@
 manual/
 .vscode/
+plots/*.png
+plots/*.pdf
+

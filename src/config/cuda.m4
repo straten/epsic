@@ -18,7 +18,7 @@ AC_DEFUN([EPSIC_LIB_CUDA],
     CUDA_BIN=`dirname $cuda_nvcc`
     CUDA_ROOT=`dirname $CUDA_BIN`
     CUDA_CFLAGS=-I$CUDA_ROOT/include
-    CUDA_LIBS="-L$CUDA_ROOT/lib64 -lcudart"
+    CUDA_LIBS="-L$CUDA_ROOT/lib64 -lcudart -lcurand"
 
     CUDA_NVCC="$cuda_nvcc \$(CUDA_NVCC_FLAGS) -Xcompiler \"\$(DEFAULT_INCLUDES) \$(INCLUDES) \$(AM_CPPFLAGS) \$(CPPFLAGS)\""
 
