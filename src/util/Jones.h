@@ -195,7 +195,6 @@ const Jones<typename PromoteTraits<T,U>::promote_type>
 operator * (const Jones<T>& a, const Jones<U>& b)
 { Jones<typename PromoteTraits<T,U>::promote_type> ret(a); ret*=b; return ret; }
 
-
 //! The identity matrix
 template<typename T>
 const Jones<T>& Jones<T>::identity ()

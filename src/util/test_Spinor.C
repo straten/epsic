@@ -19,15 +19,18 @@
 
 using namespace std;
 
-// thrust code needs to be compiled by nvcc ...
-extern int test_PolarizedNoise();
+// defined in test_PolarizedNoise.cu
+extern int test_PolarizedNoise(PolarizedNoise<double>& generator);
 
 int main()
 {
   PolarizedNoise<double> generator;
   generator.set_seed(time(NULL));
 
-  Stokes<double> mean (1.0, 0.0, 0.2, 0.7);
+  Stokes<double> mean (1.0, -0.1, 0.2, 0.6);
+
+  cerr << "Expected Stokes parameters: " << mean << endl << endl;
+
   Quaternion<double,Hermitian> root = 0.5 * sqrt (natural(mean));
   generator.set_polarizer(convert(root));
 
@@ -49,5 +52,6 @@ int main()
 
   cerr << "STL host mean=" << sum/nsamp << endl << endl;
 
-  return test_PolarizedNoise();
+  // two more times using thrust
+  return test_PolarizedNoise(generator);
 }

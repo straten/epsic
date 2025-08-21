@@ -1,7 +1,7 @@
 //-*-C++-*-
 /***************************************************************************
  *
- *   Copyright (C) 2016 by Willem van Straten
+ *   Copyright (C) 2016-2025 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
@@ -16,28 +16,35 @@
 
 #include <iostream>
 
-/***************************************************************************
- *
- *  Spinor class represents an instance of the electric field
- *
- ***************************************************************************/
-
+//! A complex-valued two-dimensional instance of the electric field vector
+/*! in the plane perpendicular to the Poynting vector */
 template<typename T>
 class Spinor
 {
 public:
+
+  //! Default constructor sets x and y components to zero
+  __prefix__ Spinor () { x = y = 0.0; }
+
+  //! Constructor sets x and y components to arguments
   __prefix__ Spinor (const epsic::complex<T>& _x, const epsic::complex<T>& _y) : x(_x), y(_y){}
-  __prefix__ Spinor () { }
 
   epsic::complex<T> x;
   epsic::complex<T> y;
 
+  //! Inplace multiplication of both vector components by a scalar
   template <typename U>
   __prefix__ const Spinor& operator *= (U scale) { x *= scale; y *= scale; return *this; }
-  __prefix__ const Spinor& operator /= (T norm) { x /= norm; y /= norm; return *this; }
+
+  //! Inplace division of both vector components by a scalar
+  template <typename U>
+  __prefix__ const Spinor& operator /= (U norm) { x /= norm; y /= norm; return *this; }
+
+  //! Inplace component-wise addition with another Spinor
   __prefix__ const Spinor& operator += (const Spinor& e) { x+=e.x; y+=e.y; return *this; }
 };
 
+//! Spinor insertion operator
 template <typename T>
 std::ostream& operator << (std::ostream& os, const Spinor<T>& s)
 {
@@ -45,13 +52,14 @@ std::ostream& operator << (std::ostream& os, const Spinor<T>& s)
   return os;
 }
 
+//! Returns the sum of two Spinor object
 template <typename T>
 const Spinor<T> operator + (Spinor<T> s, const Spinor<T>& t)
 {
   return s += t;
 }
 
-//! returns the input Spinor transformed by the Jones matrix
+//! Returns the input Spinor transformed by the Jones matrix
 template<typename T>
 __prefix__ const Spinor<T> operator * (const Jones<T>& j, const Spinor<T>& in)
 {
@@ -59,18 +67,21 @@ __prefix__ const Spinor<T> operator * (const Jones<T>& j, const Spinor<T>& in)
 		     j.j10 * in.x + j.j11 * in.y );
 }
 
+//! Returns the product of a scalar and a Spinor
 template<typename T, typename U>
 __prefix__ const Spinor<T> operator * (U a, Spinor<T> in)
 {
   return in *= a;
 }
 
+//! Returns the product of a Spinor and a scalar
 template<typename T, typename U>
 __prefix__ const Spinor<T> operator * (Spinor<T> in, U a)
 {
   return in *= a;
 }
 
+//! Inplace computation of the instantaneous Stokes parameters for the input Spinor
 template<typename T, typename U>
 __prefix__ void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
 {
@@ -85,7 +96,7 @@ __prefix__ void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
   stokes[3] = 2.0*c_xy.imag();
 }
 
-//! Function object transforms a Spinor into a Stokes vector
+//! Function object transforms a Spinor into an instantaneous Stokes vector
 template<typename T>
 class instantaneous_stokes
 {
