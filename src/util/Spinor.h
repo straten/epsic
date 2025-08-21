@@ -85,4 +85,18 @@ __prefix__ void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
   stokes[3] = 2.0*c_xy.imag();
 }
 
+//! Function object transforms a Spinor into a Stokes vector
+template<typename T>
+class instantaneous_stokes
+{
+  public:
+
+  __prefix__ Vector<4,T> operator() (const Spinor<T>& e)
+  {
+    Vector<4,T> tmp;
+    compute_stokes (tmp, e);
+    return tmp;
+  }
+};
+
 #endif

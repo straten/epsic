@@ -59,12 +59,14 @@ class Stokes : public Vector<4,T>
   __prefix__ void set_vector (const Vector<3,U>& v) 
   { this->x[1]=v[0]; this->x[2]=v[1]; this->x[3]=v[2]; }
 
+  //! Returns the square of the Euclidean length of the Stokes vector
   __prefix__ T sqr_vect () const { return normsq (get_vector()); }
 
+  //! Returns the Euclidean length of the Stokes vector
   __prefix__ T abs_vect () const { return sqrt (sqr_vect()); }
 
+  //! Returns the square of the invariant interval, I^2 - (Q,U,V)^2
   __prefix__ T invariant () const { return this->x[0]*this->x[0] - sqr_vect(); }
-
 };
 
 // useful method for generating random source polarization

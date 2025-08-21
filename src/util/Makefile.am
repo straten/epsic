@@ -7,7 +7,8 @@ pkginclude_HEADERS = \
 Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
 true_math.h    complex_math.h         complex_promote.h \
 BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
-Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h
+Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h \
+PolarizedNoise.h
 
 EXTRA_DIST = header_PromoteTraits MatrixTest.h
 
@@ -44,8 +45,8 @@ test_BoxMuller_SOURCES		= test_BoxMuller.C
 if HAVE_CUDA
 
 check_PROGRAMS += test_Spinor
-test_Spinor_SOURCES = test_Spinor.C test_cuSpinor.cu
-pkginclude_HEADERS += cuSpinor.h
+test_Spinor_SOURCES = test_Spinor.C test_PolarizedNoise.cu
+pkginclude_HEADERS += PolarizedNoise.h
 
 endif
 

@@ -13,6 +13,8 @@ AC_CONFIG_SRCDIR([epsic.cpp])
 # Initialize automake to place object files in sub-directories
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
+AX_CXX_COMPILE_STDCXX([17], [noext], [mandatory])
+
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
