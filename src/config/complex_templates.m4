@@ -38,6 +38,8 @@ template<typename T> class X {
 // Test if complex multiply on this type works
 std::complex< X<double> > a, b, c;
 c = a * b;
+// Test if complex norm works
+c = std::norm(c);
 ],
  ac_cv_cxx_complex_templates=yes,
  ac_cv_cxx_complex_templates=no)
