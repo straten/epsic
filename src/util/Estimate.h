@@ -29,6 +29,15 @@ template <typename T, typename U=T> class MeanRadian;
   \f$ \sigma_y^2 = \sum_{i=1}^n ({\partial f \over \partial x_i})^2\sigma_i^2 \f$
 
   See http://mathworld.wolfram.com/ErrorPropagation.html
+
+  Note that all variables are assumed independent, even if identical.
+  For example, the following code will underestimate the variance of xsq:
+
+    Estimate<double> x;
+    Estimate<double> xsq = x*x;
+
+  To correctly handle error propagation through equations in which variables appear
+  more than once, please see the MEAL::ScalarMath class in the psrchive library.
 */
 template <typename T, typename U=T>
 class Estimate
