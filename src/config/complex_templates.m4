@@ -39,7 +39,7 @@ template<typename T> class X {
 std::complex< X<double> > a, b, c;
 c = a * b;
 // Test if complex norm works
-c = std::norm(c);
+X<double> d = std::norm(c);
 ],
  ac_cv_cxx_complex_templates=yes,
  ac_cv_cxx_complex_templates=no)
