@@ -6,7 +6,7 @@
  ***************************************************************************/
 /*
 
-  This program generates the file, PromoteTraits.h
+  This program generates the header file, PromoteTraits.h
 
   This header file implements a type promotion template similar to
   that of Todd Veldhuizen, http://www.oonumerics.org/blitz/traits.html.
@@ -14,6 +14,42 @@
   be applied to other templates, like std::complex
 
   Willem van Straten 21 December 2004
+
+  Depending on tests performed by the configure script, the header file output
+  by this program may #define the following two C preprocessor macros.
+
+  ---
+
+  #define PROMOTE_TRAITS_SPECIALIZE 1
+
+  This is defined when either HAVE_BEST_PARTIAL_SPECIALIZATION or
+  HAVE_DEFAULT_PARTIAL_SPECIALIZATION are not defined.
+
+  When PROMOTE_TRAITS_SPECIALIZE is defined, complex_promote.h defines a partial
+  specialization of PromoteTraits for { std::complex<T>, std::complex<U> }.
+
+  ---
+
+  #define COMPLEX_SPECIALIZE 1
+
+  This is defined when HAVE_COMPLEX_TEMPLATES is not defined.
+
+  When COMPLEX_SPECIALIZE is defined, Estimate.h defines
+
+  operator * (const std::complex<Estimate>& a, const std::complex<Estimate>& b)
+
+  and
+
+  norm (const std::complex<Estimate>& u)
+
+  ---
+
+  The HAVE_BEST_PARTIAL_SPECIALIZATION, HAVE_DEFAULT_PARTIAL_SPECIALIZATION, and
+  HAVE_COMPLEX_TEMPLATES preprocessor macros are defined by m4 scripts in
+
+  src/config/best_partial_specialization.m4
+  src/config/default_partial_specialization.m4
+  src/config/complex_templates.m4
 
 */
 
