@@ -14,5 +14,5 @@ test_true_math_SOURCES = test_true_math.C
 LDADD = libtrue_math.la
 
 # disable all compiler optimizations, in particular -ffast-math
-CFLAGS=""
+CFLAGS=
 
