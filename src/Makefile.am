@@ -1,12 +1,12 @@
 
-SUBDIRS = util
+SUBDIRS = true_math util
 
 lib_LTLIBRARIES = libepsic.la
 
 # version-info should match AC_INIT version in configure.ac
 libepsic_la_LDFLAGS = -version-info 3:0:0
 
-libepsic_la_LIBADD = util/libutil.la 
+libepsic_la_LIBADD = true_math/libtrue_math.la util/libutil.la 
 
 libepsic_la_SOURCES = mode.cpp sample.cpp \
 	superposed.cpp composite.cpp disjoint.cpp coherent.cpp covariant.cpp \
@@ -19,7 +19,7 @@ epsic_SOURCES = epsic.cpp
 
 LDADD = $(top_builddir)/libepsic.la @HEALPIX_LIBS@
 
-AM_CPPFLAGS = -I$(top_srcdir)/util -I$(top_builddir)/util @HEALPIX_CFLAGS@
+AM_CPPFLAGS = -I$(top_srcdir)/true_math -I$(top_srcdir)/util -I$(top_builddir)/util @HEALPIX_CFLAGS@
 
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 libtool: $(LIBTOOL_DEPS)

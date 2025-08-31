@@ -5,8 +5,6 @@
  *
  ***************************************************************************/
 
-#pragma GCC optimize ("no-fast-math")
-
 #include "true_math.h"
 #include <math.h>
 

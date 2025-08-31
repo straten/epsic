@@ -14,8 +14,6 @@
 #include <complex>
 #include "PromoteTraits.h"
 
-#ifdef PROMOTE_TRAITS_SPECIALIZE
-
 template <class T, class U>
 class PromoteTraits< std::complex<T>, std::complex<U> >
 {
@@ -23,8 +21,6 @@ class PromoteTraits< std::complex<T>, std::complex<U> >
     typedef std::complex<typename PromoteTraits<T,U>::promote_type> 
             promote_type;
 };
-
-#endif
 
 //! std::complex addition
 template<typename T, typename U>

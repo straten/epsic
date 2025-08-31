@@ -16,17 +16,7 @@
   Willem van Straten 21 December 2004
 
   Depending on tests performed by the configure script, the header file output
-  by this program may #define the following two C preprocessor macros.
-
-  ---
-
-  #define PROMOTE_TRAITS_SPECIALIZE 1
-
-  This is defined when either HAVE_BEST_PARTIAL_SPECIALIZATION or
-  HAVE_DEFAULT_PARTIAL_SPECIALIZATION are not defined.
-
-  When PROMOTE_TRAITS_SPECIALIZE is defined, complex_promote.h defines a partial
-  specialization of PromoteTraits for { std::complex<T>, std::complex<U> }.
+  by this program may #define the following C preprocessor macro.
 
   ---
 
@@ -44,11 +34,8 @@
 
   ---
 
-  The HAVE_BEST_PARTIAL_SPECIALIZATION, HAVE_DEFAULT_PARTIAL_SPECIALIZATION, and
-  HAVE_COMPLEX_TEMPLATES preprocessor macros are defined by m4 scripts in
+  The HAVE_COMPLEX_TEMPLATES preprocessor macro is defined by m4 scripts in
 
-  src/config/best_partial_specialization.m4
-  src/config/default_partial_specialization.m4
   src/config/complex_templates.m4
 
 */

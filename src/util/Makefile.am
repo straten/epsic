@@ -1,11 +1,11 @@
 
 noinst_LTLIBRARIES = libutil.la
 
-libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C true_math.c
+libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C
 
 pkginclude_HEADERS = \
 Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
-true_math.h    complex_math.h         complex_promote.h \
+complex_math.h complex_promote.h \
 BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
 Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h
 
@@ -17,8 +17,8 @@ nodist_pkginclude_HEADERS = PromoteTraits.h
 TESTS = test_Vector test_Matrix test_rotation \
 	test_Basis test_Dirac test_Jones test_Mueller test_Quaternion \
 	test_Conventions test_Jacobi test_Pauli test_Stokes test_eigen \
-	test_inner_product test_Estimate test_Minkowski test_true_math \
-	test_BoxMuller
+	test_inner_product test_Estimate test_Minkowski test_BoxMuller
+
 
 check_PROGRAMS = $(TESTS)
 
@@ -38,7 +38,6 @@ test_Minkowski_SOURCES		= test_Minkowski.C
 test_Mueller_SOURCES		= test_Mueller.C
 test_inner_product_SOURCES	= test_inner_product.C
 test_Estimate_SOURCES		= test_Estimate.C
-test_true_math_SOURCES		= test_true_math.C
 test_BoxMuller_SOURCES		= test_BoxMuller.C
 
 LDADD = libutil.la
@@ -64,4 +63,6 @@ generate_PromoteTraits_SOURCES  = generate_PromoteTraits.C
 generate_PromoteTraits_LDADD    =
 
 include $(top_srcdir)/config/Makefile.local
+
+AM_CPPFLAGS = -I$(top_srcdir)/true_math
 

@@ -5,7 +5,7 @@
  *
  ***************************************************************************/
 
-#include "Jones.h"
+#include "true_math.h"
 
 #include <iostream>
 #include <vector>
@@ -38,14 +38,6 @@ int main ()
     }
     cerr << "true_math::finite(" << x << ") returns false as expected" << endl;
   }
-
-  Jones<double> jones (1.0/0.0);
-  if (true_math::finite(jones))
-  {
-    cerr << "true_math::finite(Jones<double> = " << jones << ") fails too!" << endl;
-    return -1;
-  }
-  cerr << "true_math::finite(Jones<double> = " << jones << ") returns false as expected" << endl;
 
   /*
     Test true_math::signbit
