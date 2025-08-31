@@ -56,6 +56,10 @@ class Estimate
   //! Construct from a value, \f$ x \f$, and its variance, \f$ \sigma_x^2 \f$
   Estimate (T _val=0, U _var=0) { val=_val; var=_var; }
 
+  //! Copy constructor
+  Estimate (const Estimate& d)
+  { val=d.val; var=d.var; }
+
   //! Construct from another Estimate
   template <typename V, typename W>
   Estimate (const Estimate<V,W>& d) { val=d.val; var=d.var; }

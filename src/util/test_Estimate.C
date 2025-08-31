@@ -1,13 +1,13 @@
 /***************************************************************************
  *
- *   Copyright (C) 2003 by Willem van Straten
+ *   Copyright (C) 2003-2025 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
+
 #include "Estimate.h"
 #include "Stokes.h"
-
-#include <complex>
+#include "complex_promote.h"
 
 using namespace std;
 
@@ -154,7 +154,22 @@ int main ()
     return -1;
   }
 
-  
+  // ///////////////////////////////////////////////////////////////////////
+  //
+  // test mixed complex<Estimate> and complex<double> operations
+  //
+  std::complex< Estimate<double> > ce (Estimate<double> (1.2,0.1), Estimate<double> (3.4, 0.1));
+  std::complex<double> cd(0.0,2.0);
+
+  std::complex< Estimate<double> > aplus = ce + cd;
+  if (fabs(aplus.real().val-1.2)>tol || fabs(aplus.imag().val-5.4)>tol)
+  {
+    cerr << "test_Estimate: complex multiply error " << cresult << endl;
+    return -1;
+  }
+
+  std::complex< Estimate<double> > amult = ce * cd;
+
   return 0;
 }
 

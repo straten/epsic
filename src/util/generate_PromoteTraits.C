@@ -73,7 +73,7 @@ int main (int argc, char** argv)
   if (argc > 1 && string(argv[1]) == "-v")
     verbose = true;
 
-  // it is assumed that header_PromoteTraits.h is copied to PromoteTraits.h
+  // it is assumed that header_PromoteTraits is copied to PromoteTraits.h
   // before this program is run
   ofstream out ("PromoteTraits.h", ios::app);
   

@@ -20,27 +20,6 @@ class PromoteTraits {
   typedef PromoteTraits_not_specialized_for_this_case promote_type;
 };
 
-//! Partial template specialization for template types
-template<typename A, typename B, template<typename> class C>
-class PromoteTraits< C<A>, B > {
-public:
-  typedef C<typename PromoteTraits<A,B>::promote_type> promote_type;
-};
-
-//! Partial template specialization for template types
-template<typename A, typename B, template<typename> class C>
-class PromoteTraits< A, C<B> > {
-public:
-  typedef C<typename PromoteTraits<A,B>::promote_type> promote_type;
-};
-
-//! Partial template specialization for template types
-template<typename A, typename B, template<typename> class C>
-class PromoteTraits< C<A>, C<B> > {
-public:
-  typedef C<typename PromoteTraits<A,B>::promote_type> promote_type;
-};
-
 #include <complex>
 
 // forward declaration
