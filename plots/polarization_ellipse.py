@@ -49,10 +49,8 @@ xpy = np.sin(psi)
 ypx = -np.sin(psi)
 ypy = np.cos(psi)
 
-plt.arrow(-xpx,-xpy,2*xpx,2*xpy, ls=':', fill=False,
-        head_width=hw, head_length=hl, fc='black', ec='black', length_includes_head=True)
-plt.arrow(-ypx,-ypy,2*ypx,2*ypy, ls=':', fill=False,
-        head_width=hw, head_length=hl, fc='black', ec='black', length_includes_head=True)
+plt.plot([-xpx, xpx*(1-hl)], [-xpy, xpy*(1-hl)], color='black', dashes=[8, 4])
+plt.plot([-ypx, ypx*(1-hl)], [-ypy, ypy*(1-hl)], color='black', dashes=[8, 4])
 
 # redraw the head with solid line (still empty)
 plt.arrow(xpx*(1-hl),xpy*(1-hl),hl*xpx,hl*xpy, fill=False,
