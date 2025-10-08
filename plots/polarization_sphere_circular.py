@@ -19,8 +19,8 @@ psi_deg = 60.0
 chi = chi_deg*np.pi/180.0
 psi = psi_deg*np.pi/180.0
 
-zeta = np.arcsin( np.sin(psi) * np.cos(chi) )
 xi = np.arctan2( np.cos(psi) * np.cos(chi), np.sin(chi) )
+zeta = np.arcsin( np.sin(psi) * np.cos(chi) )
 
 class Arrow3D(FancyArrowPatch):
 
@@ -121,7 +121,9 @@ idx=8
 ax.text(stretch*x_lat[idx], stretch*y_lat[idx], -0.05, "$2\\psi$", ha='left', va='top')
 
 
-# create the arc through xi at the origin
+#
+# draw the arc through xi in the S1-S2 plane at the origin
+#
 N = 10
 radius=1.0
 phi = np.linspace(0, xi, N)
@@ -143,7 +145,9 @@ stretch=1.05
 idx=7
 ax.text(stretch*xi_x[idx], stretch*xi_y[idx], stretch*xi_z[idx], "$2\\xi$", ha='right')
 
-# Plot the meridian
+#
+# Plot the meridian that passes through the Stokes vector
+#
 half_circle = np.linspace(-np.pi/2, np.pi/2, 100)
 x_long = np.cos(psi) * np.cos(half_circle)
 y_long = np.sin(psi) * np.cos(half_circle)
@@ -161,7 +165,9 @@ idx = 8
 stretch=1.1
 ax.text(stretch*x_long[idx], stretch*y_long[idx], stretch*z_long[idx], "$\\theta$", ha='left')
 
-# create the arc through zeta at the origin
+#
+# draw the arc through zeta at the origin
+#
 phi = np.linspace(0, zeta, N)
 
 # reserve an extra point for the apex = (arcx[0], arcy[0])
@@ -178,26 +184,30 @@ poly = Poly3DCollection(verts, alpha=0.6, color=chi_color)
 ax.add_collection3d(poly)
 ax.plot(zeta_x[1:], zeta_y[1:], zeta_z[1:], color=minor_color)
 
-# plot the right angle
+#
+# mark the right angle
+#
 dright = 0.07
 # Plot the line segment along the "latitude" parallel to meridian from the pole to xi offset by dright
 arc = np.linspace(xi-dright, xi, 10)
 x_long = np.cos(dright) * np.sin(arc)
 y_long = np.sin(dright)
 z_long = np.cos(arc)
-ax.plot(x_long, y_long, z_long, color='k')
-# Plot the line segment along the great circle from xi toward zeta, offset by dright
+ax.plot(x_long, y_long, z_long, color='k', zorder=10)
+# Plot the line segment along the great circle from the S1-S2 plane toward zeta, offset by dright
 arc = np.linspace(0, dright, 10)
 x_long = np.sin(xi-dright) * np.cos(arc)
 y_long = np.sin(arc)
 z_long = np.cos(xi-dright) * np.cos(arc)
-ax.plot(x_long, y_long, z_long, color='k')
+ax.plot(x_long, y_long, z_long, color='k', zorder=10)
 
 stretch=1.1
 idx=5
 ax.text(stretch*zeta_x[idx], stretch*zeta_y[idx], stretch*zeta_z[idx], "$2\\zeta$", ha='left')
 
-# finally, draw the polarization vector
+#
+# draw the polarization vector
+#
 r=1.8
 S1 = r * np.cos(xi) * np.cos(zeta)
 S2 = r * np.sin(xi) * np.cos(zeta)
