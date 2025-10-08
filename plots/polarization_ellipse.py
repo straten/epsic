@@ -49,10 +49,11 @@ xpy = np.sin(psi)
 ypx = -np.sin(psi)
 ypy = np.cos(psi)
 
+# dashed lines
 plt.plot([-xpx, xpx], [-xpy, xpy], color='black', dashes=[8, 4])
 plt.plot([-ypx, ypx], [-ypy, ypy], color='black', dashes=[8, 4])
 
-# redraw the head with solid line (still empty)
+# emtpy arrow heads
 plt.arrow(xpx,xpy,hl*xpx,hl*xpy, fill=False,
         head_width=hw, head_length=hl, fc='black', ec='black', length_includes_head=True)
 plt.arrow(ypx,ypy,hl*ypx,hl*ypy, fill=False,
@@ -102,13 +103,58 @@ linx=[x[q],x[u]]
 liny=[y[q],y[u]]
 plt.plot(linx, liny, color=minor_color, linewidth=2)
 
-# draw line connecting the ends of the minor and major axes in the third quadrant
+# draw line of length r that connects the ends of the minor and major axes in the third quadrant
 # this line marks the ellipticity angle, chi
 q=(3*N)//4
 u=N//2
 linx=[x[q],x[u]]
 liny=[y[q],y[u]]
 plt.plot(linx, liny, color='k', linewidth=1)
+
+# draw two dotted lines perpendicular to the above line, out to where the length r can be labelled
+# perpendicular offset vector
+dx = (liny[1] - liny[0])
+dy = (linx[0] - linx[1])
+offset = 0.3 
+dx_offset = dx * offset
+dy_offset = dy * offset
+
+# draw the first dotted line
+plt.plot(
+    [linx[0], linx[0] + dx_offset],
+    [liny[0], liny[0] + dy_offset],
+    linestyle=':',
+    color='k'
+)
+
+# draw the second dotted line
+plt.plot(
+    [linx[1], linx[1] + dx_offset],
+    [liny[1], liny[1] + dy_offset],
+    linestyle=':',
+    color='k'
+)
+
+# add the label "r" at the midpoint between the ends of the dotted lines
+midx = 0.5 * (linx[1]+linx[0]) + dx_offset
+midy = 0.5 * (liny[1]+liny[0]) + dy_offset
+
+plt.text(midx, midy, "$r$", ha='center', va='center')
+
+# draw a pair of arrows to mark the length
+
+# parallel offset vector
+dy = (liny[1] - liny[0])
+dx = (linx[1] - linx[0])
+
+space = 0.08
+llen = 0.5 - space
+
+plt.arrow(midx+space*dx, midy+space*dy, llen*dx, llen*dy, 
+          head_width=hw*.6, head_length=hl*.6, fc='black', ec='black', length_includes_head=True)
+
+plt.arrow(midx-space*dx, midy-space*dy, -llen*dx, -llen*dy,
+          head_width=hw*.6, head_length=hl*.6, fc='black', ec='black', length_includes_head=True)
 
 # create the arc through psi at the origin
 N = 10
