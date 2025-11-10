@@ -17,8 +17,15 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
 
   AC_MSG_CHECKING([for HEALPix libary installation])
 
-  HEALPIX_CFLAGS="-I${HEALPIX}/include/healpix_cxx"
-  HEALPIX_LIBS="-L${HEALPIX}/lib -lhealpix_cxx -lsharp"
+  # Try pkg-config first (most reliable for modern HEALPix)
+  if test -n "$PKG_CONFIG" && $PKG_CONFIG --exists healpix_cxx 2>/dev/null; then
+    HEALPIX_CFLAGS="$($PKG_CONFIG --cflags healpix_cxx)"
+    HEALPIX_LIBS="$($PKG_CONFIG --libs healpix_cxx)"
+  else
+    # Fall back to manual detection for modern HEALPix 3.x structure
+    HEALPIX_CFLAGS="-I${HEALPIX}/include/healpix_cxx"
+    HEALPIX_LIBS="-L${HEALPIX}/lib -lhealpix_cxx -lz"
+  fi
 
   ac_save_CXXFLAGS="$CXXFLAGS"
   ac_save_LIBS="$LIBS"
