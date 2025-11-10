@@ -8,7 +8,13 @@
 # HAVE_HEALPIX   - automake conditional
 # HAVE_HEALPIX   - pre-processor macro in config.h
 #
-# Notice that the environment variable HEALPIX is required
+# This macro tries to get HEALPIX cflags and libs using the
+# gsl-config program.  If that is not available, it 
+# will try to link using:
+#
+#    -I${HEALPIX}/${HEALPIX_TARGET}/include -L/${HEALPIX_TARGET}/lib -lhealpix_cxx -lcxxsupport -lfftpack ${CFITSIO_LIBS} ${CFITSIO_CFLAGS}
+#
+# Notice that the environment variables HEALPIX and HEALPIX_TARGET are required
 #
 # ----------------------------------------------------------
 AC_DEFUN([SWIN_LIB_HEALPIX],
@@ -17,8 +23,15 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
 
   AC_MSG_CHECKING([for HEALPix libary installation])
 
-  HEALPIX_CFLAGS="-I${HEALPIX}/include/healpix_cxx"
-  HEALPIX_LIBS="-L${HEALPIX}/lib -lhealpix_cxx -lsharp"
+  # Try pkg-config first (most reliable for modern HEALPix)
+  if test -n "$PKG_CONFIG" && $PKG_CONFIG --exists healpix_cxx 2>/dev/null; then
+    HEALPIX_CFLAGS="$($PKG_CONFIG --cflags healpix_cxx)"
+    HEALPIX_LIBS="$($PKG_CONFIG --libs healpix_cxx)"
+  else
+    # Fall back to manual detection for modern HEALPix 3.x structure
+    HEALPIX_CFLAGS="-I${HEALPIX}/include/healpix_cxx"
+    HEALPIX_LIBS="-L${HEALPIX}/lib -lhealpix_cxx -lz"
+  fi
 
   ac_save_CXXFLAGS="$CXXFLAGS"
   ac_save_LIBS="$LIBS"
@@ -30,8 +43,7 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
 
   AC_TRY_LINK([#include "healpix_base.h"
                #include "healpix_map.h"],
-              [Healpix_Map<double> map = Healpix_Map<double>(); 
-               map.SetNside(128, RING); ],
+              [Healpix_Map<double> map = Healpix_Map<double>(); map.SetNside(128, RING); ],
               have_healpix=yes, have_healpix=no)
 
   AC_MSG_RESULT($have_healpix)
@@ -49,6 +61,9 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
     if test x"$HEALPIX" = x; then
       AC_MSG_WARN([Please set the HEALPIX environment variable])
     fi
+    if test x"$HEALPIX_TARGET" = x; then
+      AC_MSG_WARN([Please set the HEALPIX_TARGET environment variable])
+    fi
     HEALPIX_CFLAGS=""
     HEALPIX_LIBS=""
     [$2]
@@ -59,4 +74,5 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
   AM_CONDITIONAL(HAVE_HEALPIX, [test x"$have_healpix" = xyes])
 
 ])
+
 
