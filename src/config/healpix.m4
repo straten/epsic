@@ -8,13 +8,7 @@
 # HAVE_HEALPIX   - automake conditional
 # HAVE_HEALPIX   - pre-processor macro in config.h
 #
-# This macro tries to get HEALPIX cflags and libs using the
-# gsl-config program.  If that is not available, it 
-# will try to link using:
-#
-#    -I${HEALPIX}/${HEALPIX_TARGET}/include -L/${HEALPIX_TARGET}/lib -lhealpix_cxx -lcxxsupport -lfftpack ${CFITSIO_LIBS} ${CFITSIO_CFLAGS}
-#
-# Notice that the environment variables HEALPIX and HEALPIX_TARGET are required
+# Notice that the environment variable HEALPIX is required
 #
 # ----------------------------------------------------------
 AC_DEFUN([SWIN_LIB_HEALPIX],
@@ -43,7 +37,8 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
 
   AC_TRY_LINK([#include "healpix_base.h"
                #include "healpix_map.h"],
-              [Healpix_Map<double> map = Healpix_Map<double>(); map.SetNside(128, RING); ],
+              [Healpix_Map<double> map = Healpix_Map<double>(); 
+               map.SetNside(128, RING); ],
               have_healpix=yes, have_healpix=no)
 
   AC_MSG_RESULT($have_healpix)
@@ -61,9 +56,6 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
     if test x"$HEALPIX" = x; then
       AC_MSG_WARN([Please set the HEALPIX environment variable])
     fi
-    if test x"$HEALPIX_TARGET" = x; then
-      AC_MSG_WARN([Please set the HEALPIX_TARGET environment variable])
-    fi
     HEALPIX_CFLAGS=""
     HEALPIX_LIBS=""
     [$2]
@@ -74,5 +66,4 @@ AC_DEFUN([SWIN_LIB_HEALPIX],
   AM_CONDITIONAL(HAVE_HEALPIX, [test x"$have_healpix" = xyes])
 
 ])
-
 
