@@ -44,12 +44,14 @@
 #include <string.h>
 #include <exception>
 #include <fstream>
+#include <string>
 
 // #define _DEBUG 1
 
 using std::cout;
 using std::cerr;
 using std::endl;
+using std::string;
 
 void usage ()
 {
