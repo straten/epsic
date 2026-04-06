@@ -26,8 +26,12 @@ template<typename T>
 class Spinor
 {
 public:
-  Spinor (const std::complex<T>& _x, const std::complex<T>& _y) : x(_x), y(_y){}
-  Spinor () { }
+
+  //! construct with x,y args
+  Spinor (const std::complex<T>& _x, const std::complex<T>& _y) : x(_x), y(_y) { }
+
+  //! default constructor
+  Spinor () { x = y = 0.0; }
 
   std::complex<T> x;
   std::complex<T> y;
@@ -71,6 +75,11 @@ const Spinor<T> operator * (Spinor<T> in, U a)
   return in *= a;
 }
 
+template<typename T, typename U>
+const Spinor<T> operator / (Spinor<T> in, U a)
+{
+  return in /= a;
+}
 
 template<typename T, typename U>
 void compute_stokes (Vector<4,T>& stokes, const Spinor<U>& e)
