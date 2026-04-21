@@ -6,31 +6,27 @@
 SPHINXBUILD   = sphinx-build
 SPHINXOPTS    =
 BUILDDIR      = _build
+DOXDIR        = _doxygen
 
-# Doxygen override configs (build order matches Documentation/Makefile)
-DOX_PROJECTS  = epsic
-
-.PHONY: help clean doxygen sphinx html
+.PHONY: help clean html xml sphinx rtd
 
 help:
-	@echo "  make html    – build Doxygen XML then Sphinx HTML"
-	@echo "  make doxygen – build Doxygen XML only"
+	@echo "  make rtd     – build Doxygen XML then Sphinx HTML"
+	@echo "  make xml     – build Doxygen XML only"
+	@echo "  make html    – build Doxygen HTML only"
 	@echo "  make clean   – remove all generated output"
 
-doxygen:
-	@for proj in $(DOX_PROJECTS); do \
-		echo "==> Doxygen: $$proj"; \
-		mkdir -p $(BUILDDIR)/$$proj; \
-		doxygen $(BUILDDIR)/$$proj.dox.override \
-			> $(BUILDDIR)/$$proj.out 2> $(BUILDDIR)/$$proj.err; \
-		grep '^Error' $(BUILDDIR)/$$proj.err || true; \
-	done
+html xml:
+	@mkdir -p $(DOXDIR)/html
+	@cp commands.sty $(DOXDIR)/html
+	doxygen $@.dox > $(DOXDIR)/$@.dox.out 2> $(DOXDIR)/$@.dox.err
+	@grep '^Error' $(DOXDIR)/$@.dox.err || echo 2> /dev/null
 
 sphinx:
 	$(SPHINXBUILD) -b html $(SPHINXOPTS) . $(BUILDDIR)/html
 
-html: doxygen sphinx
+rtd: xml sphinx
 	@echo "Build finished. Open $(BUILDDIR)/html/index.html"
 
 clean:
-	rm -rf $(BUILDDIR) $(BUILDDIR)/*/
+	rm -rf $(BUILDDIR) $(DOXDIR) api

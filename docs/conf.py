@@ -20,17 +20,20 @@ extensions = [
 # -- Breathe (Doxygen XML) configuration ------------------------------------
 
 breathe_projects = {
-    "epsic": "_build/doxygen_xml",
+    "epsic": "_doxygen/xml",
 }
 breathe_default_project = "epsic"
 
 # -- Exhale configuration ---------------------------------------------------
 
 exhale_args = {
-    "verboseBuild": True,
-    "containmentFolder": "./api",
-    "rootFileName": "index.rst",
-    "doxygenStripFromPath": "..",
+    "verboseBuild":          True,
+    "rootFileTitle":         "EPSIC Library API",
+    "containmentFolder":     "./api",
+    "rootFileName":          "index.rst",
+    "doxygenStripFromPath":  "..",
+    "createTreeView":        True,
+    "treeViewIsBootstrap": True,
 }
 
 # -- General configuration ---------------------------------------------------
@@ -56,6 +59,12 @@ myst_enable_extensions = [
     "amsmath",
     "dollarmath",
 ]
+
+# Tell sphinx what the primary language being documented is.
+primary_domain = 'cpp'
+
+# Tell sphinx what the pygments highlight language should be.
+highlight_language = 'cpp'
 
 # -- Copy button configuration -----------------------------------------------
 

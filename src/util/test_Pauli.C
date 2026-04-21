@@ -12,7 +12,7 @@ using namespace std;
 template <typename T> T sqr (T x) { return x*x; }
 
 
-template <typename T, QBasis B>
+template <typename T, QType B>
 void test_det (const Quaternion<T, B>& q, double tolerance)
 {
   Jones<T> j = convert(q);

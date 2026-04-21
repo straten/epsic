@@ -1,0 +1,17 @@
+# Doxygen override for Sphinx/Breathe XML generation
+# Inherits all settings from html.dox
+
+@INCLUDE = html.dox
+
+# Generate XML for Breathe, disable HTML
+GENERATE_HTML          = NO
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+
+# Disable tag files (not needed for Breathe)
+TAGFILES               =
+GENERATE_TAGFILE       =
+
+# epsic source files contain ISO-8859-1 characters (± signs)
+INPUT_ENCODING         = ISO-8859-1

@@ -4,6 +4,7 @@
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
+
 #include "Pauli.h"
 
 Basis<double>& Pauli::basis()
@@ -26,3 +27,4 @@ Jones<double> Pauli::matrix (unsigned i)
   q[i] = 1;
   return convert (q);
 }
+

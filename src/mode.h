@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/mode.h
+//! @file epsic/src/mode.h
 
 #ifndef __epsic_mode_h
 #define __epsic_mode_h
@@ -19,25 +19,26 @@
 
 #include <iostream>
 
+/**
+ * @defgroup epsic_core Core EPSIC Functionality
+ * @brief These classes simulate the polarization of electromagnetic fields
+ * @{
+ */
 namespace epsic
 {
 
-  /***************************************************************************
-   *
-   *  a single source of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! a single source of electromagnetic radiation
   class mode
   {
   public:
     mode ();
     virtual ~mode () { }
 
+    //! Set the expected mean Stokes parameters
     virtual void set_Stokes (const Stokes<double>& mean);
+    //! Get the expected mean Stokes parameters
     virtual Stokes<double> get_Stokes () { return mean; }
-
-    //! Return the expected mean Stokes parameters
+    //! Get the expected mean Stokes parameters
     virtual Stokes<double> get_mean () const { return mean; }
 
     //! Return the expected covariances between the Stokes parameters
@@ -66,6 +67,7 @@ namespace epsic
     double rms;
   };
 
+  //! Allows a mode to be dynamically modified and extended at runtime
   class mode_decorator : public mode
   {
   protected:
@@ -86,6 +88,7 @@ namespace epsic
     void set_normal (BoxMuller* n) { source->set_normal(n); }
   };
 
+  //! Base class of decorators that transform the electric field
   class field_transformer : public mode_decorator
   {
   public:
@@ -93,9 +96,12 @@ namespace epsic
 
     Spinor<double> get_field () { return transform( source->get_field() ); }
 
+    //! Derived types define the field transformation
     virtual Spinor<double> transform ( const Spinor<double>& ) = 0;
   };
 
 } // namespace epsic
+
+/** @} */ // end of epsic_core group
 
 #endif // ! defined __epsic_mode_h

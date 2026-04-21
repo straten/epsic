@@ -19,17 +19,21 @@
 #include <vector>
 #include <limits>
 
-namespace Pauli {
+//! Generates Pauli and identity matrices
+class Pauli
+{
+public:
 
   //! The basis through which Stokes parameters are converted to Jones matrices
-  Basis<double>& basis();
+  static Basis<double>& basis();
 
-  //! Get the specified basis matrix
-  Jones<double> matrix (unsigned i);
-}
+  //! Get the specified basis matrix, \f$\sigma_i\f$
+  /*! \f$\sigma_0\f$ is the identity and \f$\sigma_{1-3}\f$ are the Pauli matrices */
+  static Jones<double> matrix (unsigned i);
+};
 
 
-// convert Hermitian Quaternion to Jones matrix
+//! convert Hermitian Biquaternion to Jones matrix
 template<typename T>
 const Jones<T> convert (const Quaternion<std::complex<T>,Hermitian>& q)
 {
@@ -37,7 +41,7 @@ const Jones<T> convert (const Quaternion<std::complex<T>,Hermitian>& q)
 		   q.s2+ci(q.s3), q.s0-q.s1);
 }
 
-// convert Unitary Quaternion to Jones matrix
+//! convert Unitary Biquaternion to Jones matrix
 template<typename T>
 const Jones<T> convert (const Quaternion<std::complex<T>,Unitary>& q)
 {
@@ -45,7 +49,7 @@ const Jones<T> convert (const Quaternion<std::complex<T>,Unitary>& q)
 		   -q.s3+ci(q.s2), q.s0-ci(q.s1));
 }
 
-// convert Hermitian Quaternion to Jones matrix
+//! convert Hermitian Quaternion to Jones matrix
 template<typename T>
 const Jones<T> convert (const Quaternion<T,Hermitian>& q)
 {
@@ -53,7 +57,7 @@ const Jones<T> convert (const Quaternion<T,Hermitian>& q)
 		   std::complex<T>(q.s2,q.s3), std::complex<T>(q.s0-q.s1,0.0));
 }
 
-// convert Unitary Quaternion to Jones matrix
+//! convert Unitary Quaternion to Jones matrix
 template<typename T>
 const Jones<T> convert (const Quaternion<T,Unitary>& q)
 {
@@ -61,7 +65,7 @@ const Jones<T> convert (const Quaternion<T,Unitary>& q)
 		   -q.s3+ci(q.s2), q.s0-ci(q.s1));
 }
 
-// convert complex Stokes parameters to Jones matrix
+//! convert complex-valued Stokes parameters to Jones matrix
 template<typename T>
 const Jones<T> convert (const Stokes< std::complex<T> >& stokes)
 {
@@ -74,7 +78,7 @@ const Jones<T> convert (const Stokes< std::complex<T> >& stokes)
   return convert (half*q);
 }
 
-// convert Stokes parameters to Jones matrix
+//! convert Stokes parameters to Jones matrix
 template<typename T>
 const Jones<T> convert (const Stokes<T>& stokes)
 {
@@ -83,7 +87,7 @@ const Jones<T> convert (const Stokes<T>& stokes)
   return convert (T(0.5)*q);
 }
 
-// convert coherency vector to Jones matrix
+//! convert coherency vector to Jones matrix
 template<typename T>
 const Jones<T> convert (const std::vector<T>& c)
 {
@@ -94,7 +98,7 @@ const Jones<T> convert (const std::vector<T>& c)
                  std::complex<T> (c[2], c[3]), c[1]);
 }
 
-// convert Stokes parameters to natural basis
+//! convert Stokes parameters to Hermitian Quaternion in current basis
 template<typename T>
 const Quaternion<T,Hermitian> natural (const Stokes<T>& stokes)
 {
@@ -102,6 +106,7 @@ const Quaternion<T,Hermitian> natural (const Stokes<T>& stokes)
     (stokes.get_scalar(), Pauli::basis().get_out(stokes.get_vector()));
 }
 
+//! convert Hermitian Quaternion to Stokes parameters in current basis
 template<typename T>
 const Stokes<T> standard (const Quaternion<T,Hermitian>& q)
 { 
@@ -109,7 +114,7 @@ const Stokes<T> standard (const Quaternion<T,Hermitian>& q)
 }
 
 
-// convert Jones matrix to Hermitian Biquaternion
+//! convert Jones matrix to Hermitian Biquaternion
 template<typename T>
 const Quaternion<std::complex<T>, Hermitian> convert (const Jones<T>& j)
 {
@@ -120,7 +125,7 @@ const Quaternion<std::complex<T>, Hermitian> convert (const Jones<T>& j)
       T(0.5) * ci (j.j01 - j.j10) );
 }
 
-// convert Jones matrix to Unitary Biquaternion
+//! convert Jones matrix to Unitary Biquaternion
 template<typename T>
 const Quaternion<std::complex<T>, Unitary> unitary (const Jones<T>& j)
 {
@@ -131,7 +136,7 @@ const Quaternion<std::complex<T>, Unitary> unitary (const Jones<T>& j)
       T(0.5) *     (j.j01 - j.j10) );
 }
 
-// convert a Hermitian Jones matrix to Stokes parameters
+//! convert a Hermitian Jones matrix to Stokes parameters
 template<typename T>
 const Stokes<T> coherency (const Jones<T>& j)
 {
@@ -139,7 +144,7 @@ const Stokes<T> coherency (const Jones<T>& j)
   return real_coherency (h);
 }
 
-// convert a Hermitian Jones matrix to Stokes parameters
+//! convert a Jones matrix to complex-valued Stokes parameters
 template<typename T>
 const Stokes< std::complex<T> > complex_coherency (const Jones<T>& j)
 {
@@ -147,7 +152,8 @@ const Stokes< std::complex<T> > complex_coherency (const Jones<T>& j)
   return coherency (h);
 }
 
-// convert a complex Hermitian Quaternion to Stokes parameters
+//! convert a Hermitian Biquaternion to Stokes parameters
+/*! throws an exception if the imaginary part is not close to zero */
 template<typename T>
 const Stokes<T> real_coherency (const Quaternion<std::complex<T>,Hermitian>& q)
 {
@@ -169,7 +175,7 @@ const Stokes<T> real_coherency (const Quaternion<std::complex<T>,Hermitian>& q)
   return coherency (realpart);
 }
 
-// convert a Hermitian Quaternion to Stokes parameters
+//! convert a Hermitian Quaternion to Stokes parameters
 template<typename T>
 const Stokes<T> coherency (const Quaternion<T,Hermitian>& q)
 { 
@@ -177,14 +183,14 @@ const Stokes<T> coherency (const Quaternion<T,Hermitian>& q)
 		    T(2.0) * Pauli::basis().get_in(q.get_vector()) );
 }
 
-// transform the Stokes parameters by the given Jones matrix
+//! transform the Stokes parameters by the given Jones matrix
 template<typename T, typename U>
 const Stokes<T> transform (const Stokes<T>& input, const Jones<U>& jones)
 {
   return coherency (jones * convert(input) * herm(jones));
 }
 
-// transform the Stokes parameters by the given Jones matrix
+//! transform the complex-valued Stokes parameters by the given Jones matrix
 template<typename T, typename U>
 const Stokes< std::complex<T> >
 transform (const Stokes< std::complex<T> >& input, const Jones<U>& jones)
@@ -192,7 +198,7 @@ transform (const Stokes< std::complex<T> >& input, const Jones<U>& jones)
   return complex_coherency (jones * convert(input) * herm(jones));
 }
 
-// transform the coherency matrix by the given Mueller matrix
+//! transform the coherency matrix by the given Mueller matrix
 template<typename T, typename U>
 Jones<T> transform (const Matrix<4,4,U>& M, const Jones<T>& rho)
 {
@@ -200,7 +206,12 @@ Jones<T> transform (const Matrix<4,4,U>& M, const Jones<T>& rho)
   return convert(s);
 }
 
-// convert Jones matrix to Hermitian and Unitary Quaternion
+//! decompose a Jones matrix into a Hermitian and Unitary Quaternion
+/*! \param J the Jones matrix
+ *  \param d returns the determinant of J
+ *  \param h returns the Hermitian component of J
+ *  \param u returns the Unitary component of J
+ */
 template<typename T>
 void polar (std::complex<T>& d, Quaternion<T, Hermitian>& h,
 	    Quaternion<T, Unitary>& u, Jones<T> j)
@@ -220,28 +231,30 @@ void polar (std::complex<T>& d, Quaternion<T, Hermitian>& h,
 }
 
 
-// multiply a Jones matrix by a Quaternion
-template<typename T, typename U, QBasis B>
+//! multiply a Jones matrix by a Quaternion on the right
+/*! \return Jones * Quaternion */
+template<typename T, typename U, QType B>
 const Jones<T> operator * (const Jones<T>& j, const Quaternion<U,B>& q)
 {
   return j * convert(q);
 }
 
-// multiply a Jones matrix by a Quaternion
-template<typename T, typename U, QBasis B>
+//! multiply a Jones matrix by a Quaternion on the left
+/*! \return Quaternion * Jones */
+template<typename T, typename U, QType B>
 const Jones<T> operator * (const Quaternion<T,B>& q, const Jones<U>& j)
 {
   return convert(q) * j;
 }
 
-// multiply Quaternions from different QBasis
-template<typename T, typename U, QBasis A, QBasis B>
+//! multiply Quaternions of different type
+template<typename T, typename U, QType A, QType B>
 const Jones<T> operator * (const Quaternion<T,A>& q, const Quaternion<U,B>& u)
 {
   return convert(q) * convert(u);
 }
 
-// return the Mueller matrix corresponding to the given Jones matrix
+//! compute the Mueller matrix corresponding to the given Jones matrix
 template<typename T>
 Matrix<4,4,T> Mueller (const Jones<T>& J)
 {
@@ -256,13 +269,18 @@ Matrix<4,4,T> Mueller (const Jones<T>& J)
   return result;
 }
 
-// return the Mueller matrix derivative Jones matrix
+//! compute the Mueller matrix total differential
+/*! \param J the Jones matrix
+ *  \param Jdiff the total differential of the Jones matrix
+ *  \return the total differential of the corresponding Mueller matrix
+ */
 template<typename T>
 Matrix<4,4,T> Mueller (const Jones<T>& J, const Jones<T>& Jgrad)
 {
   Matrix<4,4,T> result;
 
-  for (unsigned row=0; row < 4; row++) {
+  for (unsigned row=0; row < 4; row++)
+  {
     Stokes<T> basis;
     basis[row] = 1.0;
     Jones<T> rho = convert(basis);

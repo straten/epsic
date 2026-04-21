@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/covariant.h
+//! @file epsic/src/covariant.h
 
 #ifndef __epsic_covariant_h
 #define __epsic_covariant_h
@@ -16,16 +16,17 @@
 
 #include <queue>
 
-/***************************************************************************
- *
- *  models covariant mode intensities
- *
- ***************************************************************************/
+/**
+ * @ingroup epsic_core
+ * @{
+ */
 
 namespace epsic
 {
   class covariant_coordinator;
 
+  //! models a modulated mode with covariant intensity
+  /*! the instantaneous intensity of this instance is covariant with another instance */
   class covariant_mode : public modulated_mode
   {
     friend class covariant_coordinator;
@@ -46,6 +47,7 @@ namespace epsic
     double get_mod_variance () const;
   };
 
+  //! models a pair of modes with covariant instantaneous intensities
   class covariant_coordinator
   {
   private:
@@ -81,6 +83,7 @@ namespace epsic
     modulated_mode* get_modulated_mode (unsigned index, mode*);
   };
 
+  //! a pair of modes with covariant intensities described by a bivariate lognormal distribution
   class bivariate_lognormal_modes : public covariant_coordinator
   {
     Matrix<2,2,double> meansq;
@@ -116,6 +119,8 @@ namespace epsic
     virtual void set_normal (BoxMuller* n) { normal = n; }
   };
 
-} // namespace epsic
+} // end of namespace epsic
+
+/** @} */ // end of epsic_core group
 
 #endif // ! defined __epsic_covariant_h

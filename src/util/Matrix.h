@@ -37,8 +37,7 @@ public:
   { operator=(s); }
 
   //! Set this instance equal to another Matrix<U> instance
-  template<typename U> Matrix& operator = 
-    (const Vector< Rows,Vector<Columns,U> >& s)
+  template<typename U> Matrix& operator = (const Vector< Rows,Vector<Columns,U> >& s)
   {
     for (unsigned i=0; i<Rows; i++) 
       this->x[i] = s.x[i];
@@ -54,6 +53,7 @@ public:
     return s;
   }
 
+  //! Set all elements to zero
   void zero ()
   {
     for (unsigned i=0; i<Rows; i++) 

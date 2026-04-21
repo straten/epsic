@@ -22,10 +22,10 @@
   Hermitian matrices in scalar+vector form.  The Quaternion class is used;
   however, calling something a Hermitian quaternion is conceptually misleading.
 */
-enum QBasis { Hermitian, Unitary };
+enum QType { Hermitian, Unitary };
 
 //! Quaternion
-template<typename T, QBasis B = Unitary> 
+template<typename T, QType B = Unitary> 
 class Quaternion {
   
 public:
@@ -126,7 +126,7 @@ public:
 };
 
 //! Quaternion addition
-template<typename T, QBasis B, typename U>
+template<typename T, QType B, typename U>
 const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator + (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 {
@@ -136,7 +136,7 @@ operator + (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 }
 
 //! Quaternion subtraction
-template<typename T, QBasis B, typename U>
+template<typename T, QType B, typename U>
 const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator - (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 {
@@ -147,7 +147,7 @@ operator - (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 
 //! Scalar multiplication
 /*! The return type should use PromoteTraits, but the compiler won't */
-template<typename T, QBasis B, typename U>
+template<typename T, QType B, typename U>
 const Quaternion<T,B>
 operator * (const Quaternion<T,B>& a, const U& c)
 { 
@@ -158,7 +158,7 @@ operator * (const Quaternion<T,B>& a, const U& c)
 
 //! Scalar multiplication
 /*! The return type should use PromoteTraits, but the compiler won't */
-template<typename T, QBasis B, typename U>
+template<typename T, QType B, typename U>
 const Quaternion<T,B>
 operator * (const U& c, const Quaternion<T,B>& a)
 {
@@ -168,7 +168,7 @@ operator * (const U& c, const Quaternion<T,B>& a)
 }
 
 //! Scalar division
-template<typename T, QBasis B, typename U>
+template<typename T, QType B, typename U>
 const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator / (const Quaternion<T,B>& a, const U& c)
 {
@@ -178,7 +178,7 @@ operator / (const Quaternion<T,B>& a, const U& c)
 }
 
 //! The identity Quaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 const Quaternion<T,B>& Quaternion<T,B>::identity ()
 {
   static Quaternion<T,B> I (1,0,0,0);
@@ -186,7 +186,7 @@ const Quaternion<T,B>& Quaternion<T,B>::identity ()
 }
 
 //! Enable the Quaternion class to be passed to certain template functions
-template<typename T, QBasis B> struct DatumTraits< Quaternion<T,B> >
+template<typename T, QType B> struct DatumTraits< Quaternion<T,B> >
 {
   ElementTraits<T> element_traits;
   static inline unsigned ndim () { return 4; }
@@ -225,7 +225,7 @@ operator * (const Quaternion<T,Unitary>& a, const Quaternion<U,Unitary>& b)
 
 
 //! Returns the real component of a Biquaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 Quaternion<T,B> real (const Quaternion<std::complex<T>,B>& j)
 {
   return Quaternion<T,B>
@@ -233,7 +233,7 @@ Quaternion<T,B> real (const Quaternion<std::complex<T>,B>& j)
 }
 
 //! Returns the imag component of a Biquaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 Quaternion<T,B> imag (const Quaternion<std::complex<T>,B>& j)
 {
   return Quaternion<T,B>
@@ -276,7 +276,7 @@ Quaternion<T, Unitary> herm (const Quaternion<T,Unitary>& j)
 
 
 //! Returns the inverse of Quaternion, j
-template<typename T, QBasis B>
+template<typename T, QType B>
 Quaternion<T, B> inv (const Quaternion<T,B>& j) 
 {
   T d (-1.0); d/=det(j);
@@ -295,26 +295,26 @@ T det (const Quaternion<T,Unitary>& j)
 { return j.s0*j.s0 + j.s1*j.s1 + j.s2*j.s2 + j.s3*j.s3; }
 
 //! Returns the trace of Quaternion, j
-template<typename T, QBasis B>
+template<typename T, QType B>
 T trace (const Quaternion<T,B>& j)
 { return 2.0 * j.s0; }
 
 //! Returns the square of the Frobenius norm of a Biquaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 T norm (const Quaternion<std::complex<T>,B>& j)
 { return 2.0 * (norm(j.s0) + norm(j.s1) + norm(j.s2) + norm(j.s3)); }
 
 //! Returns the square of the Frobenius norm of a quaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 T norm (const Quaternion<T,B>& j)
 { return 2.0 * (j.s0*j.s0 + j.s1*j.s1 + j.s2*j.s2 + j.s3*j.s3); }
 
-template<typename T, QBasis B>
+template<typename T, QType B>
 T fabs (const Quaternion<T,B>& j)
 { return sqrt (norm(j)); }
 
 // Return the positive definite square root of a Hermitian Quaternion
-template<typename T, QBasis B>
+template<typename T, QType B>
 const Quaternion<T,B> sqrt (const Quaternion<T,B>& h)
 {
   T root_det = sqrt( det(h) );

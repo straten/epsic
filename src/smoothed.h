@@ -6,12 +6,17 @@
  *
  ***************************************************************************/
 
-// epsic/src/smoothed.h
+//! @file epsic/src/smoothed.h
 
 #ifndef __epsic_smoothed_h
 #define __epsic_smoothed_h
 
 #include "mode.h"
+
+/**
+ * @ingroup epsic_core
+ * @{
+ */
 
 namespace epsic
 {
@@ -56,6 +61,8 @@ namespace epsic
     }
   };
 
-} // namespace epsic
+} // end of namespace epsic
+
+/** @} */ // end of epsic_core group
 
 #endif // ! defined __epsic_smoothed_h

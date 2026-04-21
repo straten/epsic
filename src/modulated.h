@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/modulated.h
+//! @file epsic/src/modulated.h
 
 #ifndef __epsic_modulated_h
 #define __epsic_modulated_h
@@ -19,6 +19,11 @@
 #if _DEBUG
 #include <iostream>
 #endif
+
+/**
+ * @ingroup epsic_core
+ * @{
+ */
 
 namespace epsic
 {
@@ -246,6 +251,8 @@ namespace epsic
     }
   };
 
-} // namespace epsic
+} // end of namespace epsic
+
+/** @} */ // end of epsic_core group
 
 #endif // ! defined __epsic_modulated_h

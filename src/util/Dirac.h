@@ -12,14 +12,15 @@
 #include "Pauli.h"
 #include "Matrix.h"
 
-namespace Dirac {
-
+//! Generates Dirac matrices as Kronecker products of Pauli+identity matrices
+class Dirac 
+{
+public:
   typedef Matrix< 4,4,std::complex<double> > type;
 
-  //! Get the specified basis matrix
-  type matrix (unsigned i, unsigned j);
-
-}
-
+  //! Get the specified Dirac basis matrix
+  /*! The result is the Kronecker product: $\sigma_i \ocross \sigma_j$*/
+  static type matrix (unsigned i, unsigned j);
+};
 
 #endif

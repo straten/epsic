@@ -6,7 +6,7 @@
  *
  ***************************************************************************/
 
-// epsic/src/sample.h
+//! @file epsic/src/sample.h
 
 #ifndef __epsic_sample_h
 #define __epsic_sample_h
@@ -15,6 +15,11 @@
 
 #include <cstdlib>
 #include <vector>
+
+/**
+ * @ingroup epsic_core
+ * @{
+ */
 
 namespace epsic
 {
@@ -250,6 +255,8 @@ namespace epsic
   
   };
 
-} // namespace epsic
+} // end of namespace epsic
+
+/** @} */ // end of epsic_core group
 
 #endif // ! defined __epsic_sample_h
