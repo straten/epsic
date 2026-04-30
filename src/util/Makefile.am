@@ -1,13 +1,13 @@
 
 noinst_LTLIBRARIES = libutil.la
 
-libutil_la_SOURCES = BoxMuller.C Conventions.C Dirac.C Pauli.C random.C
+libutil_la_SOURCES = BoxMuller.C Convention.C Dirac.C Pauli.C random.C
 
 pkginclude_HEADERS = \
 Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
 complex_math.h complex_promote.h \
 BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
-Conventions.h  Jones.h   Pauli.h      Spinor.h      Vector.h
+Convention.h  Jones.h   Pauli.h      Spinor.h      Vector.h
 
 EXTRA_DIST = header_PromoteTraits MatrixTest.h
 
@@ -16,13 +16,13 @@ nodist_pkginclude_HEADERS = PromoteTraits.h
 
 TESTS = test_Vector test_Matrix test_rotation \
 	test_Basis test_Dirac test_Jones test_Mueller test_Quaternion \
-	test_Conventions test_Jacobi test_Pauli test_Stokes test_eigen \
+	test_Convention test_Jacobi test_Pauli test_Stokes test_eigen \
 	test_inner_product test_Estimate test_Minkowski test_BoxMuller
 
 
 check_PROGRAMS = $(TESTS)
 
-test_Conventions_SOURCES	= test_Conventions.C
+test_Convention_SOURCES	= test_Convention.C
 test_Vector_SOURCES			= test_Vector.C
 test_Matrix_SOURCES			= test_Matrix.C
 test_rotation_SOURCES		= test_rotation.C

@@ -4,7 +4,7 @@
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
-#include "Conventions.h"
+#include "Convention.h"
 
 #include <sstream>
 #include <string>
@@ -43,25 +43,25 @@ void test_io (T value, string match)
 int main () try {
   
   cerr << "testing Basis Circular" << endl;
-  test_io (Signal::Circular, "cir");
+  test_io (Convention::Circular, "cir");
 
   cerr << "testing Basis Linear" << endl;
-  test_io (Signal::Linear, "lin");
+  test_io (Convention::Linear, "lin");
   
   cerr << "testing Basis Elliptical" << endl;
-  test_io (Signal::Elliptical, "ell");
+  test_io (Convention::Elliptical, "ell");
 
   cerr << "testing Hand Left" << endl;
-  test_io (Signal::Left, "-1");
+  test_io (Convention::Left, "-1");
 
   cerr << "testing Hand Right" << endl;
-  test_io (Signal::Right, "+1");
+  test_io (Convention::Right, "+1");
 
   cerr << "testing Argument Conventional" << endl;
-  test_io (Signal::Conventional, "+1");
+  test_io (Convention::Conventional, "+1");
 
   cerr << "testing Argument Conjugate" << endl;
-  test_io (Signal::Conjugate, "-1");
+  test_io (Convention::Conjugate, "-1");
 
   cerr << "all tests passed" << endl;
 

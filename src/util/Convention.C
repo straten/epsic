@@ -5,38 +5,38 @@
  *
  ***************************************************************************/
 
-#include "Conventions.h"
+#include "Convention.h"
 
 #include <stdlib.h>
 
 using namespace std;
 
-ostream& operator << (ostream& os, Signal::Basis basis)
+ostream& operator << (ostream& os, Convention::Basis basis)
 {
   switch (basis)
   {
-  case Signal::Linear:
+  case Convention::Linear:
     return os << "lin";
-  case Signal::Circular:
+  case Convention::Circular:
     return os << "cir";
-  case Signal::Elliptical:
+  case Convention::Elliptical:
     return os << "ell";
   }
   return os;
 }
 
-istream& operator >> (istream& is, Signal::Basis& basis)
+istream& operator >> (istream& is, Convention::Basis& basis)
 {
   std::streampos pos = is.tellg();
   string unit;
   is >> unit;
 
   if (unit == "lin" || unit == "Linear")
-    basis = Signal::Linear;
+    basis = Convention::Linear;
   else if (unit == "cir" || unit == "circ" || unit == "Circular")
-    basis = Signal::Circular;
+    basis = Convention::Circular;
   else if (unit == "ell" || unit == "Elliptical")
-    basis = Signal::Elliptical;
+    basis = Convention::Elliptical;
   else {
 
     // replace the text and try to parse a number
@@ -47,14 +47,14 @@ istream& operator >> (istream& is, Signal::Basis& basis)
 
     if (!is.fail())
     {
-      switch ((Signal::Basis)code)
+      switch ((Convention::Basis)code)
       {
-      case Signal::Linear:
-	basis = Signal::Linear; break;
-      case Signal::Circular:
-	basis = Signal::Circular; break;
-      case Signal::Elliptical:
-	basis = Signal::Elliptical; break;
+      case Convention::Linear:
+	basis = Convention::Linear; break;
+      case Convention::Circular:
+	basis = Convention::Circular; break;
+      case Convention::Elliptical:
+	basis = Convention::Elliptical; break;
       }
     }
 
@@ -86,22 +86,22 @@ istream& input (istream& is, T& argument)
   return is;
 }
 
-ostream& operator << (ostream& os, Signal::Hand hand)
+ostream& operator << (ostream& os, Convention::Hand hand)
 {
   return output (os, hand);
 }
 
-istream& operator >> (istream& is, Signal::Hand& hand)
+istream& operator >> (istream& is, Convention::Hand& hand)
 {
   return input (is, hand);
 }
 
-ostream& operator << (ostream& os, Signal::Argument arg)
+ostream& operator << (ostream& os, Convention::Argument arg)
 {
   return output (os, arg);
 }
 
-istream& operator >> (istream& is, Signal::Argument& arg)
+istream& operator >> (istream& is, Convention::Argument& arg)
 {
   return input (is, arg);
 }

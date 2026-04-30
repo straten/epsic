@@ -15,7 +15,7 @@ int main ()
   basis1.set_basis (0.25*M_PI, 0.25*M_PI);
 
   Basis<double> basis2;
-  basis2.set_basis (Signal::Circular);
+  basis2.set_basis (Convention::Circular);
 
   for (unsigned i=0; i<3; i++)  {
     double dot = basis1.get_basis_vector(i) * basis2.get_basis_vector(i);

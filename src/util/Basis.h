@@ -12,7 +12,7 @@
 #define __epsic_util_Basis_H
 
 #include "Matrix.h"
-#include "Conventions.h"
+#include "Convention.h"
 
 //! Defines the basis in which the electric field is represented
 template<typename T>
@@ -21,13 +21,13 @@ class Basis {
 public:
 
   //! Default constructor
-  Basis () { set_basis (Signal::Linear); }
+  Basis () { set_basis (Convention::Linear); }
 
   //! set basis to circular or linear
-  void set_basis (Signal::Basis basis);
+  void set_basis (Convention::Basis basis);
 
   //! get the current basis
-  Signal::Basis get_basis () const { return basis; }
+  Convention::Basis get_basis () const { return basis; }
 
   //! set basis to elliptical
   void set_basis (double orientation, double ellipticity);
@@ -52,7 +52,7 @@ public:
 protected:
 
   //! The basis code
-  Signal::Basis basis;
+  Convention::Basis basis;
 
   //! The orientation 
   double orientation;
@@ -84,20 +84,20 @@ void Basis<T>::set_basis (double _orientation, double _ellipticity)
   into[1] = Vector<3,T> (-sin_2o*cos_2e, cos_2o, sin_2o*sin_2e);
   into[2] = Vector<3,T> (sin_2e, 0, cos_2e);
 
-  basis = Signal::Elliptical;
+  basis = Convention::Elliptical;
 
   outof = transpose (into);
 }
 
 //! set basis to circular or linear
 template<typename T>
-void Basis<T>::set_basis (Signal::Basis _basis)
+void Basis<T>::set_basis (Convention::Basis _basis)
 {
   basis = _basis;
 
   switch (basis)  {
 
-  case Signal::Linear:
+  case Convention::Linear:
     into[0] = Vector<3,T>::basis (0); // hat q
     into[1] = Vector<3,T>::basis (1); // hat u
     into[2] = Vector<3,T>::basis (2); // hat v
@@ -105,7 +105,7 @@ void Basis<T>::set_basis (Signal::Basis _basis)
     ellipticity = 0;
     break;
 
-  case Signal::Circular:
+  case Convention::Circular:
     into[0] = Vector<3,T>::basis (1); // hat q
     into[1] = Vector<3,T>::basis (2); // hat u
     into[2] = Vector<3,T>::basis (0); // hat v
