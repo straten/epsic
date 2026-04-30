@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef __Traits_h
-#define __Traits_h
+#ifndef __epsic_util_Traits_h
+#define __epsic_util_Traits_h
 
 #include <complex>
 

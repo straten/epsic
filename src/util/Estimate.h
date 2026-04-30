@@ -8,8 +8,8 @@
 
 // epsic/src/util/Estimate.h
 
-#ifndef __Estimate_h
-#define __Estimate_h
+#ifndef __epsic_util_Estimate_h
+#define __epsic_util_Estimate_h
 
 #include "PromoteTraits.h"
 #include "Traits.h"

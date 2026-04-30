@@ -8,8 +8,8 @@
 
 // epsic/src/util/Quaternion.h
 
-#ifndef __Quaternion_H
-#define __Quaternion_H
+#ifndef __epsic_util_Quaternion_H
+#define __epsic_util_Quaternion_H
 
 #include "Traits.h"
 #include "complex_promote.h"
@@ -395,5 +395,5 @@ std::ostream& operator<< (std::ostream& ostr, const Quaternion<T,Unitary>& j)
   return ostr << "[u:" << j.s0 <<","<< j.s1 <<","<< j.s2 <<","<< j.s3 << "]";
 }
 
-#endif  /* not __Quaternion_H defined */
+#endif  /* not __epsic_util_Quaternion_H defined */
 

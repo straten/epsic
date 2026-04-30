@@ -8,8 +8,8 @@
 
 // epsic/src/util/Spinor.h
 
-#ifndef __Spinor_H
-#define __Spinor_H
+#ifndef __epsic_util_Spinor_H
+#define __epsic_util_Spinor_H
 
 #include "Vector.h"
 #include "Jones.h"
@@ -38,7 +38,9 @@ public:
 
   template <typename U>
   const Spinor& operator *= (U scale) { x *= scale; y *= scale; return *this; }
-  const Spinor& operator /= (T norm) { x /= norm; y /= norm; return *this; }
+
+  template <typename U>
+  const Spinor& operator /= (U norm) { x /= norm; y /= norm; return *this; }
   const Spinor& operator += (const Spinor& e) { x+=e.x; y+=e.y; return *this; }
 };
 

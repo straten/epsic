@@ -8,8 +8,8 @@
 
 // epsic/src/util/Basis.h
 
-#ifndef __Basis_H
-#define __Basis_H
+#ifndef __epsic_util_Basis_H
+#define __epsic_util_Basis_H
 
 #include "Matrix.h"
 #include "Conventions.h"

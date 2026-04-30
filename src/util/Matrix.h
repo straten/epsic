@@ -8,8 +8,8 @@
 
 // epsic/src/util/Matrix.h
 
-#ifndef __Matrix_H
-#define __Matrix_H
+#ifndef __epsic_util_Matrix_H
+#define __epsic_util_Matrix_H
 
 #include "Vector.h"
 #include "complex_promote.h"
@@ -421,5 +421,5 @@ std::ostream& operator<< (std::ostream& ostr, const Matrix<R,C,T>& m)
   return ostr << "]";
 }
 
-#endif  /* not __Matrix_H defined */
+#endif  /* not __epsic_util_Matrix_H defined */
 

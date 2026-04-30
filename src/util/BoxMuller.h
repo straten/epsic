@@ -8,8 +8,8 @@
 
 // epsic/src/util/BoxMuller.h
 
-#ifndef __BoxMuller_h
-#define __BoxMuller_h
+#ifndef __epsic_util_BoxMuller_h
+#define __epsic_util_BoxMuller_h
 
 //! Returns a random variable from a normal distribution
 class BoxMuller {

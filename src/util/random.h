@@ -8,8 +8,8 @@
 
 // epsic/src/util/random.h
 
-#ifndef __random_H
-#define __random_H
+#ifndef __epsic_util_random_H
+#define __epsic_util_random_H
 
 #include <complex>
 #include <inttypes.h>

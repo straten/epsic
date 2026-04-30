@@ -8,8 +8,8 @@
 
 // epsic/src/util/Minkowski.h
 
-#ifndef __Minkowski_H
-#define __Minkowski_H
+#ifndef __epsic_util_Minkowski_H
+#define __epsic_util_Minkowski_H
 
 #include "Matrix.h"
 

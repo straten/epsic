@@ -8,8 +8,8 @@
 
 // epsic/src/util/complex_promote.h
 
-#ifndef __complex_promote_H
-#define __complex_promote_H
+#ifndef __epsic_util_complex_promote_H
+#define __epsic_util_complex_promote_H
 
 #include <complex>
 #include "PromoteTraits.h"

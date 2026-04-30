@@ -8,8 +8,8 @@
 
 // espic/src/Vector.h
 
-#ifndef __Vector_H
-#define __Vector_H
+#ifndef __epsic_util_Vector_H
+#define __epsic_util_Vector_H
 
 #include "Traits.h"
 #include "Estimate.h"
@@ -289,5 +289,5 @@ std::istream& operator >> (std::istream& is, Vector<N,T>& v)
   return is;
 }
 
-#endif  /* not __Vector_H defined */
+#endif  /* not __epsic_util_Vector_H defined */
 

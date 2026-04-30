@@ -8,8 +8,8 @@
 
 // epsic/src/util/Jones.h
 
-#ifndef __Jones_H
-#define __Jones_H
+#ifndef __epsic_util_Jones_H
+#define __epsic_util_Jones_H
 
 #include "Matrix.h"
 #include "Traits.h"
@@ -286,5 +286,5 @@ std::ostream& operator<< (std::ostream& ostr, const Jones<T>& j)
   return ostr << "[" << j.j00 << j.j01 << j.j10 << j.j11 << "]";
 }
 
-#endif  /* not __Jones_H defined */
+#endif  /* not __epsic_util_Jones_H defined */
 

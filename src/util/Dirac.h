@@ -6,8 +6,8 @@
  *
  ***************************************************************************/
 
-#ifndef __Dirac_H
-#define __Dirac_H
+#ifndef __epsic_util_Dirac_H
+#define __epsic_util_Dirac_H
 
 #include "Pauli.h"
 #include "Matrix.h"

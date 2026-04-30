@@ -8,8 +8,8 @@
 
 // epsic/src/util/Pauli.h
 
-#ifndef __Pauli_H
-#define __Pauli_H
+#ifndef __epsic_util_Pauli_H
+#define __epsic_util_Pauli_H
 
 #include "Jones.h"
 #include "Quaternion.h"

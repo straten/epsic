@@ -8,8 +8,8 @@
 
 // epsic/src/util/Jacobi.h
 
-#ifndef __Jacobi_H
-#define __Jacobi_H
+#ifndef __epsic_util_Jacobi_H
+#define __epsic_util_Jacobi_H
 
 #include "Matrix.h"
 #include "Quaternion.h"

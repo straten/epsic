@@ -8,8 +8,8 @@
 
 // espic/src/Stokes.h
 
-#ifndef __Stokes_H
-#define __Stokes_H
+#ifndef __epsic_util_Stokes_H
+#define __epsic_util_Stokes_H
 
 #include "Vector.h"
 #include "Estimate.h"

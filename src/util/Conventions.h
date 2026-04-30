@@ -8,8 +8,8 @@
 
 // epsic/src/util/Conventions.h
 
-#ifndef __Conventions_h
-#define __Conventions_h
+#ifndef __epsic_util_Conventions_h
+#define __epsic_util_Conventions_h
 
 #include <iostream>
 
