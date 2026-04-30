@@ -1,0 +1,9 @@
+
+@INCLUDE = common.dox
+
+PROJECT_NAME           = epsic
+PROJECT_NUMBER         = 4.0.0
+INPUT                  = ../src
+USE_MDFILE_AS_MAINPAGE = ../README.md
+
+XML_OUTPUT             = xml/epsic

@@ -1,0 +1,5 @@
+Doxyfile
+Doxyfile.bak
+_build/
+_doxygen/
+api/

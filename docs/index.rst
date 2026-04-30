@@ -2,8 +2,8 @@
    :parser: myst_parser.sphinx_
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Developer Guide
+   :maxdepth: 5
 
-   overview 
-
+   api/epsic/classlist
+   api/util/classlist
+   api/util/structlist

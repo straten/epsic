@@ -6,7 +6,6 @@ author = "Willem van Straten"
 
 extensions = [
     "breathe",
-    "exhale",
     "myst_parser",
     "sphinx_click",
     "sphinx_copybutton",
@@ -20,21 +19,10 @@ extensions = [
 # -- Breathe (Doxygen XML) configuration ------------------------------------
 
 breathe_projects = {
-    "epsic": "_doxygen/xml",
+    "epsic": "_doxygen/xml/epsic",
+    "util": "_doxygen/xml/util",
 }
 breathe_default_project = "epsic"
-
-# -- Exhale configuration ---------------------------------------------------
-
-exhale_args = {
-    "verboseBuild":          True,
-    "rootFileTitle":         "EPSIC Library API",
-    "containmentFolder":     "./api",
-    "rootFileName":          "index.rst",
-    "doxygenStripFromPath":  "..",
-    "createTreeView":        True,
-    "treeViewIsBootstrap": True,
-}
 
 # -- General configuration ---------------------------------------------------
 

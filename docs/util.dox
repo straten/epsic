@@ -1,0 +1,11 @@
+
+@INCLUDE = common.dox
+
+PROJECT_NAME           = "epsic utilties"
+PROJECT_NUMBER         = 4.0.0
+INPUT                  = ../src/util ../src/true_math
+
+EXCLUDE                = ../src/util/PromoteTraits.h ../src/util/generate_PromoteTraits.C
+EXCLUDE_PATTERNS       = test_*.*
+
+XML_OUTPUT             = xml/util
