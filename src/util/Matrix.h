@@ -45,7 +45,7 @@ public:
   }
   
   //! Negation
-  const friend Matrix operator - (Matrix s)
+  friend Matrix operator - (Matrix s)
   {
     for (unsigned i=0; i<Rows; i++) 
       for (unsigned j=0; j<Columns; j++)
@@ -65,8 +65,7 @@ public:
 
 //! Vector multiplication
 template<unsigned Rows, unsigned Columns, typename T, typename U>
-const Vector<Rows,U> operator * (const Matrix<Rows,Columns,T>& m,
-                                 const Vector<Columns,U>& b)
+Vector<Rows,U> operator * (const Matrix<Rows,Columns,T>& m, const Vector<Columns,U>& b)
 {
   Vector<Rows,U> r;
   for (unsigned i=0; i<Rows; i++)
@@ -76,8 +75,7 @@ const Vector<Rows,U> operator * (const Matrix<Rows,Columns,T>& m,
 
 //! Vector transpose multiplication
 template<unsigned Rows, unsigned Columns, typename T, typename U>
-const Vector<Columns,U> operator * (const Vector<Rows,U>& b,
-				    const Matrix<Rows,Columns,T>& m)
+Vector<Columns,U> operator * (const Vector<Rows,U>& b, const Matrix<Rows,Columns,T>& m)
 {
   Vector<Columns,U> r;
   for (unsigned j=0; j<Columns; j++)
@@ -88,10 +86,9 @@ const Vector<Columns,U> operator * (const Vector<Rows,U>& b,
 
 //! Matrix multiplication
 template<unsigned R1, unsigned C1R2, unsigned C2, typename T>
-const Matrix<R1, C2, T>
-operator * (const Matrix<R1, C1R2, T>& a, const Matrix<C1R2, C2, T>& b)
+Matrix<R1,C2,T> operator * (const Matrix<R1,C1R2,T>& a, const Matrix<C1R2,C2,T>& b)
 { 
-  Matrix<R1, C2, T> r; 
+  Matrix<R1,C2,T> r; 
   for (unsigned i=0; i<R1; i++)
     for (unsigned j=0; j<C2; j++)
       for (unsigned k=0; k<C1R2; k++)
@@ -209,11 +206,11 @@ T trace (const Matrix<Square,Square,T>& M)
 }
 
 template <unsigned RC, typename T>
-const Matrix<RC, RC, T> inv (const Matrix<RC, RC, T>& m)
+Matrix<RC,RC,T> inv (const Matrix<RC,RC,T>& m)
 {
-  Matrix<RC, RC, T> copy (m);
+  Matrix<RC,RC,T> copy (m);
   
-  Matrix<RC, RC, T> inverse;
+  Matrix<RC,RC,T> inverse;
   matrix_identity (inverse);
 
   GaussJordan (copy, inverse);
@@ -222,9 +219,9 @@ const Matrix<RC, RC, T> inv (const Matrix<RC, RC, T>& m)
 }
 
 template <unsigned Rows, unsigned Columns, typename T>
-const Matrix<Columns, Rows, T> transpose (const Matrix<Rows, Columns,T>& m)
+Matrix<Columns,Rows,T> transpose (const Matrix<Rows,Columns,T>& m)
 {
-  Matrix< Columns, Rows,T> result;
+  Matrix<Columns,Rows,T> result;
 
   for (unsigned i=0; i<Rows; i++)
     for (unsigned j=0; j<Columns; j++)
@@ -234,9 +231,9 @@ const Matrix<Columns, Rows, T> transpose (const Matrix<Rows, Columns,T>& m)
 }
 
 template <unsigned Rows, unsigned Columns, typename T>
-const Matrix< Columns, Rows,T> herm (const Matrix<Rows, Columns,T>& m)
+Matrix<Columns,Rows,T> herm (const Matrix<Rows,Columns,T>& m)
 {
-  Matrix< Columns, Rows,T> result;
+  Matrix<Columns,Rows,T> result;
 
   for (unsigned i=0; i<Rows; i++)
     for (unsigned j=0; j<Columns; j++)
@@ -247,10 +244,10 @@ const Matrix< Columns, Rows,T> herm (const Matrix<Rows, Columns,T>& m)
 
 //! Vector direct (outer) product 
 template<unsigned Rows, unsigned Columns, typename T, typename U>
-const Matrix<Rows,Columns,typename PromoteTraits<T,U>::promote_type> 
+Matrix<Rows,Columns,typename PromoteTraits<T,U>::promote_type> 
 outer (const Vector<Rows,T>& a, const Vector<Columns,U>& b)
 {
-  Matrix<Rows, Columns, typename PromoteTraits<T,U>::promote_type> result;
+  Matrix<Rows,Columns,typename PromoteTraits<T,U>::promote_type> result;
 
   for (unsigned i=0; i<Rows; i++)
     for (unsigned j=0; j<Columns; j++)
@@ -262,10 +259,10 @@ outer (const Vector<Rows,T>& a, const Vector<Columns,U>& b)
 //! Matrix direct (Kronecker) product 
 template<unsigned Ar, unsigned Ac, typename At,
 	 unsigned Br, unsigned Bc, typename Bt>
-const Matrix<Ar*Br,Ac*Bc,typename PromoteTraits<At,Bt>::promote_type> 
+Matrix<Ar*Br,Ac*Bc,typename PromoteTraits<At,Bt>::promote_type> 
 direct (const Matrix<Ar,Ac,At>& a, const Matrix<Br,Bc,Bt>& b)
 {
-  Matrix<Ar*Br,Ac*Bc, typename PromoteTraits<At,Bt>::promote_type> result;
+  Matrix<Ar*Br,Ac*Bc,typename PromoteTraits<At,Bt>::promote_type> result;
 
   for (unsigned ar=0; ar<Ar; ar++)
     for (unsigned ac=0; ac<Ac; ac++)

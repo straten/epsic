@@ -82,8 +82,7 @@ int main (int argc, char** argv)
     for (unsigned j=0; j<types.size(); j++)
 
       out << "template<>\n"
-        "class PromoteTraits< " << types[i] << ", " << types[j] << " > {\n"
-	"public:\n"
+        "struct PromoteTraits< " << types[i] << ", " << types[j] << " > {\n"
 	"  typedef " << types[max(i,j)] << " promote_type;\n"
 	"};\n" << endl;
 

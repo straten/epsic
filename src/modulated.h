@@ -27,13 +27,7 @@
 
 namespace epsic
 {
-
-  /***************************************************************************
-   *
-   *  an amplitude modulated mode of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! an amplitude modulated source of electromagnetic radiation
   class modulated_mode : public field_transformer
   {
   #if _DEBUG
@@ -45,20 +39,21 @@ namespace epsic
 
     modulated_mode (mode* s) : field_transformer(s)
     { 
-  #if -DEBUG
+  #if _DEBUG
       tot=0; totsq=0; count=0; 
   #endif
     }
 
-    // return a random scalar modulation factor
+    //! return a random scalar modulation factor
     virtual double modulation () = 0;
 
-    // return the mean of the scalar modulation factor
+    //! return the mean of the scalar modulation factor
     virtual double get_mod_mean () const = 0;
 
-    // return the variance of the scalar modulation factor
+    //! return the variance of the scalar modulation factor
     virtual double get_mod_variance () const = 0;
 
+    //! multiply the electric field by the square root of the modulation factor
     Spinor<double> transform (const Spinor<double>& field)
     {
       double mod = modulation();
@@ -70,6 +65,7 @@ namespace epsic
       return sqrt(mod) * field;
     }
 
+    //! compute the expected covariances between the Stokes parameters
     Matrix<4,4,double> get_covariance () const
     {
       double mean = get_mod_mean();
@@ -91,6 +87,7 @@ namespace epsic
       return C + o;
     }
 
+    //! compute the expected mean Stokes parameters
     Stokes<double> get_mean () const
     {
       return get_mod_mean () * source->get_mean();
@@ -98,21 +95,24 @@ namespace epsic
 
   };
 
+  //! modulates a source by a scalar with a lognormal distribution
   class lognormal_mode : public modulated_mode
   {
-    // standard deviation of the logarithm of the random variate
+    //! standard deviation of the logarithm of the random variate
     double log_sigma;
 
   public:
 
-    // initialize based on the modulation index beta
+    //! initialize based on the modulation index \f$ \beta \f$
     lognormal_mode (mode* s, double beta) : modulated_mode (s) { set_beta (beta); }
 
+    //! set the modulation index \f$ \beta \f$
     void set_beta (double beta)
     {
       log_sigma = sqrt( log( beta*beta + 1.0 ) );
     }
 
+    //! get the modulation index \f$ \beta \f$
     double get_beta () const
     {
       return sqrt( get_mod_variance() );
@@ -124,19 +124,22 @@ namespace epsic
       return log_sigma;
     }
 
-    // return a random scalar modulation factor
+    //! return a random scalar modulation factor with a lognormal distribution
     double modulation ()
     {
       return exp ( log_sigma * (get_normal()->evaluate() - 0.5*log_sigma) ) ;
     }
 
+    //! return the expected mean of the amplitude-modulating function
     double get_mod_mean () const { return 1.0; }
-    
+
+    //! return the expected variance of the amplitude-modulating function
     double get_mod_variance () const { return exp(log_sigma*log_sigma) - 1.0; }
 
   };
 
 
+  //! an amplitude modulating function smoothed using a running mean
   class boxcar_modulated_mode : public modulated_mode
   {
     std::vector< double > instances;
@@ -198,6 +201,7 @@ namespace epsic
   };
 
 
+  //! amplitude modulation by contiguous sequence of rectangular pulses of constant width and varying height
   class square_modulated_mode : public modulated_mode
   {
     unsigned width;

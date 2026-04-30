@@ -20,12 +20,7 @@
 
 namespace epsic
 {
-  /***************************************************************************
-   *
-   *  a boxcar-smoothed mode of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! a boxcar-smoothed source of electromagnetic radiation
   class boxcar_mode : public mode_decorator
   {
     std::vector< Spinor<double> > instances;

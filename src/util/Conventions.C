@@ -11,31 +11,32 @@
 
 using namespace std;
 
-ostream& Signal::operator << (ostream& os, Basis basis)
+ostream& operator << (ostream& os, Signal::Basis basis)
 {
-  switch (basis) {
-  case Linear:
+  switch (basis)
+  {
+  case Signal::Linear:
     return os << "lin";
-  case Circular:
+  case Signal::Circular:
     return os << "cir";
-  case Elliptical:
+  case Signal::Elliptical:
     return os << "ell";
   }
   return os;
 }
 
-istream& Signal::operator >> (istream& is, Basis& basis)
+istream& operator >> (istream& is, Signal::Basis& basis)
 {
   std::streampos pos = is.tellg();
   string unit;
   is >> unit;
 
   if (unit == "lin" || unit == "Linear")
-    basis = Linear;
+    basis = Signal::Linear;
   else if (unit == "cir" || unit == "circ" || unit == "Circular")
-    basis = Circular;
+    basis = Signal::Circular;
   else if (unit == "ell" || unit == "Elliptical")
-    basis = Elliptical;
+    basis = Signal::Elliptical;
   else {
 
     // replace the text and try to parse a number
@@ -44,14 +45,16 @@ istream& Signal::operator >> (istream& is, Basis& basis)
     int code = -1;
     is >> code;
 
-    if (!is.fail()) {
-      switch ((Basis)code) {
-      case Linear:
-	basis = Linear; break;
-      case Circular:
-	basis = Circular; break;
-      case Elliptical:
-	basis = Elliptical; break;
+    if (!is.fail())
+    {
+      switch ((Signal::Basis)code)
+      {
+      case Signal::Linear:
+	basis = Signal::Linear; break;
+      case Signal::Circular:
+	basis = Signal::Circular; break;
+      case Signal::Elliptical:
+	basis = Signal::Elliptical; break;
       }
     }
 
@@ -83,22 +86,23 @@ istream& input (istream& is, T& argument)
   return is;
 }
 
-ostream& Signal::operator << (ostream& os, Hand hand)
+ostream& operator << (ostream& os, Signal::Hand hand)
 {
   return output (os, hand);
 }
 
-istream& Signal::operator >> (istream& is, Hand& hand)
+istream& operator >> (istream& is, Signal::Hand& hand)
 {
   return input (is, hand);
 }
 
-ostream& Signal::operator << (ostream& os, Argument arg)
+ostream& operator << (ostream& os, Signal::Argument arg)
 {
   return output (os, arg);
 }
 
-istream& Signal::operator >> (istream& is, Argument& arg)
+istream& operator >> (istream& is, Signal::Argument& arg)
 {
   return input (is, arg);
 }
+

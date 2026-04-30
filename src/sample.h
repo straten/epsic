@@ -24,12 +24,7 @@
 namespace epsic
 {
     
-  /***************************************************************************
-   *
-   *  a Stokes sample
-   *
-   ***************************************************************************/
-
+  //! sample of electric field instances used to compute the Stokes parameters
   class sample
   {
   public:
@@ -51,12 +46,7 @@ namespace epsic
               unsigned sample_size);
   };
 
-  /***************************************************************************
-   *
-   *  a single source of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a single source of electromagnetic radiation
   class single : public sample
   {
   public:
@@ -101,12 +91,7 @@ namespace epsic
   };
 
 
-  /***************************************************************************
-   *
-   *  a combination of two sources of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a combination of two sources of electromagnetic radiation
   class combination : public sample
   {
   protected:
@@ -134,12 +119,7 @@ namespace epsic
     }
   };
 
-  /***************************************************************************
-   *
-   *  a superposition of two sources of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a superposition of two sources of electromagnetic radiation
   class superposed : public combination
   {
     Stokes<double> get_Stokes ();
@@ -147,12 +127,7 @@ namespace epsic
     Matrix<4,4, double> get_covariance ();
   };
 
-  /***************************************************************************
-   *
-   *  a composition of two sources of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a composition of two sources of electromagnetic radiation
   class composite : public combination
   {
     double A_fraction;
@@ -166,12 +141,7 @@ namespace epsic
     Matrix<4,4, double> get_covariance ();
   };
 
-  /***************************************************************************
-   *
-   *  a disjoint combination of two sources of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a disjoint combination of two sources of electromagnetic radiation
   class disjoint : public combination
   {
     double A_fraction;
@@ -187,12 +157,7 @@ namespace epsic
   };
 
 
-  /***************************************************************************
-   *
-   *  a post-detection boxcar-smoothed source of electromagnetic radiation
-   *
-   ***************************************************************************/
-
+  //! sample defined by a post-detection boxcar-smoothed source of electromagnetic radiation
   class boxcar_sample : public single
   {
     std::vector< Stokes<double> > instances;
@@ -229,6 +194,7 @@ namespace epsic
   };
 
 
+  //! sample defined by a coherent superposition of two sources of electromagnetic radiation
   class coherent : public combination
   {
     Spinor<double> a;

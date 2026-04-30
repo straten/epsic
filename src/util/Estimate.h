@@ -138,24 +138,24 @@ class Estimate
   const Estimate inverse () const
   { T v=1.0/val; return Estimate (v,var*v*v*v*v); }
 
-  friend const Estimate operator + (Estimate a, const Estimate& b)
+  friend Estimate operator + (Estimate a, const Estimate& b)
   { return a+=b; }
 
-  friend const Estimate operator - (Estimate a, const Estimate& b)
+  friend Estimate operator - (Estimate a, const Estimate& b)
   { return a-=b; }
 
-  friend const Estimate operator * (Estimate a, const Estimate& b)
+  friend Estimate operator * (Estimate a, const Estimate& b)
   { return a*=b; }
   
-  friend const Estimate operator / (Estimate a, const Estimate& b)
+  friend Estimate operator / (Estimate a, const Estimate& b)
   { return a/=b; }
 
   //! Negation operator
-  friend const Estimate operator - (Estimate a)
+  friend Estimate operator - (Estimate a)
   { return Estimate (-a.val, a.var); }
 
 #if COMPLEX_SPECIALIZE
-  friend const std::complex<Estimate> operator * (const std::complex<Estimate>& a, const std::complex<Estimate>& b)
+  friend std::complex<Estimate> operator * (const std::complex<Estimate>& a, const std::complex<Estimate>& b)
   {
     return std::complex<Estimate> (
         a.real()*b.real() - a.imag()*b.imag(),
@@ -163,55 +163,55 @@ class Estimate
         );
   }
 
-  friend const Estimate norm (const std::complex<Estimate>& u)
+  friend Estimate norm (const std::complex<Estimate>& u)
   { return u.real()*u.real() + u.imag()*u.imag(); }
 #endif
 
   //! See http://mathworld.wolfram.com/ErrorPropagation.html Equation (15)
-  friend const Estimate exp (const Estimate& u)
+  friend Estimate exp (const Estimate& u)
   { T val = ::exp (u.val); return Estimate (val, val*val*u.var); }
 
   //! See http://mathworld.wolfram.com/ErrorPropagation.html Equation (17)
-  friend const Estimate log (const Estimate& u)
+  friend Estimate log (const Estimate& u)
   { return Estimate (::log (u.val), u.var/(u.val*u.val)); }
 
   //! \f$ {\partial\over\partial x} x^{1\over2} = {1\over2}x^{-{1\over2}} \f$
-  friend const Estimate sqrt (const Estimate& u)
+  friend Estimate sqrt (const Estimate& u)
   { return Estimate (::sqrt (u.val), 0.25*u.var/fabs(u.val)); }
 
   //! \f$ \left({\partial\sin x\over\partial x}\right)^2 = (1-\sin^2x) \f$
-  friend const Estimate sin (const Estimate& u)
+  friend Estimate sin (const Estimate& u)
   { T val = ::sin (u.val); return Estimate (val, (1-val*val)*u.var); }
 
   //! \f$ \left({\partial\cos x\over\partial x}\right)^2 = (1-\cos^2x) \f$
-  friend const Estimate cos (const Estimate& u)
+  friend Estimate cos (const Estimate& u)
   { T val = ::cos (u.val); return Estimate (val, (1-val*val)*u.var); }
 
   //! \f$ {\partial\over\partial x} \cos^-1 (x) = -(1-x^2)^{-1/2} \f$
-  friend const Estimate acos (const Estimate& u)
+  friend Estimate acos (const Estimate& u)
   { T val = ::acos (u.val); T del=-1.0/sqrt(1.0-u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
   //! \f$ {\partial\over\partial x} \tan^-1 (x) = (1+x^2)^{-1} \f$
-  friend const Estimate atan (const Estimate& u)
+  friend Estimate atan (const Estimate& u)
   { T val = ::atan (u.val); T del=1/(1+u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
   //! \f$ {\partial\over\partial x} \tan^-1 (x) = (1+x^2)^{-1} \f$
-  friend const Estimate atan2 (const Estimate& s, const Estimate& c)
+  friend Estimate atan2 (const Estimate& s, const Estimate& c)
   { T c2 = c.val*c.val;  T s2 = s.val*s.val;  T sc2 = c2+s2;
     return Estimate (::atan2 (s.val, c.val),(c2*s.var+s2*c.var)/(sc2*sc2)); }
 
   //! \f$ \left({\partial\sinh x\over\partial x}\right)^2 = (1+\sinh^2x) \f$
-  friend const Estimate sinh (const Estimate& u)
+  friend Estimate sinh (const Estimate& u)
   { T val = ::sinh (u.val); return Estimate (val, (1+val*val)*u.var); }
 
   //! \f$ \left({\partial\cosh x\over\partial x}\right)^2 = (\cosh^2x-1) \f$
-  friend const Estimate cosh (const Estimate& u)
+  friend Estimate cosh (const Estimate& u)
   { T val = ::cosh (u.val); return Estimate (val, (val*val-1)*u.var); }
 
   //! \f$ {\partial\over\partial x} \tanh^-1 (x) = (1-x^2)^{-1} \f$
-  friend const Estimate atanh (const Estimate& u)
+  friend Estimate atanh (const Estimate& u)
   { T val = ::atanh (u.val); T del=1/(1-u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
@@ -224,10 +224,10 @@ class Estimate
   friend int isnan (const Estimate& u)
   { return isnan (u.val); }
 
-  friend const T abs (const Estimate& u)
+  friend T abs (const Estimate& u)
   { return std::abs (u.val); }
 
-  friend const Estimate copysign (const Estimate& u, const Estimate& v)
+  friend Estimate copysign (const Estimate& u, const Estimate& v)
   { return Estimate (::copysign (u.val, v.val), u.var); }
 };
 
@@ -244,25 +244,22 @@ template <class T, class U> struct DatumTraits< Estimate<T,U> >
 };
 
 template <class T, class U, class V, class W>
-class PromoteTraits< Estimate<T,U>, Estimate<V,W> >
+struct PromoteTraits< Estimate<T,U>, Estimate<V,W> >
 {
-  public:
-    typedef Estimate< typename PromoteTraits<T,V>::promote_type, 
-                      typename PromoteTraits<U,W>::promote_type > promote_type;
+  typedef Estimate< typename PromoteTraits<T,V>::promote_type,
+                    typename PromoteTraits<U,W>::promote_type > promote_type;
 };
 
 template <class T, class U, class V>
-class PromoteTraits< Estimate<T,U>, V >
+struct PromoteTraits< Estimate<T,U>, V >
 {
-  public:
-    typedef Estimate<typename PromoteTraits<T,V>::promote_type,U> promote_type;
+  typedef Estimate<typename PromoteTraits<T,V>::promote_type,U> promote_type;
 };
 
 template <class T, class U, class V>
-class PromoteTraits< V, Estimate<T,U> >
+struct PromoteTraits< V, Estimate<T,U> >
 {
-  public:
-    typedef Estimate<typename PromoteTraits<T,V>::promote_type,U> promote_type;
+  typedef Estimate<typename PromoteTraits<T,V>::promote_type,U> promote_type;
 };
 
 namespace std

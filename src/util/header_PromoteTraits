@@ -12,11 +12,11 @@
 #ifndef __epsic_PromoteTraits_h
 #define __epsic_PromoteTraits_h
 
-class PromoteTraits_not_specialized_for_this_case { };
+struct PromoteTraits_not_specialized_for_this_case { };
 
-//! Empty template class requires specialization 
+//! Empty template struct requires specialization
 template<typename A, typename B>
-class PromoteTraits {
+struct PromoteTraits {
   typedef PromoteTraits_not_specialized_for_this_case promote_type;
 };
 

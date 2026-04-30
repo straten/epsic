@@ -92,7 +92,7 @@ public:
     { return ! operator==(b); }
 
   //! Negation
-  const friend Quaternion operator - (Quaternion s)
+  friend Quaternion operator - (Quaternion s)
     { s.s0=-s.s0; s.s1=-s.s1; s.s2=-s.s2; s.s3=-s.s3; return s; }
 
   //! Alternative access to elements
@@ -127,7 +127,7 @@ public:
 
 //! Quaternion addition
 template<typename T, QType B, typename U>
-const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
+Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator + (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 {
   Quaternion<typename PromoteTraits<T,U>::promote_type,B> ret(a);
@@ -137,7 +137,7 @@ operator + (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 
 //! Quaternion subtraction
 template<typename T, QType B, typename U>
-const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
+Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator - (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 {
   Quaternion<typename PromoteTraits<T,U>::promote_type,B> ret(a);
@@ -148,7 +148,7 @@ operator - (const Quaternion<T,B>& a, const Quaternion<U,B>& b)
 //! Scalar multiplication
 /*! The return type should use PromoteTraits, but the compiler won't */
 template<typename T, QType B, typename U>
-const Quaternion<T,B>
+Quaternion<T,B>
 operator * (const Quaternion<T,B>& a, const U& c)
 { 
   Quaternion<typename PromoteTraits<T,U>::promote_type,B> ret(a);
@@ -159,7 +159,7 @@ operator * (const Quaternion<T,B>& a, const U& c)
 //! Scalar multiplication
 /*! The return type should use PromoteTraits, but the compiler won't */
 template<typename T, QType B, typename U>
-const Quaternion<T,B>
+Quaternion<T,B>
 operator * (const U& c, const Quaternion<T,B>& a)
 {
   Quaternion<typename PromoteTraits<T,U>::promote_type,B> ret(a);
@@ -169,7 +169,7 @@ operator * (const U& c, const Quaternion<T,B>& a)
 
 //! Scalar division
 template<typename T, QType B, typename U>
-const Quaternion<typename PromoteTraits<T,U>::promote_type,B>
+Quaternion<typename PromoteTraits<T,U>::promote_type,B>
 operator / (const Quaternion<T,B>& a, const U& c)
 {
   Quaternion<typename PromoteTraits<T,U>::promote_type,B> ret(a);
@@ -198,8 +198,7 @@ template<typename T, QType B> struct DatumTraits< Quaternion<T,B> >
 
 //! Multiplication of two Biquaternions in the Hermitian basis
 template<typename T, typename U>
-const Quaternion<std::complex<typename PromoteTraits<T,U>::promote_type>,
-                 Hermitian>
+Quaternion<std::complex<typename PromoteTraits<T,U>::promote_type>, Hermitian>
 operator * (const Quaternion<std::complex<T>,Hermitian>& a,
 	    const Quaternion<std::complex<U>,Hermitian>& b)
 {
@@ -213,7 +212,7 @@ operator * (const Quaternion<std::complex<T>,Hermitian>& a,
 
 //! Multiplication of two Quaternions in the Unitary basis
 template<typename T, typename U>
-const Quaternion<typename PromoteTraits<T,U>::promote_type, Unitary>
+Quaternion<typename PromoteTraits<T,U>::promote_type, Unitary>
 operator * (const Quaternion<T,Unitary>& a, const Quaternion<U,Unitary>& b)
 {
   return Quaternion<typename PromoteTraits<T,U>::promote_type, Unitary>
@@ -315,7 +314,7 @@ T fabs (const Quaternion<T,B>& j)
 
 // Return the positive definite square root of a Hermitian Quaternion
 template<typename T, QType B>
-const Quaternion<T,B> sqrt (const Quaternion<T,B>& h)
+Quaternion<T,B> sqrt (const Quaternion<T,B>& h)
 {
   T root_det = sqrt( det(h) );
   T scalar = sqrt( 0.5 * (h.s0 + root_det) );
@@ -357,7 +356,7 @@ const Quaternion<T,B> sqrt (const Quaternion<T,B>& h)
 */
 
 template<typename T>
-const Quaternion<T,Unitary> eigen (const Quaternion<T,Hermitian>& q)
+Quaternion<T,Unitary> eigen (const Quaternion<T,Hermitian>& q)
 {
   T p = norm( q.get_vector() );
 

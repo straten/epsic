@@ -15,11 +15,9 @@
 #include "PromoteTraits.h"
 
 template <class T, class U>
-class PromoteTraits< std::complex<T>, std::complex<U> >
+struct PromoteTraits< std::complex<T>, std::complex<U> >
 {
-  public:
-    typedef std::complex<typename PromoteTraits<T,U>::promote_type> 
-            promote_type;
+  typedef std::complex<typename PromoteTraits<T,U>::promote_type> promote_type;
 };
 
 //! std::complex addition

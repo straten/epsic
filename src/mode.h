@@ -24,10 +24,12 @@
  * @brief These classes simulate the polarization of electromagnetic fields
  * @{
  */
+
+//! Core classes that generate electromagnetic fields and compute Stokes parameters
 namespace epsic
 {
 
-  //! a single source of electromagnetic radiation
+  //! a single source of polarized electromagnetic radiation
   class mode
   {
   public:
@@ -100,7 +102,7 @@ namespace epsic
     virtual Spinor<double> transform ( const Spinor<double>& ) = 0;
   };
 
-} // namespace epsic
+} // end of namespace epsic
 
 /** @} */ // end of epsic_core group
 

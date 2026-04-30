@@ -13,7 +13,9 @@
 
 #include <iostream>
 
-namespace Signal {
+class Signal
+{
+public:
 
   //! The basis in which the electric field is represented
   enum Basis { Circular=0, Linear=1, Elliptical=2 };
@@ -23,25 +25,24 @@ namespace Signal {
 
   //! The complex phase of the basis
   enum Argument { Conjugate=-1, Conventional=1 };
+};
 
-  // //////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////
 
-  //! Basis output operator
-  std::ostream& operator << (std::ostream&, Basis);
-  //! Basis input operator
-  std::istream& operator >> (std::istream&, Basis&);
+//! Basis output operator
+std::ostream& operator << (std::ostream&, Signal::Basis);
+//! Basis input operator
+std::istream& operator >> (std::istream&, Signal::Basis&);
 
-  //! Hand output operator
-  std::ostream& operator << (std::ostream&, Hand);
-  //! Hand input operator
-  std::istream& operator >> (std::istream&, Hand&);
+//! Hand output operator
+std::ostream& operator << (std::ostream&, Signal::Hand);
+//! Hand input operator
+std::istream& operator >> (std::istream&, Signal::Hand&);
 
-  //! Argument output operator
-  std::ostream& operator << (std::ostream&, Argument);
-  //! Argument input operator
-  std::istream& operator >> (std::istream&, Argument&);
-
-}
+//! Argument output operator
+std::ostream& operator << (std::ostream&, Signal::Argument);
+//! Argument input operator
+std::istream& operator >> (std::istream&, Signal::Argument&);
 
 #endif
 

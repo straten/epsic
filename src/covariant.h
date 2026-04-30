@@ -26,7 +26,7 @@ namespace epsic
   class covariant_coordinator;
 
   //! models a modulated mode with covariant intensity
-  /*! the instantaneous intensity of this instance is covariant with another instance */
+  /*! the instantaneous intensity of this instance is covariant with that of another instance */
   class covariant_mode : public modulated_mode
   {
     friend class covariant_coordinator;

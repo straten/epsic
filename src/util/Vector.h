@@ -93,32 +93,32 @@ public:
 
   //! Vector addition
   template<typename U>
-  const friend Vector operator + (Vector a, const Vector<N,U>& b)
+  friend Vector operator + (Vector a, const Vector<N,U>& b)
     { a+=b; return a; }
 
   //! Vector subtraction
   template<typename U> 
-  const friend Vector operator - (Vector a, const Vector<N,U>& b)
+  friend Vector operator - (Vector a, const Vector<N,U>& b)
     { a-=b; return a; }
 
   //! Scalar multiplication
-  const friend Vector operator * (Vector a, T c)
+  friend Vector operator * (Vector a, T c)
     { a*=c; return a; }
 
   //! Scalar multiplication
-  const friend Vector operator * (T c, Vector a)
+  friend Vector operator * (T c, Vector a)
     { a*=c; return a; }
 
   //! Dot product
-  const friend T operator * (const Vector& a, const Vector& b)
+  friend T operator * (const Vector& a, const Vector& b)
     { T r=0; for (unsigned i=0; i<N; i++) r += a[i]*b[i]; return r; }
 
   //! Scalar division
-  const friend Vector operator / (Vector a, T c)
+  friend Vector operator / (Vector a, T c)
     { a/=c; return a; }
 
   //! Negation
-  const friend Vector operator - (Vector s)
+  friend Vector operator - (Vector s)
     { for (unsigned i=0; i<N; i++) s.x[i] = -s.x[i]; return s; }
 
   //! Access to elements
@@ -126,7 +126,7 @@ public:
     { return x[n]; }
   
   //! Alternative access to elements 
-  const T operator [] (unsigned n) const
+  const T& operator [] (unsigned n) const
     { return x[n]; }
 
   //! Dimension of data

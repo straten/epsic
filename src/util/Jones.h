@@ -113,28 +113,28 @@ public:
 
   //! Binary multiplication of Jones<T> and std::complex<U>
   template<typename U> 
-  const friend Jones operator * (Jones a, std::complex<U> c)
+  friend Jones operator * (Jones a, std::complex<U> c)
     { a*=c; return a; }
 
   //! Binary multiplication of std::complex<U> and Jones<T>
   template<typename U>
-  const friend Jones operator * (std::complex<U> c, Jones a)
+  friend Jones operator * (std::complex<U> c, Jones a)
     { a*=c; return a; }
 
   //! Binary multiplication of Jones<T> and T
-  const friend Jones operator * (Jones a, T c)
+  friend Jones operator * (Jones a, T c)
     { a*=c; return a; }
 
   //! Binary multiplication of T and Jones<T>
-  const friend Jones operator * (T c, Jones a)
+  friend Jones operator * (T c, Jones a)
     { a*=c; return a; }
 
   //! Binary division of Jones by any type
-  template<typename U> const friend Jones operator / (Jones a, U c)
+  template<typename U> friend Jones operator / (Jones a, U c)
     { a/=c; return a; }
 
   //! Negation operator returns negative of instance
-  const friend Jones operator - (Jones s)
+  friend Jones operator - (Jones s)
     { s.j00=-s.j00; s.j01=-s.j01; s.j10=-s.j10; s.j11=-s.j11; return s; }
 
   //! Returns reference to the value of the matrix at j(ir,ic)
