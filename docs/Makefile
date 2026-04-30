@@ -8,12 +8,13 @@ SPHINXOPTS    =
 BUILDDIR      = _build
 DOXDIR        = _doxygen
 
-.PHONY: help clean epsic util breathe sphinx rtd
+.PHONY: help clean epsic util apidocs docs
 
 help:
-	@echo "  make rtd     – build Doxygen XML then Sphinx HTML"
-	@echo "  make xml     – build Doxygen XML only"
-	@echo "  make html    – build Doxygen HTML only"
+	@echo "  make docs    – build Doxygen XML, Breathe RST, then Sphinx HTML"
+	@echo "  make apidocs – build Doxygen XML, Breathe RST only"
+	@echo "  make epsic   – build Doxygen XML for epsic core only"
+	@echo "  make util    - build Doxygen XML for epsic util only"
 	@echo "  make clean   – remove all generated output"
 
 Doxyfile:
@@ -24,17 +25,15 @@ epsic util: Doxyfile
 	doxygen $@.dox > $(DOXDIR)/$@.dox.out 2> $(DOXDIR)/$@.dox.err
 	@grep '^Error' $(DOXDIR)/$@.dox.err || echo 2> /dev/null
 
-breathe: epsic util
+apidocs: epsic util
 	breathe-apidoc -q -o api/epsic -p epsic -m -f -g class $(DOXDIR)/xml/epsic
 	breathe-apidoc -q -o api/util -p util -m -f -g class,struct $(DOXDIR)/xml/util
 	cp overrides/api_epsic_classlist api/epsic/classlist.rst
 	cp overrides/api_util_classlist api/util/classlist.rst
 	cp overrides/api_util_structlist api/util/structlist.rst
 
-sphinx: breathe
+docs: apidocs
 	$(SPHINXBUILD) -b html $(SPHINXOPTS) . $(BUILDDIR)/html
-
-rtd: sphinx
 	@echo "Build finished. Open $(BUILDDIR)/html/index.html"
 
 clean:
