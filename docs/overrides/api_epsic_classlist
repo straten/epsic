@@ -1,0 +1,9 @@
+
+Core class list
+===============
+
+.. toctree::
+   :glob:
+
+   class/*
+

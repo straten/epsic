@@ -13,11 +13,6 @@
 
 #include "mode.h"
 
-/**
- * @ingroup epsic_core
- * @{
- */
-
 namespace epsic
 {
   //! a boxcar-smoothed source of electromagnetic radiation
@@ -58,6 +53,5 @@ namespace epsic
 
 } // end of namespace epsic
 
-/** @} */ // end of epsic_core group
-
 #endif // ! defined __epsic_smoothed_h
+

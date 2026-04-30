@@ -16,14 +16,8 @@
 #include <cstdlib>
 #include <vector>
 
-/**
- * @ingroup epsic_core
- * @{
- */
-
 namespace epsic
 {
-    
   //! sample of electric field instances used to compute the Stokes parameters
   class sample
   {
@@ -223,6 +217,5 @@ namespace epsic
 
 } // end of namespace epsic
 
-/** @} */ // end of epsic_core group
-
 #endif // ! defined __epsic_sample_h
+

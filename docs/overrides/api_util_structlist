@@ -1,0 +1,9 @@
+
+Traits struct list
+==================
+
+.. toctree::
+   :glob:
+
+   struct/*
+

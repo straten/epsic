@@ -6,4 +6,6 @@ PROJECT_NUMBER         = 4.0.0
 INPUT                  = ../src
 USE_MDFILE_AS_MAINPAGE = ../README.md
 
+EXCLUDE                = ../src/epsic.cpp
+
 XML_OUTPUT             = xml/epsic

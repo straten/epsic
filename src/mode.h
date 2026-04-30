@@ -19,13 +19,7 @@
 
 #include <iostream>
 
-/**
- * @defgroup epsic_core Core EPSIC Functionality
- * @brief These classes simulate the polarization of electromagnetic fields
- * @{
- */
-
-//! Core classes that generate electromagnetic fields and compute Stokes parameters
+//! Core classes that generate random electromagnetic fields and compute Stokes parameters
 namespace epsic
 {
 
@@ -104,6 +98,5 @@ namespace epsic
 
 } // end of namespace epsic
 
-/** @} */ // end of epsic_core group
-
 #endif // ! defined __epsic_mode_h
+

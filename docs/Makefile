@@ -27,7 +27,9 @@ epsic util: Doxyfile
 breathe: epsic util
 	breathe-apidoc -q -o api/epsic -p epsic -m -f -g class $(DOXDIR)/xml/epsic
 	breathe-apidoc -q -o api/util -p util -m -f -g class,struct $(DOXDIR)/xml/util
-	sed -i -e 's/Class list/Utility Class list/g' api/util/classlist.rst
+	cp overrides/api_epsic_classlist api/epsic/classlist.rst
+	cp overrides/api_util_classlist api/util/classlist.rst
+	cp overrides/api_util_structlist api/util/structlist.rst
 
 sphinx: breathe
 	$(SPHINXBUILD) -b html $(SPHINXOPTS) . $(BUILDDIR)/html
@@ -36,4 +38,4 @@ rtd: sphinx
 	@echo "Build finished. Open $(BUILDDIR)/html/index.html"
 
 clean:
-	rm -rf $(BUILDDIR) $(DOXDIR) api Doxyfile
+	rm -rf $(BUILDDIR) $(DOXDIR) api Doxyfile Doxyfile.bak

@@ -20,11 +20,6 @@
 #include <iostream>
 #endif
 
-/**
- * @ingroup epsic_core
- * @{
- */
-
 namespace epsic
 {
   //! an amplitude modulated source of electromagnetic radiation
@@ -257,6 +252,5 @@ namespace epsic
 
 } // end of namespace epsic
 
-/** @} */ // end of epsic_core group
-
 #endif // ! defined __epsic_modulated_h
+

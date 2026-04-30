@@ -16,11 +16,6 @@
 
 #include <queue>
 
-/**
- * @ingroup epsic_core
- * @{
- */
-
 namespace epsic
 {
   class covariant_coordinator;
@@ -121,6 +116,5 @@ namespace epsic
 
 } // end of namespace epsic
 
-/** @} */ // end of epsic_core group
-
 #endif // ! defined __epsic_covariant_h
+

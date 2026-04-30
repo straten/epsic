@@ -1,7 +1,7 @@
 
 @INCLUDE = Doxyfile
 
-FILE_PATTERNS          = *.C *.cpp *.h
+FILE_PATTERNS          = *.h
 
 OUTPUT_DIRECTORY       = _doxygen
 
@@ -16,7 +16,8 @@ SHOW_INCLUDE_FILES     = NO
 SORT_MEMBERS_CTORS_1ST = YES
 SHOW_USED_FILES        = NO
 SHOW_FILES             = NO
-
+SHOW_NAMESPACES        = NO
+HIDE_SCOPE_NAMES       = YES
 REFERENCED_BY_RELATION = YES
 REFERENCES_RELATION    = YES
 
@@ -43,5 +44,5 @@ CASE_SENSE_NAMES       = NO
 
 # Drop std::* — Doxygen otherwise emits a stub namespacestd.xml that
 # references std::allocator etc. with no body, breaking Breathe.
-EXCLUDE_SYMBOLS        = std::*
+EXCLUDE_SYMBOLS        = std
 
