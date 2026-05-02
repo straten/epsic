@@ -8,7 +8,7 @@ AC_INIT([EPSIC],[4.0.0],[vanstraten.willem@gmail.com])
 
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_MACRO_DIR([config])
-AC_CONFIG_SRCDIR([epsic.cpp])
+AC_CONFIG_SRCDIR([src/epsic.cpp])
 
 # Initialize automake to place object files in sub-directories
 AM_INIT_AUTOMAKE([foreign subdir-objects])
@@ -25,8 +25,8 @@ AC_PROG_INSTALL
 
 SWIN_LIB_HEALPIX
 
-AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([util/Makefile true_math/Makefile Makefile])
+AC_CONFIG_HEADERS([src/config.h])
+AC_CONFIG_FILES([src/util/Makefile src/true_math/Makefile src/Makefile Makefile epsic.pc])
 
 AC_OUTPUT
 

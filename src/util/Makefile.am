@@ -64,5 +64,5 @@ generate_PromoteTraits_LDADD    =
 
 include $(top_srcdir)/config/Makefile.local
 
-AM_CPPFLAGS = -I$(top_srcdir)/true_math
+AM_CPPFLAGS = -I$(top_srcdir)/src/true_math
 

@@ -1,0 +1,13 @@
+prefix=@prefix@
+datarootdir=@datarootdir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+aclocal=@datadir@/aclocal
+html=@datadir@/html
+
+Name: @PACKAGE_NAME@
+Description: Electromagnetic Polarization Simulation in C++
+Version: @PACKAGE_VERSION@
+Libs: -L@libdir@ -lepsic @LDFLAGS@ 
+Cflags: -I@includedir@ -I@includedir@/epsic
