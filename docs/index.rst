@@ -4,6 +4,7 @@
 .. toctree::
    :maxdepth: 5
 
+   intro
    api/epsic/classlist
    api/util/classlist
    api/util/structlist
