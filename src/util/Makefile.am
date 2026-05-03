@@ -4,10 +4,25 @@ noinst_LTLIBRARIES = libutil.la
 libutil_la_SOURCES = BoxMuller.C Convention.C Dirac.C Pauli.C random.C
 
 pkginclude_HEADERS = \
-Basis.h        Dirac.h   Matrix.h     Stokes.h      Estimate.h   \
-complex_math.h complex_promote.h \
-BoxMuller.h    Jacobi.h  Minkowski.h  Quaternion.h  Traits.h     random.h \
-Convention.h  Jones.h   Pauli.h      Spinor.h      Vector.h
+    Basis.h \
+    BoxMuller.h \
+    Cloude.h \
+    Convention.h \
+    Dirac.h \
+    Estimate.h \
+    Jacobi.h \
+    Jones.h \
+    Matrix.h \
+    Minkowski.h \
+    Pauli.h \
+    Quaternion.h \
+    Spinor.h \
+    Stokes.h \
+    Traits.h \
+    Vector.h \
+    complex_math.h \
+    complex_promote.h \
+    random.h
 
 EXTRA_DIST = header_PromoteTraits MatrixTest.h
 
