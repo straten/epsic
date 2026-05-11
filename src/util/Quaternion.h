@@ -24,7 +24,41 @@
 */
 enum QType { Hermitian, Unitary };
 
-//! Quaternion
+//! Represents either a left-handed quaternion or a biquaternion
+/*!
+  The Quaternion template class was designed to implement both biquaternions
+  and left-handed quaternions using the %Pauli spin matrices as the basis.
+  Biquaternions have complex-valued components, and Quaternions can have
+  either purely imaginary (QType = Unitary) or purely real (QType = Hermitian)
+  vector components.  When using the %Pauli spin matrices with real components,
+  it is possible to represent a Hermitian matrix using only four real
+  numbers.  However, as the product of two Hermitian matrices is not
+  Hermitian (unless the matrices commute), it is not possible to
+  multiply two real quaternions in the %Pauli basis.
+
+  There are four ways to create a null-constructed instance
+  of a Quaternion object:
+
+    \code{.cpp}
+    // Left-handed quaternion (unitary basis)
+    Quaternion<float> q;
+
+    // Representation of Hermitian matrix (non-multiplicative)
+    Quaternion<float, Hermitian> h;
+
+    // Biquaternion in unitary basis
+    Quaternion<complex<float>, Unitary> bq;
+
+    // Biquaternion in Hermitian basis
+    Quaternion<complex<float>, Hermitian> bh;
+    \endcode
+
+  Note that the floating-point precision is specified in the first
+  template argument and the type, Unitary or Hermitian,
+  is specified in the second template argument. As the left-handed
+  quaternion is most closely related to Hamilton's quaternion, the
+  Unitary basis is used by default.
+*/
 template<typename T, QType B = Unitary> 
 class Quaternion {
   

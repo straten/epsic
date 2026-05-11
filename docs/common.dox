@@ -38,8 +38,6 @@ HAVE_DOT               = NO
 GENERATE_HTML          = NO
 GENERATE_XML           = YES
 
-# epsic source files contain ISO-8859-1 characters (± signs)
-INPUT_ENCODING         = ISO-8859-1
 CASE_SENSE_NAMES       = NO
 
 # Drop std::* — Doxygen otherwise emits a stub namespacestd.xml that

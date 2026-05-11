@@ -32,7 +32,6 @@ exclude_patterns = ["_build", ".venv"]
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "sphinx_rtd_theme"
-# html_static_path = ["_static"]
 
 # -- MyST (Markdown) support -------------------------------------------------
 

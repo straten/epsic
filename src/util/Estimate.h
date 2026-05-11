@@ -31,13 +31,17 @@ template <typename T, typename U=T> class MeanRadian;
   See http://mathworld.wolfram.com/ErrorPropagation.html
 
   Note that all variables are assumed independent, even if identical.
-  For example, the following code will underestimate the variance of xsq:
+  For example, the following code will underestimate the variance of xsq.
 
-    Estimate<double> x;
-    Estimate<double> xsq = x*x;
+  \code{.cpp}
+  Estimate<double> x;
+  Estimate<double> xsq = x*x;
+  \endcode
 
   To correctly handle error propagation through equations in which variables appear
-  more than once, please see the MEAL::ScalarMath class in the psrchive library.
+  more than once, please see the
+  [MEAL::ScalarMath](https://meal.readthedocs.io/en/latest/api/meal/class/class_m_e_a_l_1_1_scalar_math.html)
+  class in the [meal](https://meal.readthedocs.io/en/latest/) library.
 */
 template <typename T, typename U=T>
 class Estimate
@@ -109,7 +113,7 @@ class Estimate
   { val -= d.val; var += d.var; return *this; }
 
   //! Multiplication operator
-  /*! Where \f$ r=x*y \f$, \f$\sigma^2_r = y^2\sigma^2_x + x^2\sigma^2_y\f$ */
+  /*! Where \f$ r=x*y \f$, \f$ \sigma^2_r = y^2\sigma^2_x + x^2\sigma^2_y \f$ */
   const Estimate& operator*= (const Estimate& d)
   { var=val*val*d.var+d.val*d.val*var; val*=d.val; return *this; }
 
@@ -187,30 +191,30 @@ class Estimate
   friend Estimate cos (const Estimate& u)
   { T val = ::cos (u.val); return Estimate (val, (1-val*val)*u.var); }
 
-  //! \f$ {\partial\over\partial x} \cos^-1 (x) = -(1-x^2)^{-1/2} \f$
+  //! \f$ {\partial\over\partial x} \cos^{-1} (x) = -(1-x^2)^{-1/2} \f$
   friend Estimate acos (const Estimate& u)
   { T val = ::acos (u.val); T del=-1.0/sqrt(1.0-u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
-  //! \f$ {\partial\over\partial x} \tan^-1 (x) = (1+x^2)^{-1} \f$
+  //! \f$ {\partial\over\partial x} \tan^{-1} (x) = (1+x^2)^{-1} \f$
   friend Estimate atan (const Estimate& u)
   { T val = ::atan (u.val); T del=1/(1+u.val*u.val);
     return Estimate (val, del*del*u.var); }
 
-  //! \f$ {\partial\over\partial x} \tan^-1 (x) = (1+x^2)^{-1} \f$
+  //! \f$ {\partial\over\partial x} \tan^{-1} (x) = (1+x^2)^{-1} \f$
   friend Estimate atan2 (const Estimate& s, const Estimate& c)
   { T c2 = c.val*c.val;  T s2 = s.val*s.val;  T sc2 = c2+s2;
     return Estimate (::atan2 (s.val, c.val),(c2*s.var+s2*c.var)/(sc2*sc2)); }
 
-  //! \f$ \left({\partial\sinh x\over\partial x}\right)^2 = (1+\sinh^2x) \f$
+  //! \f$ \left({\partial\sinh x\over\partial x}\right)^2 = 1+\sinh^2x \f$
   friend Estimate sinh (const Estimate& u)
   { T val = ::sinh (u.val); return Estimate (val, (1+val*val)*u.var); }
 
-  //! \f$ \left({\partial\cosh x\over\partial x}\right)^2 = (\cosh^2x-1) \f$
+  //! \f$ \left({\partial\cosh x\over\partial x}\right)^2 = \cosh^2x-1 \f$
   friend Estimate cosh (const Estimate& u)
   { T val = ::cosh (u.val); return Estimate (val, (val*val-1)*u.var); }
 
-  //! \f$ {\partial\over\partial x} \tanh^-1 (x) = (1-x^2)^{-1} \f$
+  //! \f$ {\partial\over\partial x} \tanh^{-1} (x) = (1-x^2)^{-1} \f$
   friend Estimate atanh (const Estimate& u)
   { T val = ::atanh (u.val); T del=1/(1-u.val*u.val);
     return Estimate (val, del*del*u.var); }
@@ -323,11 +327,8 @@ std::istream& operator >> (std::istream& is, Estimate<T,U>& estimate)
 //! output latex-formatted Estimate with error in last digit in parentheses
 std::string latex (const Estimate<double>&);
 
-/*!
-  \f$ {\bar{x} over \bar{\sigma}^2} = \sum_{i=1}^n {x_i \over \sigma_i^2} \f$
-
-  See http://mathworld.wolfram.com/MaximumLikelihood.html (Eqs. 16 and 19)
-*/
+//! \f$ \frac{\bar{x}}{\bar{\sigma}^2} = \sum_{i=1}^n \frac{x_i}{\sigma_i^2} \f$
+/*! See http://mathworld.wolfram.com/MaximumLikelihood.html (Eqs. 16 and 19) */
 template <typename T, typename U>
 class MeanEstimate
 {
