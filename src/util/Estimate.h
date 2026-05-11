@@ -40,7 +40,7 @@ template <typename T, typename U=T> class MeanRadian;
 
   To correctly handle error propagation through equations in which variables appear
   more than once, please see the
-  [MEAL::ScalarMath](https://meal.readthedocs.io/en/latest/api/meal/class/class_m_e_a_l_1_1_scalar_math.html)
+  [MEAL::ScalarMath](https://meal.readthedocs.io/en/latest/api/meal/class/classMEAL_1_1ScalarMath.html)
   class in the [meal](https://meal.readthedocs.io/en/latest/) library.
 */
 template <typename T, typename U=T>

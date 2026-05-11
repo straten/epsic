@@ -5,21 +5,17 @@ FILE_PATTERNS          = *.h
 
 OUTPUT_DIRECTORY       = _doxygen
 
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+
 FULL_PATH_NAMES        = NO
-JAVADOC_AUTOBRIEF      = YES
 BUILTIN_STL_SUPPORT    = YES
 IDL_PROPERTY_SUPPORT   = NO
-DISTRIBUTE_GROUP_DOC   = YES
 EXTRACT_LOCAL_CLASSES  = NO
-HIDE_UNDOC_CLASSES     = YES
 SHOW_INCLUDE_FILES     = NO
 SORT_MEMBERS_CTORS_1ST = YES
 SHOW_USED_FILES        = NO
 SHOW_FILES             = NO
-SHOW_NAMESPACES        = NO
-HIDE_SCOPE_NAMES       = YES
-REFERENCED_BY_RELATION = YES
-REFERENCES_RELATION    = YES
 
 ALPHABETICAL_INDEX     = NO
 HTML_DYNAMIC_SECTIONS  = YES
@@ -38,9 +34,6 @@ HAVE_DOT               = NO
 GENERATE_HTML          = NO
 GENERATE_XML           = YES
 
-CASE_SENSE_NAMES       = NO
-
-# Drop std::* — Doxygen otherwise emits a stub namespacestd.xml that
-# references std::allocator etc. with no body, breaking Breathe.
+# Do not generate documentation for things in the std namespace.
 EXCLUDE_SYMBOLS        = std
 
