@@ -29,6 +29,21 @@ breathe_default_project = "epsic"
 templates_path = ["_templates"]
 exclude_patterns = ["_build", ".venv"]
 
+mathjax3_config = {
+    'loader': {'load': ['[tex]/ams']},
+    'tex': {
+        'macros': {
+            'C': r'{\mathbb{C}}',
+            'R': r'{\mathbb{R}}',
+            'Ci': r'{\mathrm{i}}',
+            'bm': [r'\boldsymbol{#1}', 1],
+            'boost': [r'{\bf H}{#1}_{\hat{\boldsymbol{m}}}(\beta)', 1],
+            'rotat': [r'{\bf U}{#1}_{\hat{\boldsymbol{n}}}(\phi)', 1],
+            'pauli': [r'{\boldsymbol{\sigma}}_{#1}', 1],
+        }
+    }
+}
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "sphinx_rtd_theme"

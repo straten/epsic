@@ -15,7 +15,7 @@
 #include "complex_promote.h"
 #include "Vector.h"
 
-//! Quaternion multiplication is isomorphic with that of 2x2 Unitary matrices
+//! The type of quaternion determines if the vector part is real or imaginary
 /*!
   Although the product of two Hermitian matrices is not necessarily Hermitian
   (and therefore is not a group operation), it is still useful to represent 
@@ -26,13 +26,13 @@ enum QType { Hermitian, Unitary };
 
 //! Represents either a left-handed quaternion or a biquaternion
 /*!
-  The Quaternion template class was designed to implement both biquaternions
-  and left-handed quaternions using the %Pauli spin matrices as the basis.
-  Biquaternions have complex-valued components, and Quaternions can have
+  The Quaternion template class was designed to represent either biquaternions
+  (a quaternion with complex-valued coefficients) or left-handed quaternions 
+  using the %Pauli spin matrices as the basis (see below).
+  
+  Left-handed quaternions can have
   either purely imaginary (QType = Unitary) or purely real (QType = Hermitian)
-  vector components.  When using the %Pauli spin matrices with real components,
-  it is possible to represent a Hermitian matrix using only four real
-  numbers.  However, as the product of two Hermitian matrices is not
+  vector components. However, as the product of two Hermitian matrices is not
   Hermitian (unless the matrices commute), it is not possible to
   multiply two real quaternions in the %Pauli basis.
 
@@ -58,6 +58,80 @@ enum QType { Hermitian, Unitary };
   is specified in the second template argument. As the left-handed
   quaternion is most closely related to Hamilton's quaternion, the
   Unitary basis is used by default.
+
+  A biquaternion may be represented by the linear combination,
+  \f[
+    \bm{B}=b_0\pauli{0}+b_1\pauli{1}+b_2\pauli{2}+b_3\pauli{3},\hspace{5mm}b_i\in\C
+  \f]
+  where \f$\pauli{0}\f$ is the identity matrix and \f$\pauli{1-3}\f$
+  are the Pauli spin matrices. The Pauli matrices have the following properties:
+  \f[
+    \pauli{i}^2 = \bm{I}, \hspace{5mm}
+    \pauli{i}\pauli{j} = -\pauli{j}\pauli{i} = \Ci\pauli{k}
+  \f]
+  where \f$\{i,j,k\}\f$ is chosen from cyclic permutations of \f$\{1,2,3\}\f$.
+
+  A biquaternion may be written as a scalar plus a three-vector:
+  \f[
+    \bm{B}=[b+\bm{b}] = b\pauli{0} + \bm{b\cdot\sigma}, \hspace{5mm} b_i\in\C
+  \f]
+  where \f$\bm{b}=(b_1,b_2,b_3)\f$ and \f$\bm{\sigma}\f$ is a three-vector whose
+  components are the Pauli spin matrices.  Using this notation, the left-handed
+  quaternion sub-group may be represented as
+  \f[
+    \bm{Q}=[q+i\bm{q}]= q\pauli{0} + \Ci\bm{q\cdot\sigma}, \hspace{5mm} q_i\in\R.
+  \f]
+
+  Consider the product of two biquaternions, \f$\bm{A}=[a_0+\bm{a}]\f$
+  and \f$\bm{B}=[b_0+\bm{b}]\f$, 
+  \f[
+    \begin{array}{ccl}
+    \bm{A}\bm{B} & = &
+    (a_0\pauli{0} + a_1\pauli{1} + a_2\pauli{2} + a_3\pauli{3})
+    (b_0\pauli{0} + b_1\pauli{1} + b_2\pauli{2} + b_3\pauli{3}) \\
+    & = & a_0b_0\pauli{0}\pauli{0} + a_0b_1\pauli{0}\pauli{1}
+            + a_0b_2\pauli{0}\pauli{2} + a_0b_3\pauli{0}\pauli{3} \\
+    & + & a_1b_0\pauli{1}\pauli{0} + a_1b_1\pauli{1}\pauli{1}
+            + a_1b_2\pauli{1}\pauli{2} + a_1b_3\pauli{1}\pauli{3} \\
+    & + & a_2b_0\pauli{2}\pauli{0} + a_2b_1\pauli{2}\pauli{1}
+            + a_2b_2\pauli{2}\pauli{2} + a_2b_3\pauli{2}\pauli{3} \\
+    & + & a_3b_0\pauli{3}\pauli{0} + a_3b_1\pauli{3}\pauli{1}
+            + a_3b_2\pauli{3}\pauli{2} + a_3b_3\pauli{3}\pauli{3}
+    \end{array}
+  \f]
+  which reduces to
+  \f[
+    \begin{array}{ccl}
+    \bm{A}\bm{B}
+    & = & (a_0b_0 + a_1b_1 + a_2b_2 + a_3b_3) \pauli{0} \\
+    & + & (a_0b_1 + a_1b_0 + \Ci a_2b_3 - \Ci a_3b_2) \pauli{1} \\
+    & + & (a_0b_2 - \Ci a_1b_3 + a_2b_0 + \Ci a_3b_1) \pauli{2} \\
+    & + & (a_0b_3 + \Ci a_1b_2 - \Ci a_2b_1 + a_3b_0) \pauli{3}
+    \end{array}
+  \f]
+
+  This equation is used to derive the multiplication rule for 
+  left-handed quaternions.  Assuming that
+  \f$\bm{C}=[c_0+\Ci\bm{c}]\f$ and \f$\bm{D}=[d_0+\Ci\bm{d}]\f$,
+  the left-handed quaternion product, \f$\bm{X}=[x_0+\Ci\bm{x}]=\bm{CD}\f$, 
+  is given by
+  \f[
+    \begin{array}{rl}
+    x_0 & = c_0d_0 - c_1d_1 - c_2d_2 - c_3d_3 \\
+    x_1 & = c_0d_1 + c_1d_0 - c_2d_3 + c_3d_2 \\
+    x_2 & = c_0d_2 + c_1d_3 + c_2d_0 - c_3d_1 \\
+    x_3 & = c_0d_3 - c_1d_2 + c_2d_1 + c_3d_0
+    \end{array}
+  \f]
+
+  Notice that this result differs from the product of two quaternions as
+  originally defined by Hamilton.  This is because the left-handed
+  quaternion basis is given by the Pauli spin matrices multiplied by the
+  imaginary number, \f$\Ci=\sqrt{-1}\f$, which satisfy
+  \f[
+    \Ci\pauli{i} \Ci\pauli{j} = -\Ci\pauli{k}
+  \f]
+
 */
 template<typename T, QType B = Unitary> 
 class Quaternion {

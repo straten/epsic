@@ -5,6 +5,8 @@ FILE_PATTERNS          = *.h
 
 OUTPUT_DIRECTORY       = _doxygen
 
+FORMULA_MACROFILE      = latex_macros.tex
+
 HIDE_UNDOC_MEMBERS     = YES
 HIDE_UNDOC_CLASSES     = YES
 

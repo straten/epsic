@@ -19,7 +19,31 @@
 #include <vector>
 #include <limits>
 
-//! Generates Pauli and identity matrices
+//! Generates Hermitian basis matrices \f$\pauli{\mu}\f$ defined by the identity and Pauli spin matrices
+/*!
+  \f$\pauli{0}\f$ is the identity matrix and \f$\pauli{1-3}\f$ are the Pauli spin matrices; i.e.
+  \f[
+    \pauli{0} = \left( \begin{array}{cc}
+    1 & 0 \\
+    0 & 1
+    \end{array}\right)
+  \hspace{5mm}
+    \pauli{1} = \left( \begin{array}{cc}
+    1 & 0 \\
+    0 & -1
+    \end{array}\right)
+  \hspace{5mm}
+    \pauli{2} = \left( \begin{array}{cc}
+    0 & 1 \\
+    1 & 0
+    \end{array}\right)
+  \hspace{5mm}
+    \pauli{3} = \left( \begin{array}{cc}
+    0 & -\Ci \\
+    \Ci & 0
+    \end{array}\right).
+  \f]
+ */
 class Pauli
 {
 public:
