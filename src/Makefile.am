@@ -4,7 +4,7 @@ SUBDIRS = true_math util
 lib_LTLIBRARIES = libepsic.la
 
 # version-info should match AC_INIT version in configure.ac
-libepsic_la_LDFLAGS = -version-info 4:0:0
+libepsic_la_LDFLAGS = -version-info 4:0:1
 
 libepsic_la_LIBADD = true_math/libtrue_math.la util/libutil.la 
 
