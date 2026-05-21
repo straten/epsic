@@ -30,6 +30,8 @@ int main ()
 
   cerr << "M*inv(M)=" << test * inverse << endl;
 
+  auto div = m2 / 4.0;
+
   return 0;
 }
 

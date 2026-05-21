@@ -112,7 +112,8 @@ public:
   friend T inner (const Vector& a, const Vector& b) { return a*b; }
 
   //! Scalar division
-  friend Vector operator / (Vector a, T c)
+  template<typename U>
+  friend Vector operator / (Vector a, const U& c)
     { a/=c; return a; }
 
   //! Negation
