@@ -1,7 +1,7 @@
 //-*-C++-*-
 /***************************************************************************
  *
- *   Copyright (C) 2003 by Willem van Straten
+ *   Copyright (C) 2003-2026 by Willem van Straten
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
@@ -17,7 +17,7 @@
 #include <iostream>
 #include <complex>
 
-//! Vector
+//! Vector of N elements of type T
 template <unsigned N, typename T> 
 class Vector {
 
@@ -68,11 +68,6 @@ public:
   Vector& operator -= (const Vector& s)
     { for (unsigned i=0; i<N; i++) x[i] -= s.x[i]; return *this; }
 
-  /*! Vector multiplication
-    Vector& operator *= (const Vector& s)
-    { *this = *this * s; return *this; }
-  */
-
   //! Scalar multiplication
   template<typename U>
   Vector& operator *= (const U& a)
@@ -109,9 +104,12 @@ public:
   friend Vector operator * (T c, Vector a)
     { a*=c; return a; }
 
-  //! Dot product
+  //! Dot/inner product
   friend T operator * (const Vector& a, const Vector& b)
     { T r=0; for (unsigned i=0; i<N; i++) r += a[i]*b[i]; return r; }
+
+  //! Explicit dot/inner product
+  friend T inner (const Vector& a, const Vector& b) { return a*b; }
 
   //! Scalar division
   friend Vector operator / (Vector a, T c)
