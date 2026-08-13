@@ -6,8 +6,8 @@ using namespace std;
 
 int main ()
 {
-  for (unsigned i=0; i < 1000; i++) {
-
+  for (unsigned i=0; i < 1000; i++)
+  {
     Jones<double> J;
     random_vector (J, 10.0);
 
@@ -23,7 +23,8 @@ int main ()
 
     Stokes<double> diff = output2 - output1;
 
-    if (norm(diff)/norm(output1) > 1e-14) {
+    if (norm(diff)/norm(output1) > 1e-14)
+    {
       cerr << "Error: out1=" << output1 << endl
 	   << "    != out2=" << output2 << endl;
       return -1;

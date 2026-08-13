@@ -284,7 +284,8 @@ Matrix<4,4,T> Mueller (const Jones<T>& J)
 {
   Matrix<4,4,T> result;
 
-  for (unsigned row=0; row < 4; row++) {
+  for (unsigned row=0; row < 4; row++)
+  {
     Stokes<T> basis;
     basis[row] = 1.0;
     result[row] = coherency(herm(J) * convert(basis) * J);

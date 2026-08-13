@@ -1,0 +1,3 @@
+[submodule ".build-commons"]
+	path = .build-commons
+	url = https://gitlab.com/pulsar-astronomy/build-commons.git
