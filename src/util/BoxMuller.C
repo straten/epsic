@@ -6,39 +6,24 @@
  ***************************************************************************/
 
 #include "BoxMuller.h"
-#include <math.h>
-#include <stdlib.h>
+
+constexpr float default_mean = 0.0f;
+constexpr float default_stddev = 1.0f;
 
 BoxMuller::BoxMuller (long seed)
+: dist(default_mean, default_stddev)
 {
-  have_one_ready = false;
-  one_ready = 0;
-  if (seed)
-    srand48 (seed);
+  if (!seed)
+  {
+    std::random_device rd;
+    seed = rd();
+  }
+
+  engine.seed(seed);
 }
 
 //! returns a random variable with a Gaussian distribution
 float BoxMuller::evaluate ()
 {
-  if (have_one_ready) {
-    /* use value from previous call */
-    have_one_ready = false;
-    return one_ready;
-  }
-
-  float v1, v2, w;
-
-  do {
-    v1 = 2.0 * drand48() - 1.0;
-    v2 = 2.0 * drand48() - 1.0;
-    w = v1 * v1 + v2 * v2;
-  } while ( w >= 1.0 );
-  
-  w = sqrt( (-2.0 * log( w ) ) / w );
-
-  have_one_ready = true;
-  one_ready = v2 * w;
-
-  return v1 * w;
-  
+  return dist(engine);
 }
