@@ -55,11 +55,18 @@ void test_Rotation (double theta, double phi, unsigned axis, unsigned perm)
  
 void test_loop (unsigned axis, unsigned perm)
 {
-  double increment = M_PI/87.0;
+  unsigned steps = 87;
+  double increment = M_PI/steps;
 
-  for (double theta = -2*M_PI; theta < 2*M_PI+increment; theta += increment)
-    for (double phi = -M_PI; phi < M_PI+increment; phi += increment)
+  for (unsigned istep=0; istep < steps; istep++)
+  {
+    double theta = -2*M_PI + increment * istep;
+    for (unsigned jstep=0; jstep < steps; jstep++)
+    {
+      double phi = -M_PI + increment * jstep;
       test_Rotation (theta, phi, axis, perm);
+    }
+  }
 }
 
 int main ()

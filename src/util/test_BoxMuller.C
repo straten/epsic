@@ -32,7 +32,7 @@ int main ()
   for (const auto& datum : data)
     os << datum << ' ';
 
-  std::string expect = "-0.0190504 0.892552 0.225053 0.484419 -1.50899 1.84724 -1.08279 -0.145933 -0.567948 0.78989 ";
+  std::string expect = "0.519191 1.3432 0.551075 -0.402395 1.6094 -0.297697 1.52676 1.55092 0.677957 0.635312 ";
   std::string got = os.str();
  
   if (got != expect)

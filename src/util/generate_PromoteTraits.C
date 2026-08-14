@@ -55,11 +55,6 @@ using namespace std;
 
 int main (int argc, char** argv)
 {
-  bool verbose = false;
-
-  if (argc > 1 && string(argv[1]) == "-v")
-    verbose = true;
-
   // it is assumed that header_PromoteTraits is copied to PromoteTraits.h
   // before this program is run
   ofstream out ("PromoteTraits.h", ios::app);
@@ -79,12 +74,15 @@ int main (int argc, char** argv)
   types.push_back( "MEAL::ScalarMath" );
 
   for (unsigned i=0; i<types.size(); i++)
+  {
     for (unsigned j=0; j<types.size(); j++)
-
+    {
       out << "template<>\n"
         "struct PromoteTraits< " << types[i] << ", " << types[j] << " > {\n"
-	"  typedef " << types[max(i,j)] << " promote_type;\n"
-	"};\n" << endl;
+        "  typedef " << types[max(i,j)] << " promote_type;\n"
+        "};\n" << endl;
+    }
+  }
 
 #if !defined(HAVE_BEST_PARTIAL_SPECIALIZATION) | !defined(HAVE_DEFAULT_PARTIAL_SPECIALIZATION)
   out << "#define PROMOTE_TRAITS_SPECIALIZE 1\n" << endl;

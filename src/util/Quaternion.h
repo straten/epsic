@@ -204,11 +204,11 @@ public:
     { s.s0=-s.s0; s.s1=-s.s1; s.s2=-s.s2; s.s3=-s.s3; return s; }
 
   //! Alternative access to elements
-  T& operator [] (int n)
+  T& operator [] (unsigned n)
     { T* val = &s0; return val[n]; }
   
   //! Alternative access to elements 
-  T operator [] (int n) const
+  T operator [] (unsigned n) const
     { return *(&s0+n); }
 
   //! Access to scalar component

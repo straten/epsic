@@ -16,8 +16,8 @@ void add (Stokes<double>& result, Spinor<double>& e)
 
 Stokes<double> epsic::composite::get_Stokes ()
 {
-  unsigned A_sample_size = A_fraction * sample_size;
-  unsigned B_sample_size = sample_size - A_fraction;
+  unsigned A_sample_size = static_cast<unsigned>(A_fraction * sample_size);
+  unsigned B_sample_size = sample_size - A_sample_size;
   unsigned max_size = std::max (A_sample_size, B_sample_size);
   
   Stokes<double> result;
@@ -41,7 +41,7 @@ Stokes<double> epsic::composite::get_Stokes ()
 
 Vector<4, double> epsic::composite::get_mean ()
 {
-  unsigned A_sample_size = A_fraction * sample_size;
+  unsigned A_sample_size = static_cast<unsigned>(A_fraction * sample_size);
   unsigned B_sample_size = sample_size - A_sample_size;
   Vector<4,double> result =
     A_sample_size * A->get_mean() +
@@ -53,7 +53,7 @@ Vector<4, double> epsic::composite::get_mean ()
 //! Implements Equation (59) of van Straten & Tiburzi (2017)
 Matrix<4,4, double> epsic::composite::get_covariance ()
 {
-  unsigned A_sample_size = A_fraction * sample_size;
+  unsigned A_sample_size = static_cast<unsigned>(A_fraction * sample_size);
   unsigned B_sample_size = sample_size - A_sample_size;
 
   Matrix<4,4,double> C_A = sample::get_covariance (A, A_sample_size);

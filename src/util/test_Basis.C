@@ -4,12 +4,13 @@
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
+
 #include "Basis.h"
 #include <iostream>
 
 using namespace std;
 
-int main ()
+int main () try
 {
   Basis<double> basis1;
   basis1.set_basis (0.25*M_PI, 0.25*M_PI);
@@ -29,4 +30,9 @@ int main ()
        << endl;
 
   return 0;
+}
+catch (std::exception& error)
+{
+  cerr << error.what() << endl;
+  return -1;
 }

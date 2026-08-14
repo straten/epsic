@@ -4,12 +4,13 @@
  *   Licensed under the Academic Free License version 2.1
  *
  ***************************************************************************/
-#include "Pauli.h"
+
+ #include "Pauli.h"
 
 #include <iostream>
 using namespace std;
 
-int main ()
+int main () try
 {
   Stokes< complex< Estimate<double> > > test_default_constructor;
 
@@ -78,4 +79,8 @@ int main ()
 
   return 0;
 }
-
+catch (std::exception& error)
+{
+  cerr << error.what() << endl;
+  return -1;
+}

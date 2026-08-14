@@ -12,6 +12,7 @@
 #define __epsic_smoothed_h
 
 #include "mode.h"
+#include <vector>
 
 namespace epsic
 {

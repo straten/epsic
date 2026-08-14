@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int main ()
+int main () try
 {
   for (unsigned i=0; i < 1000; i++)
   {
@@ -34,4 +34,9 @@ int main ()
   cerr << "Mueller passes test" << endl;
 
   return 0;
+}
+catch (std::exception& error)
+{
+  cerr << error.what() << endl;
+  return -1;
 }

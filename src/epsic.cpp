@@ -45,6 +45,7 @@
 #include <exception>
 #include <fstream>
 #include <string>
+#include <cassert>
 
 // #define _DEBUG 1
 
@@ -123,11 +124,11 @@ public:
 
     if (covariant)
     {
-      if (beta)
+      if (beta != 0.0)
         covariant->set_beta (index, beta);
       s = mod = covariant->get_modulated_mode (index, s);
     }
-    else if (beta)
+    else if (beta != 0.0)
       s = mod = new epsic::lognormal_mode (s, beta);
 
     if (smooth_modulator > 1 && mod)
@@ -145,6 +146,25 @@ public:
 
 double sqr (double x) { return x*x; }
 
+epsic::combination* dual = NULL;
+epsic::sample* stokes_sample = NULL;
+epsic::bivariate_lognormal_modes* covariant = NULL;
+
+void cleanup()
+{
+  if (dual)
+  {
+    delete dual;
+  }
+  else if (stokes_sample)
+  {
+    delete stokes_sample;
+  }
+
+  if (covariant)
+    delete covariant;
+}
+
 int main (int argc, char** argv)
 {
   bool run_simulation = true;
@@ -160,14 +180,10 @@ int main (int argc, char** argv)
   bool subtract_outer_population_mean = false;
 
   epsic::mode source;
-  epsic::combination* dual = NULL;
-  epsic::sample* stokes_sample = NULL;
-  epsic::bivariate_lognormal_modes* covariant = NULL;
 
   mode_setup setup_A;
   mode_setup setup_B;
 
-  bool print = false;
   bool rho_stats = false;
   bool variances_and_means = false;
 
@@ -180,12 +196,13 @@ int main (int argc, char** argv)
 
   //! Healpix workers
   Healpix_Map<double> healpix_map;
+
+  //! Weight assigned to each histogram hit
+  Weight weight = PolarizedFlux;
 #endif
 
   //! Weight each count by unity, polarized flux, or total flux
   typedef enum { Unity, PolarizedFlux, TotalFlux } Weight;
-
-  Weight weight = PolarizedFlux;
  
   bool output_stokes = false;
  
@@ -195,7 +212,7 @@ int main (int argc, char** argv)
     const char* usearg = optarg;
     mode_setup* setup = &setup_A;
     
-    if (optarg && optarg[0] == 'B')
+    if (optarg != nullptr && optarg[0] == 'B')
     {
       setup = &setup_B;
       usearg ++;
@@ -210,15 +227,18 @@ int main (int argc, char** argv)
 
     case 'h':
       usage ();
+      cleanup ();
       return 0;
 
 #if HAVE_HEALPIX
     case 'H':
+      assert(optarg != nullptr);
       healpix_order = atoi (optarg);
       break;
 #endif
 
     case 'N':
+      assert(optarg != nullptr);
       if (optarg[strlen(optarg)-1] == 'k')
       {
         optarg[strlen(optarg)-1] = '\0';
@@ -229,6 +249,7 @@ int main (int argc, char** argv)
       break;
 
     case 'n':
+      assert(optarg != nullptr);
       nint = atoi (optarg);
       break;
 
@@ -237,23 +258,28 @@ int main (int argc, char** argv)
       break;
 
     case 'C':
+      assert(optarg != nullptr);
       dual = new epsic::composite( atof(optarg) );
       break;
 
     case 'D':
+      assert(optarg != nullptr);
       dual = new epsic::disjoint( atof(optarg) );
       break;
 
     case 'c':
+      assert(optarg != nullptr);
       dual = new epsic::coherent( atof(optarg) );
       break;
       
     case 's':
     {
+      assert(usearg != nullptr);
       double i,q,u,v;
       if (sscanf (usearg, "%lf,%lf,%lf,%lf", &i,&q,&u,&v) != 4)
       {
         cerr << "Error parsing " << usearg << " as 4-vector" << endl;
+        cleanup();
         return -1;
       }
       stokes = Stokes<double> (i,q,u,v);
@@ -261,6 +287,7 @@ int main (int argc, char** argv)
       if (stokes.abs_vect() > i)
       {
         cerr << "Invalid Stokes parameters (p>I) " << stokes << endl;
+        cleanup();
         return -1;
       }
 
@@ -270,43 +297,46 @@ int main (int argc, char** argv)
     }
 
     case 'l':
+      assert(usearg != nullptr);
       setup->beta = atof (usearg);
       break;
       
     case 'b':
+      assert(usearg != nullptr);
       setup->smooth_modulator = atoi (usearg);
       break;
 
     case 'r':
+      assert(usearg != nullptr);
       setup->square_modulator = atoi (usearg);
       break;
 
     case 'k':
+      assert(optarg != nullptr);
       covariant = new epsic::bivariate_lognormal_modes( atof(optarg) );
       setup_A.covariant = covariant;
       setup_B.covariant = covariant;
       break;
 
     case 'X':
+      assert(optarg != nullptr);
       nlag = atoi (optarg);
       break;
 
     /* undocumented and currently unavailable features */
 
     case 'M':
+      assert(optarg != nullptr);
       smooth_after = atoi (optarg);
       break;
 
     case 'm':
+      assert(usearg != nullptr);
       setup->smooth_before = atoi (usearg);
       break;
 
     case 'o':
       subtract_outer_population_mean = true;
-      break;
-
-    case 'p':
-      print = true;
       break;
 
     case 'R':
@@ -321,7 +351,9 @@ int main (int argc, char** argv)
       run_simulation = false;
       break;
 
+#if HAVE_HEALPIX
     case 'w':
+      assert(optarg != nullptr);
       switch (optarg[0])
       {
         case '1':
@@ -338,7 +370,7 @@ int main (int argc, char** argv)
           break;
       }
       break;
-
+#endif
     }
   }
 
@@ -488,6 +520,7 @@ int main (int argc, char** argv)
       cout << "mean[" << i << "] = " << tot[i] << endl;
       cout << "var[" << i << "] = " << totsq[i][i] << endl;
     }
+    cleanup();
     return 0;
   }
 
@@ -564,10 +597,16 @@ int main (int argc, char** argv)
 #endif
  
   if (covariant)
+  {
     delete covariant;
- 
+    covariant = 0;
+  }
+
   if (!rho_stats)
+  {
+    cleanup();
     return 0;
+  }
 
   cerr << "\n"
     " ******************************************************************* \n"
@@ -608,6 +647,7 @@ int main (int argc, char** argv)
   for (unsigned i=0; i<4; i++)
     cerr << "e_" << i << "=" << eigenvalues[i] << "  v=" << eigenvectors[i] << endl;
 
+  cleanup();
   return 0;
 }
 

@@ -14,7 +14,7 @@ epsic::mode::mode ()
   normal = 0;
   rms = 0.5;
 
-  set_Stokes (Stokes<double>(1.0));
+  mode::set_Stokes (Stokes<double>(1.0));
 }
 
 void epsic::mode::set_Stokes (const Stokes<double>& _mean)

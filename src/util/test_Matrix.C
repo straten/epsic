@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int main ()
+int main () try
 {
   Matrix<3, 4, double> m1;
   Matrix<4, 5, double> m2;
@@ -34,4 +34,8 @@ int main ()
 
   return 0;
 }
-
+catch (std::exception& error)
+{
+  cerr << error.what() << endl;
+  return -1;
+}
