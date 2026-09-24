@@ -232,7 +232,7 @@ Jones<T> transform (const Matrix<4,4,U>& M, const Jones<T>& rho)
 
 //! decompose a Jones matrix into a Hermitian and Unitary Quaternion
 /*! \param J the Jones matrix
- *  \param d returns the determinant of J
+ *  \param d returns the square root of the determinant of J
  *  \param h returns the Hermitian component of J
  *  \param u returns the Unitary component of J
  */
